@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/models/categoriessearchbykey_model.dart';
+import 'package:smsseller/models/selectcategory_model.dart';
 // import 'package:sms/constants/route_constants.dart';
 // import 'package:sms/repositries/storerepo.dart';
 // import 'package:sms/views/seller/sellerchatlistscreen.dart';
@@ -14,6 +16,14 @@ class StoreController extends GetxController {
   StoreRepo storeRepo;
 
   StoreController({required this.storeRepo});
+  @override
+  void onInit() async {
+    super.onInit();
+    searchcategorykeycontroller.value.addListener(() {
+      getCategoriesSearchbykey(
+          searchcategorykeycontroller.value.text.toString());
+    });
+  }
 
 ///////////seller createshop profile image
   var sellercreateshopuploadedprofileImage = Rx<File?>(null);
@@ -321,17 +331,15 @@ class StoreController extends GetxController {
     },
     {"title": "DSLR Camera", "image": 'assets/images/homecatgeoryicon5.png'},
   ].obs;
-  void sellersetupshopremoveCategory(int index) {
-    sellersetupshopaddcategoriesList.removeAt(index);
-  }
+  
 
 /////////////////////seller setup shop add banner  images
 
-  var sellersetupshopuploadedbannerimages = Rx<File?>(null);
-
-  void sellersetupshopbannerimages(File? image) {
-    sellersetupshopuploadedbannerimages.value = image;
-  }
+  var sellersetupshopuploadedbannerimages = RxList<File?>([]);
+ void setupshopremovebannerImage(int index) {
+   
+      sellersetupshopuploadedbannerimages.removeAt(index);
+    }
 
   Future<void> uploadsellersetupshopbannerimages(BuildContext context) async {
     final picker = ImagePicker();
@@ -365,7 +373,7 @@ class StoreController extends GetxController {
     if (pickedImage != null) {
       final pickedFile = await picker.pickImage(source: pickedImage);
       if (pickedFile != null) {
-        sellersetupshopbannerimages(File(pickedFile.path));
+        sellersetupshopuploadedbannerimages.add(File(pickedFile.path));
       }
     }
   }
@@ -477,4 +485,79 @@ class StoreController extends GetxController {
       }
     }
   }
+///////////////get categories searchbykey
+  final searchcategorykeycontroller = TextEditingController().obs;
+  final Rx<CategoriesSearchByKeyModel?> categoriesSearchbykey =
+      Rx<CategoriesSearchByKeyModel?>(null);
+  final RxBool categoriesSearchbykeyloading = false.obs;
+  getCategoriesSearchbykey(String key) async {
+    try {
+      if (key.isEmpty) {
+      categoriesSearchbykey.value = null;
+      return;
+    }
+      categoriesSearchbykeyloading(true);
+      await storeRepo.getCategoriessearchbykey(key.toString()).then((value) {
+        categoriesSearchbykey.value = value;
+        categoriesSearchbykeyloading(false);
+      });
+    } catch (e) {
+      categoriesSearchbykeyloading(false);
+    }
+  }
+
+///////select category
+RxList<SelectCategory> createshopselectedCategories = <SelectCategory>[].obs;
+ RxList<int> createshopselectedCategoryIds = <int>[].obs;
+   void sellersetupshopremoveCategory(int index) {
+    createshopselectedCategories.removeAt(index);
+  }
+void sellersetupshopremoveCategoryIds(int index) {
+    createshopselectedCategoryIds.removeAt(index);
+  }
+/////////////sellercreateshop api
+  final phonenumbercontroller = TextEditingController().obs;
+   final shopnamecontroller = TextEditingController().obs;
+    final whatyousellcontroller = TextEditingController().obs;
+    final shopregistrationnumcontroller = TextEditingController().obs;
+  final createshopphonecode = ''.obs;
+  final RxBool sellercreateshoploading = false.obs;
+ Future<void> sellerCreateShop({
+    required BuildContext context,
+    required String address,
+      required String city,
+      required String state,
+        required String country,
+        required String zipcode,
+  }) async {
+    try {
+      sellercreateshoploading.value = true;
+      await storeRepo.createsellershop(
+        context: context, 
+        name: shopnamecontroller.value.text.toString(), 
+        address: address, 
+        city: city, 
+        state: state, 
+        country: country, 
+        zipcode: zipcode, 
+        phonecode:createshopphonecode.toString(), 
+        phonenumber: phonenumbercontroller.value.text.toString(), 
+        whatyousell: whatyousellcontroller.value.text.toString(), 
+        registrationnumber: shopnamecontroller.value.text.toString(), 
+        description: "", 
+        categories: createshopselectedCategoryIds, 
+        mainimage: sellercreateshopuploadedprofileImage.value, 
+        coverimage: sellersetupshopuploadedcoverImage.value,
+         bannersimages: sellersetupshopuploadedbannerimages);
+
+      sellercreateshoploading.value = false;
+    } finally {
+      sellercreateshoploading.value = false;
+    }
+  }
+
 }
+
+
+
+

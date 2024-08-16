@@ -7,22 +7,32 @@ typedef ButtonPressed = VoidCallback;
 
 showErrrorSnackbar({required String message}) {
   return Get.snackbar("Error", message,
-      backgroundColor: Color(0xff2E3192), colorText: Colors.white);
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Color(0xff2E3192),
+      colorText: Colors.white);
 }
 
 showSuccessSnackbar({required String message}) {
   return Get.snackbar("Success", message,
-      backgroundColor: Color(0xff2E3192), colorText: Colors.white);
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Color(0xff2E3192),
+      colorText: Colors.white);
 }
 
-void showSuccessDialogAndNavigateToLogin(context) {
+void showSuccessDialogAndNavigateToLogin(context, String message) {
   Get.dialog(
     WhiteCustomPopupDialog(
-      message: 'Verification Done',
+      message: message,
       image: 'assets/images/sms 5.png',
     ),
   );
   Future.delayed(Duration(seconds: 2), () {
     Get.offAllNamed(RouteConstants.loginscreen);
   });
+}
+
+customcircularprogress() {
+  return const CircularProgressIndicator(
+    color: Color(0xff2E3192),
+  );
 }

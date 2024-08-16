@@ -1,5 +1,6 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/seller/authentication/changepassword.dart';
 import 'package:smsseller/seller/authentication/createaccount.dart';
 import 'package:smsseller/seller/authentication/emailverification.dart';
 import 'package:smsseller/seller/authentication/forgotemailverification.dart';
@@ -122,10 +123,10 @@ class RouteGenerator {
       //   name: RouteConstants.reasonreport,
       //   page: () => ReportSeller(),
       // ),
-      // GetPage(
-      //   name: RouteConstants.changepassword,
-      //   page: () => ChangePassword(),
-      // ),
+      GetPage(
+        name: RouteConstants.changepassword,
+        page: () => ChangePassword(),
+      ),
       // GetPage(
       //   name: RouteConstants.setyourprofile,
       //   page: () => SetYourProfile(),

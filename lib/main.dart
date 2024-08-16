@@ -4,12 +4,13 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/constants/routemanagment.dart';
 import 'package:smsseller/controller/splashcontroller.dart';
+import 'package:smsseller/services/local_storage.dart';
 import 'services/dependencies.dart' as dep;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dep.init();
-  // await LocalStorage().init();
+  await LocalStorage().init();
   runApp(const MyApp());
 }
 

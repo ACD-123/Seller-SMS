@@ -9,6 +9,7 @@ Container customtextformfield({
   Widget? prefixicon,
   Widget? suffixicon,
   final TextInputType? keyboardType,
+   bool? enabled,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -21,6 +22,8 @@ Container customtextformfield({
               color: const Color(0xff000000).withOpacity(0.06))
         ]),
     child: TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      enabled: enabled,
       controller: controller,
       validator: validator,
       style: TextStyle(

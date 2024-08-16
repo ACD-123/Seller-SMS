@@ -4,18 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:smsseller/constants/appconstants.dart';
-// import 'package:sms/repositries/authenication_repo.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
+import 'package:smsseller/services/local_storage.dart';
 
 class AuthenticationController extends GetxController {
   AuthRepo authRepo;
   File? uploadedProfileImage;
   bool isChecked = false;
   final isLoading = false.obs;
-  final isObsCure = true.obs;
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final loginformKey = GlobalKey<FormState>();
   bool isEmailSelected = true;
   AuthenticationController({
     required this.authRepo,
@@ -154,18 +151,19 @@ class AuthenticationController extends GetxController {
   //////////verify otp api
   var verifyotploading = false.obs;
   final otpcontroller = TextEditingController().obs;
-  Future<void> VerifyOTP({
-    required BuildContext context,
-    required String email,
-    required String type,
-  }) async {
+  Future<void> VerifyOTP(
+      {required BuildContext context,
+      required String email,
+      required String type,
+      required String popupmessage}) async {
     try {
       verifyotploading.value = true;
       await authRepo.VerifyOTP(
           otp: otpcontroller.value.text.toString(),
           email: email,
           type: type,
-          context: context);
+          context: context,
+          popupmessage: popupmessage);
 
       verifyotploading.value = false;
     } finally {
@@ -173,6 +171,7 @@ class AuthenticationController extends GetxController {
     }
   }
 
+///////////re-sent otp
   var resendotploading = false.obs;
   Future<void> ReSendOTP({
     required String email,
@@ -185,6 +184,100 @@ class AuthenticationController extends GetxController {
       resendotploading.value = false;
     } finally {
       resendotploading.value = false;
+    }
+  }
+
+///////send otp
+  var sendotploading = false.obs;
+  Future<void> sendOTP({
+    required String email,
+    required String type,
+  }) async {
+    try {
+      sendotploading.value = true;
+      await authRepo.SendOTP(email: email.toString(), type: type.toString());
+
+      sendotploading.value = false;
+    } finally {
+      sendotploading.value = false;
+    }
+  }
+
+///////////login password visiblity
+  final RxBool loginpasswordvisible = false.obs;
+  void loginPasswordVisibility() {
+    loginpasswordvisible.value = !loginpasswordvisible.value;
+  }
+
+////////remeber me logic
+  RxBool remembermeischecked = false.obs;
+  ////////saveremebe data
+  saveremembermecredentials(
+      {required String email,
+      required String password,
+      required bool isremeberme}) {
+    LocalStorage().setString("rememberemail", email);
+    LocalStorage().setString("rememberpasswrod", password);
+    LocalStorage().setBool("isrememberme", isremeberme);
+  }
+
+  ///clear remeber me data
+  clearremebermecredentials() {
+    LocalStorage().remove("rememberemail");
+    LocalStorage().remove("rememberpasswrod");
+    LocalStorage().remove("isrememberme");
+  }
+
+  //////////login api
+  var loginloading = false.obs;
+  final loginemailcontroller = TextEditingController().obs;
+  final loginpasswordcontroller = TextEditingController().obs;
+  Future<void> login() async {
+    try {
+      loginloading.value = true;
+      await authRepo.login(
+          email: loginemailcontroller.value.text.toString(),
+          password: loginpasswordcontroller.value.text.toString());
+      remembermeischecked.value
+          ? saveremembermecredentials(
+              email: loginemailcontroller.value.text.toString(),
+              password: loginpasswordcontroller.value.text.toString(),
+              isremeberme: remembermeischecked.value)
+          : clearremebermecredentials();
+
+      loginloading.value = false;
+    } finally {
+      loginloading.value = false;
+    }
+  }
+
+  ///load rememberme
+  loadremebermecredentials() {
+    loginemailcontroller.value.text = LocalStorage().getString("rememberemail");
+    loginpasswordcontroller.value.text =
+        LocalStorage().getString("rememberpasswrod");
+    remembermeischecked.value = LocalStorage().getBool("isrememberme");
+  }
+
+///////change password
+  var changepasswordloading = false.obs;
+  final changepasswordcontroller = TextEditingController().obs;
+  final changeconfpasswordcontroller = TextEditingController().obs;
+  Future<void> changePassword({
+    required String email,
+    required BuildContext context,
+  }) async {
+    try {
+      changepasswordloading.value = true;
+      await authRepo.changepassword(
+          email: email,
+          password: changepasswordcontroller.value.text.toString(),
+          newpassword: changeconfpasswordcontroller.value.text.toString(),
+          context: context);
+
+      changepasswordloading.value = false;
+    } finally {
+      changepasswordloading.value = false;
     }
   }
 }

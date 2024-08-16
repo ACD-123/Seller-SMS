@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
 // import 'package:sms/views/onboarding/welcome_screen1.dart';
 
@@ -10,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
   @override
   void initState() {
     super.initState();

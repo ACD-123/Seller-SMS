@@ -5,6 +5,7 @@ import 'package:show_up_animation/show_up_animation.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/customcomponents/customwidgets.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/passwordtextfield.dart';
 import 'package:smsseller/customcomponents/textfieldforphone.dart';
 
@@ -19,19 +20,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isEmailSelected = true;
   final loginController =
       Get.put(AuthenticationController(authRepo: Get.find()));
-  bool _isChecked = false;
   @override
   void initState() {
     super.initState();
-    loginController.emailController.clear();
-    loginController.passwordController.clear();
+    loginController.loginemailcontroller.value.clear();
+    loginController.loginpasswordcontroller.value.clear();
+    loginController.loadremebermecredentials();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: loginController.formKey,
+        key: loginController.loginformKey,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -91,10 +92,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 _isEmailSelected
                     ? EmailCustomTextField(
                         enabled: true,
-                        editingController: loginController.emailController,
+                        editingController:
+                            loginController.loginemailcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
-                            return 'Email cant be empty';
+                            return 'Email can\'t be empty';
                           } else if (!v.isEmail) {
                             return 'Invalid Email';
                           }
@@ -107,22 +109,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
-                CustomTextFieldPassword(
-                  image: 'assets/images/pasword.png',
-                  hintText: 'Password',
-                  // hintText: '',÷÷
-                  controller: loginController.passwordController,
-                  callback: () {
-                    loginController.isObsCure.value =
-                        !loginController.isObsCure.value;
-                  },
-                  fieldValidator: (v) {
-                    if (v!.isEmpty) {
-                      return 'Password cant be empty';
-                    }
-                    return null;
-                  },
-                  hiddenPassword: loginController.isObsCure.value,
+                Obx(
+                  () => CustomTextFieldPassword(
+                    image: 'assets/images/pasword.png',
+                    hintText: 'Password',
+                    controller: loginController.loginpasswordcontroller.value,
+                    callback: () {
+                      loginController.loginPasswordVisibility();
+                    },
+                    fieldValidator: (v) {
+                      if (v!.isEmpty) {
+                        return 'Password can\'t be empty';
+                      }
+                      return null;
+                    },
+                    hiddenPassword: !loginController.loginpasswordvisible.value,
+                  ),
                 ),
                 const SizedBox(
                   height: 12,
@@ -134,14 +136,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Row(
                         children: [
-                          Checkbox(
-                            activeColor: Color(0xff1375EA),
-                            value: _isChecked,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _isChecked = value ?? false;
-                              });
-                            },
+                          Obx(
+                            () => Checkbox(
+                              activeColor: Color(0xff1375EA),
+                              value: loginController.remembermeischecked.value,
+                              onChanged: (bool? value) {
+                                loginController.remembermeischecked.value =
+                                    value ?? false;
+                                if (value == false) {
+                                  loginController.clearremebermecredentials();
+                                }
+                              },
+                            ),
                           ),
                           const Text('Remember Me'),
                         ],
@@ -165,9 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 6.5.h,
                 ),
-                Obx(() => loginController.isLoading.value
-                    ? const Center(
-                        child: CircularProgressIndicator(),
+                Obx(() => loginController.loginloading.value
+                    ? Center(
+                        child: customcircularprogress(),
                       )
                     : ShowUpAnimation(
                         delayStart: const Duration(milliseconds: 500),
@@ -184,10 +190,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           margin: const EdgeInsets.only(left: 20.0, right: 20),
                           child: ElevatedButton(
                               onPressed: () {
-                                Get.offAllNamed(
-                                    RouteConstants.userbottomnavbar);
-                                // print('login button tapped');
-                                // loginController.loginTapped();
+                                if (loginController.loginformKey.currentState!
+                                    .validate()) {
+                                  loginController.login();
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xff2E3192),

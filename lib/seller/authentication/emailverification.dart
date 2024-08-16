@@ -190,7 +190,7 @@ class _ForgotEmailverificationState extends State<Emailverification> {
                           ontap: () {
                             if (formKey.currentState!.validate()) {
                               authcontroller.VerifyOTP(
-                                  context: context, email: email, type: "0");
+                                  context: context, email: email, type: "0",popupmessage: 'Verification Done');
                             }
                           },
                           // },

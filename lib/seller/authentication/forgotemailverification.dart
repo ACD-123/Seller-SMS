@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-import 'package:smsseller/constants/route_constants.dart';
-import 'package:smsseller/customcomponents/custom_popup_dialogwhite.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/customcomponents/customelevatedbutton.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
 class ForgotEmailverification extends StatefulWidget {
   // final String? email; // New parameter
@@ -24,21 +25,14 @@ class _ForgotEmailverificationState extends State<ForgotEmailverification> {
   FocusNode fieldThreeFocusNode = FocusNode();
   FocusNode fieldFourFocusNode = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController otpController = TextEditingController();
-  TextEditingController emailTextEditingContoller = TextEditingController();
-  String otpPin = ''; // Define a variable to store the OTP pin
-  void showSuccessDialogAndNavigateToLogin(context) {
-    Get.dialog(
-      WhiteCustomPopupDialog(
-        message: 'Password Successfully Setup',
-        // text: 'Password Successfully Setup',
-      ),
-    );
-
-    // Delay for 1 second
-    Future.delayed(Duration(seconds: 1), () {
-      Get.toNamed(RouteConstants.changepassword);
-    });
+  String email = Get.arguments as String;
+  String otpPin = '';
+  final authcontroller =
+      Get.put(AuthenticationController(authRepo: Get.find()));
+  @override
+  void initState() {
+    super.initState();
+    authcontroller.otpcontroller.value.clear();
   }
 
   @override
@@ -91,7 +85,7 @@ class _ForgotEmailverificationState extends State<ForgotEmailverification> {
                         text: 'We have sent ',
                       ),
                       TextSpan(
-                        text: '4 digits',
+                        text: '5 digits',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
@@ -108,7 +102,7 @@ class _ForgotEmailverificationState extends State<ForgotEmailverification> {
                     child: TextFormField(
                       enabled: false, // Isse input field disable ho jayega
                       decoration: InputDecoration(
-                        hintText: 'sms@gmail.com',
+                        hintText: email,
                         // hintText: controllertoStr/ing(),
                         fillColor: Colors.white,
                         hintStyle: TextStyle(
@@ -133,7 +127,14 @@ class _ForgotEmailverificationState extends State<ForgotEmailverification> {
                 ),
                 Center(
                   child: Pinput(
-                    length: 4,
+                    controller: authcontroller.otpcontroller.value,
+                    length: 5,
+                    validator: (value) {
+                      if (value == null || value.length != 5) {
+                        return 'Please enter a 5-digit OTP';
+                      }
+                      return null;
+                    },
                     defaultPinTheme: PinTheme(
                       width: 65,
                       height: 65,
@@ -159,48 +160,60 @@ class _ForgotEmailverificationState extends State<ForgotEmailverification> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('If you didn’t receive a code.'),
-                      GestureDetector(
-                        onTap: () async {
-                          // final emaillocal =
-                          //     await LocalStorage().getString('email');
-                          // print("emaillocal: " + verificati/onemail.toString());
-                          // forgotcontroller.resendOTP(
-                          //     email: verificationemail.toString());
-                        },
-                        child: Text(
-                          'ResendCode',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xff2E3192),
-                            decoration: TextDecoration.underline,
-                            decorationThickness:
-                                1.0, // Adjust the thickness as needed
-                          ),
-                        ),
-                      )
+                      Obx(() => authcontroller.resendotploading.value
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 1.w),
+                              child: SizedBox(
+                                  height: 2.h,
+                                  width: 4.w,
+                                  child: customcircularprogress()),
+                            )
+                          : Padding(
+                           padding: EdgeInsets.only(left: 1.w),
+                            child: GestureDetector(
+                                onTap: () async {
+                                  authcontroller.ReSendOTP(
+                                      email: email, type: "1");
+                                },
+                                child: Text(
+                                  'ResendCode',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff2E3192),
+                                    decoration: TextDecoration.underline,
+                                    decorationThickness: 1.0,
+                                  ),
+                                ),
+                              ),
+                          ))
                     ],
                   ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.03,
                 ),
-                ElevetedButton(
-                  // onPressed: () {},
-                  buttonName: 'VERIFY',
-
-                  textColor: Colors.white,
-                  ontap: () {
-                    showSuccessDialogAndNavigateToLogin(context);
-                    // print()
-                    print('hassam verify');
-                    // controller.onVerifyTapped();
-                  },
-                  // },
-                  fontSize: 14,
-                  color: Color(0xff2E3192),
-                  width: MediaQuery.of(context).size.width * 0.92,
-                  // gradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-                ),
+                Obx(
+                  () => authcontroller.verifyotploading.value
+                      ? Center(
+                          child: customcircularprogress(),
+                        )
+                      : ElevetedButton(
+                          buttonName: 'VERIFY',
+                          textColor: Colors.white,
+                          ontap: () {
+                            if (formKey.currentState!.validate()) {
+                              authcontroller.VerifyOTP(
+                                  context: context,
+                                  email: email,
+                                  type: "1",
+                                  popupmessage: "");
+                            }
+                          },
+                          fontSize: 14,
+                          color: Color(0xff2E3192),
+                          width: MediaQuery.of(context).size.width * 0.92,
+                        ),
+                )
               ],
             ),
           ),
@@ -225,14 +238,6 @@ class OtpInput extends StatefulWidget {
 }
 
 class _OtpInputState extends State<OtpInput> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   if (widget.autoFocus) {
-  //     FocusScope.of(context).requestFocus(widget.focusNode);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -241,14 +246,6 @@ class _OtpInputState extends State<OtpInput> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
-          // border: GradientBoxBorder(
-          //   gradient: LinearGradient(
-          //     colors: [
-          //       Color(0xFF8B2CA0),
-          //       Color(0xFF00C3C9),
-          //     ],
-          //   ),
-          //  width: 1,
         ),
         child: TextField(
           focusNode: widget.focusNode,
