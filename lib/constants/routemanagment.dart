@@ -26,6 +26,7 @@ import 'package:smsseller/seller/sellersetupshop.dart';
 import 'package:smsseller/seller/sellersideshop.dart';
 import 'package:smsseller/seller/sellerwelcomescreen.dart';
 import 'package:smsseller/seller/splashscreen.dart';
+import 'package:smsseller/seller/steppper.dart';
 
 import '../seller/sellerchatlistscreen.dart';
 
@@ -151,10 +152,10 @@ class RouteGenerator {
       //   name: RouteConstants.homeguestscreen,
       //   page: () => const HomeGuestScreen(),
       // ),
-      // GetPage(
-      //   name: RouteConstants.stepper,
-      //   page: () => MyStepperApp(),
-      // ),
+      GetPage(
+        name: RouteConstants.stepper,
+        page: () => MyStepperApp(),
+      ),
       // GetPage(
       //   name: RouteConstants.productdetailscreen,
       //   page: () => const ProductDetailScreen(),

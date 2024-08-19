@@ -3,10 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/controller./storecontroller.dart';
-// import 'package:sms/customcomponents/customappbar.dart';
-// import 'package:sms/customcomponents/custombutton.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
@@ -244,62 +240,62 @@ class _EditSellerShopState extends State<EditSellerShop> {
               SizedBox(
                 height: 1.h,
               ),
-              Obx(() => GestureDetector(
-                    onTap: () {
-                      storecontroller
-                          .uploadsellersetupshopbannerimages(context);
-                    },
-                    child: Container(
-                      height: 15.h,
-                      width: 40.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.84),
-                          border: Border.all(
-                            color: Color(0xffD4D4D4),
-                          )),
-                      child: storecontroller
-                                  .sellersetupshopuploadedbannerimages.value ==
-                              null
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/imagesicon.png',
-                                  height: 3.h,
-                                  color: Color(0xff2E3192),
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                Text(
-                                  'Add Images',
-                                  style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color(0xffA09696),
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  'Browse',
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Color(0xff2572B9),
-                                      fontSize: 14.sp,
-                                      color: Color(0xff2572B9),
-                                      fontWeight: FontWeight.w500),
-                                )
-                              ],
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: Image.file(
-                                File(storecontroller
-                                    .sellersetupshopuploadedbannerimages
-                                    .value!
-                                    .path),
-                                fit: BoxFit.fill,
-                              )),
-                    ),
-                  )),
+              // Obx(() => GestureDetector(
+              //       onTap: () {
+              //         storecontroller
+              //             .uploadsellersetupshopbannerimages(context);
+              //       },
+              //       child: Container(
+              //         height: 15.h,
+              //         width: 40.w,
+              //         decoration: BoxDecoration(
+              //             borderRadius: BorderRadius.circular(7.84),
+              //             border: Border.all(
+              //               color: Color(0xffD4D4D4),
+              //             )),
+              //         child: storecontroller
+              //                     .sellersetupshopuploadedbannerimages.value ==
+              //                 null
+              //             ? Column(
+              //                 mainAxisAlignment: MainAxisAlignment.center,
+              //                 children: [
+              //                   Image.asset(
+              //                     'assets/images/imagesicon.png',
+              //                     height: 3.h,
+              //                     color: Color(0xff2E3192),
+              //                   ),
+              //                   SizedBox(
+              //                     height: 1.h,
+              //                   ),
+              //                   Text(
+              //                     'Add Images',
+              //                     style: TextStyle(
+              //                         fontSize: 14.sp,
+              //                         color: Color(0xffA09696),
+              //                         fontWeight: FontWeight.w500),
+              //                   ),
+              //                   Text(
+              //                     'Browse',
+              //                     style: TextStyle(
+              //                         decoration: TextDecoration.underline,
+              //                         decorationColor: Color(0xff2572B9),
+              //                         fontSize: 14.sp,
+              //                         color: Color(0xff2572B9),
+              //                         fontWeight: FontWeight.w500),
+              //                   )
+              //                 ],
+              //               )
+              //             : ClipRRect(
+              //                 borderRadius: BorderRadius.circular(4),
+              //                 child: Image.file(
+              //                   File(storecontroller
+              //                       .sellersetupshopuploadedbannerimages
+              //                       .value!
+              //                       .path),
+              //                   fit: BoxFit.fill,
+              //                 )),
+              //       ),
+              //     )),
               SizedBox(
                 height: 4.h,
               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
-import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
+import 'package:smsseller/services/local_storage.dart';
 // import 'package:sms/views/onboarding/welcome_screen1.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,16 +13,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
+  final authcontroller =
+      Get.put(AuthenticationController(authRepo: Get.find()));
+
   @override
   void initState() {
     super.initState();
+    
+    final token = LocalStorage().getString("token");
+    final istrustedseller = LocalStorage().getBool("istrustedseller");
     Future.delayed(
         const Duration(seconds: 2),
-        () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WelcomeScreen1()),
-            ));
+        () => token.isEmpty
+            ? Get.offNamed(RouteConstants.welcome1)
+            : istrustedseller == false
+                ? Get.offNamed(RouteConstants.selerwelcome)
+                : Get.offNamed(RouteConstants.sellerdashboard));
   }
 
   @override

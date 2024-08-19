@@ -61,45 +61,45 @@ class HttpApiClient extends GetxService {
   }
 
 /////////post images methods
-Future<http.Response> postImagesToServer({
-  required String endPoint,
-  required Map<String, String> data,
-  required Map<String, dynamic> files,
-}) async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('token');
+  Future<http.Response> postImagesToServer({
+    required String endPoint,
+    required Map<String, String> data,
+    required Map<String, dynamic> files,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
 
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('$baseUrl$endPoint'),
-    );
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl$endPoint'),
+      );
 
-    request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Authorization'] = 'Bearer $token';
 
-    // Handle files in the request
-    for (var entry in files.entries) {
+      // Handle files in the request
+       for (var entry in files.entries) {
       String key = entry.key;
       dynamic value = entry.value;
 
-      if (value is List<File>) {
-        for (var file in value) {
+      if (value is List<File?>) {
+        for (var file in value.where((file) => file != null).cast<File>()) {
           request.files.add(await http.MultipartFile.fromPath(key, file.path));
         }
-      } else if (value is File) {
-        request.files.add(await http.MultipartFile.fromPath(key, value.path));
+      } else if (value is File?) {
+        if (value != null) {
+          request.files.add(await http.MultipartFile.fromPath(key, value.path));
+        }
       }
     }
 
-    request.fields.addAll(data);
+      request.fields.addAll(data);
 
-    var response = await request.send();
-    return http.Response.fromStream(response);
-  } catch (e) {
-    logData(message: "Exeption $e");
-    rethrow;
+      var response = await request.send();
+      return http.Response.fromStream(response);
+    } catch (e) {
+      logData(message: "Exeption $e");
+      rethrow;
+    }
   }
-}
-
-
 }

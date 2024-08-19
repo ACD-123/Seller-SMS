@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -280,4 +281,10 @@ class AuthenticationController extends GetxController {
       changepasswordloading.value = false;
     }
   }
+////////signout
+signout(){
+   LocalStorage().remove("istrustedseller");
+   LocalStorage().remove("token");
+   Get.offAllNamed(RouteConstants.loginscreen);
+}
 }

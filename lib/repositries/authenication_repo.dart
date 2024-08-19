@@ -80,7 +80,7 @@ class AuthRepo extends GetxService {
           showSuccessSnackbar(message: "Email Verified");
           Get.toNamed(RouteConstants.changepassword,arguments: email);
         }else{
-          showSuccessDialogAndNavigateToLogin(context, popupmessage);
+          showSuccessDialogAndNavigateToLogin(context, popupmessage,RouteConstants.loginscreen);
         }
        
       } else {
@@ -152,7 +152,11 @@ class AuthRepo extends GetxService {
          Get.offAllNamed(RouteConstants.selerwelcome);
         showSuccessSnackbar(message: "Login");
          final token = jsonDecode(res.body)['data']['token'];
+          final istrustedseller = jsonDecode(res.body)['data']['is_trusted_seller'];
+       istrustedseller == false ?    Get.offAllNamed(RouteConstants.selerwelcome):
+       Get.offAllNamed(RouteConstants.sellerdashboard);
          LocalStorage().setString("token", token);
+         LocalStorage().setBool("istrustedseller", istrustedseller);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -180,7 +184,7 @@ class AuthRepo extends GetxService {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.changepassword, data: mapData);
       if (res.statusCode == 200) {
-       showSuccessDialogAndNavigateToLogin(context, 'Password Successfully Setup');
+       showSuccessDialogAndNavigateToLogin(context, 'Password Successfully Setup',RouteConstants.loginscreen);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);

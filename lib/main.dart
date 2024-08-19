@@ -9,6 +9,7 @@ import 'services/dependencies.dart' as dep;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await dep.init();
   await LocalStorage().init();
   runApp(const MyApp());

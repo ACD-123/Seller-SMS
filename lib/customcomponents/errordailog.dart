@@ -19,7 +19,7 @@ showSuccessSnackbar({required String message}) {
       colorText: Colors.white);
 }
 
-void showSuccessDialogAndNavigateToLogin(context, String message) {
+void showSuccessDialogAndNavigateToLogin(context, String message,String routename) {
   Get.dialog(
     WhiteCustomPopupDialog(
       message: message,
@@ -27,7 +27,7 @@ void showSuccessDialogAndNavigateToLogin(context, String message) {
     ),
   );
   Future.delayed(Duration(seconds: 2), () {
-    Get.offAllNamed(RouteConstants.loginscreen);
+    Get.offAllNamed(routename);
   });
 }
 

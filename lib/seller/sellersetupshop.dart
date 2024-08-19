@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
-import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
@@ -20,6 +20,8 @@ class SellerSetupShop extends StatefulWidget {
 
 class _SellerSetupShopState extends State<SellerSetupShop> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+   final authcontroller =
+      Get.put(AuthenticationController(authRepo: Get.find()));
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -98,6 +100,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                         color: Color(0xffD4D4D4),
                       )),
                   child: TextFormField(
+                    controller: storecontroller.createaboutshop.value,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (v) {
                       if (v!.isEmpty) {
@@ -434,7 +437,8 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                 SizedBox(
                   height: 4.h,
                 ),
-                custombutton(
+               Obx(() => 
+              storecontroller.sellercreateshoploading.value ? Center(child: customcircularprogress(),) :  custombutton(
                     hinttext: "Create",
                     ontap: () {
                       if (formKey.currentState!.validate()) {
@@ -448,9 +452,16 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                     null
                             ? showErrrorSnackbar(
                                 message: "Please Fill All Fields")
-                            : Get.toNamed(RouteConstants.sellerdashboard);
+                            : storecontroller.sellerCreateShop(
+                              context: context, 
+                              address: authcontroller.signupstreetaddres.value.toString(), 
+                              city: authcontroller.signupcitycontroller.value.text.toString(), 
+                              state: authcontroller.signupstateprovincecontroller.value.text.toString(), 
+                              country: authcontroller.signupcountryregioncontroller.value.text.toString(), 
+                              zipcode: authcontroller.signupzipcodecontroller.value.text.toString());
                       }
-                    }),
+                    }), 
+              ),
                 SizedBox(
                   height: 2.h,
                 ),

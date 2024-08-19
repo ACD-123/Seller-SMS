@@ -7,6 +7,7 @@ import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/custom_textformfield.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
 class SellerCreateShopScreen extends StatefulWidget {
   const SellerCreateShopScreen({super.key});
@@ -17,7 +18,8 @@ class SellerCreateShopScreen extends StatefulWidget {
 
 class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
-  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
+  final authcontroller =
+      Get.put(AuthenticationController(authRepo: Get.find()));
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -27,7 +29,13 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
     authcontroller.signupcountryregioncontroller.value.clear();
     authcontroller.signupcitycontroller.value.clear();
     authcontroller.signupzipcodecontroller.value.clear();
+    authcontroller.signupstateprovincecontroller.value.clear();
+    storecontroller.phonenumbercontroller.value.clear();
+    storecontroller.shopnamecontroller.value.clear();
+    storecontroller.shopregistrationnumcontroller.value.clear();
+    storecontroller.whatyousellcontroller.value.clear();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,6 +125,7 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                 child: Column(
                   children: [
                     customtextformfield(
+                        controller: storecontroller.shopnamecontroller.value,
                         hinttext: "Business Name",
                         validator: (v) {
                           if (v!.isEmpty) {
@@ -166,6 +175,7 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                       height: 1.5.h,
                     ),
                     customtextformfield(
+                        controller: storecontroller.whatyousellcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
                             return "Please Enter Sell";
@@ -177,6 +187,7 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                       height: 1.5.h,
                     ),
                     customtextformfield(
+                        controller: storecontroller.shopregistrationnumcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
                             return "Please Enter ID";
@@ -187,65 +198,72 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                     SizedBox(
                       height: 1.5.h,
                     ),
-                    customtextformfield(
-                        validator: (v) {
-                          if (v!.isEmpty) {
-                            return "Please Enter Email";
-                          } else if (!v.isEmail) {
-                            return 'Invalid Email';
-                          }
-                          return null;
-                        },
-                        hinttext: "Email"),
-                    SizedBox(
-                      height: 1.5.h,
-                    ),
-                    Obx(() => customtextformfield(
-                       controller:  authcontroller.signupstreetaddrescontroller.value,
-                        validator: (v) {
-                          if (authcontroller.signupstreetaddres.value.isEmpty) {
-                            return "Please Enter Street Address";
-                          }
-                          return null;
-                        },
-                        hinttext: authcontroller.signupstreetaddres.value.isEmpty
-                              ? 'Street Address'
-                              : authcontroller.signupstreetaddres.value),),
+                    // customtextformfield(
+                    //     validator: (v) {
+                    //       if (v!.isEmpty) {
+                    //         return "Please Enter Email";
+                    //       } else if (!v.isEmail) {
+                    //         return 'Invalid Email';
+                    //       }
+                    //       return null;
+                    //     },
+                    //     hinttext: "Email"),
+                    // SizedBox(
+                    //   height: 1.5.h,
+                    // ),
                     Obx(
-                    () {
-                      if (authcontroller.places.isNotEmpty) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: authcontroller.places.length,
-                          itemBuilder: (context, index) {
-                            final place = authcontroller.places[index];
-                            return ListTile(
-                              title: Text(place['description']),
-                              onTap: () {
-                                authcontroller
-                                    .setSelectedPlace(place['place_id']);
-                                authcontroller.signupstreetaddres.value = place['description'];
-                                authcontroller
-                                    .signupstreetaddrescontroller.value
-                                    .clear();
-                                authcontroller.places.clear();
-                              },
-                            );
+                      () => customtextformfield(
+                          controller:
+                              authcontroller.signupstreetaddrescontroller.value,
+                          validator: (v) {
+                            if (authcontroller
+                                .signupstreetaddres.value.isEmpty) {
+                              return "Please Enter Street Address";
+                            }
+                            return null;
                           },
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
+                          hinttext:
+                              authcontroller.signupstreetaddres.value.isEmpty
+                                  ? 'Street Address'
+                                  : authcontroller.signupstreetaddres.value),
+                    ),
+                    Obx(
+                      () {
+                        if (authcontroller.places.isNotEmpty) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: authcontroller.places.length,
+                            itemBuilder: (context, index) {
+                              final place = authcontroller.places[index];
+                              return ListTile(
+                                title: Text(place['description']),
+                                onTap: () {
+                                  authcontroller
+                                      .setSelectedPlace(place['place_id']);
+                                  authcontroller.signupstreetaddres.value =
+                                      place['description'];
+                                  authcontroller
+                                      .signupstreetaddrescontroller.value
+                                      .clear();
+                                  authcontroller.places.clear();
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
                     SizedBox(
                       height: 1.5.h,
                     ),
-                    
+
                     customtextformfield(
-                      controller:  authcontroller.signupcountryregioncontroller.value,
-                       enabled: false,
-                      hinttext: "Country"),
+                        controller:
+                            authcontroller.signupcountryregioncontroller.value,
+                        enabled: false,
+                        hinttext: "Country"),
                     SizedBox(
                       height: 1.5.h,
                     ),
@@ -253,19 +271,20 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          
                           width: 45.w,
                           child: customtextformfield(
-                            controller:  authcontroller.signupcitycontroller.value,
-                            enabled: false,
-                            hinttext: "City"),
+                              controller:
+                                  authcontroller.signupcitycontroller.value,
+                              enabled: false,
+                              hinttext: "City"),
                         ),
                         Container(
                           width: 45.w,
                           child: customtextformfield(
-                            controller:  authcontroller.signupzipcodecontroller.value,
-                             enabled: false,
-                            hinttext: "Zip Code"),
+                              controller:
+                                  authcontroller.signupzipcodecontroller.value,
+                              enabled: false,
+                              hinttext: "Zip Code"),
                         )
                       ],
                     ),
@@ -275,19 +294,19 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                     custombutton(
                         hinttext: "Next",
                         ontap: () {
-                          // if (formKey.currentState!.validate()) {
-                          //   if (storecontroller
-                          //           .sellercreateshopuploadedprofileImage
-                          //           .value ==
-                          //       null || storecontroller
-                          //   .phonenumbercontroller.value.text.isEmpty ) {
-                          //     showErrrorSnackbar(
-                          //         message: "Please fill all fields ");
-                          //   } else {
-                          //     Get.toNamed(RouteConstants.sellersetupshop);
-                          //   }
-                          // }
-                           Get.toNamed(RouteConstants.sellersetupshop);
+                          if (formKey.currentState!.validate()) {
+                            if (storecontroller
+                                        .sellercreateshopuploadedprofileImage
+                                        .value ==
+                                    null ||
+                                storecontroller
+                                    .phonenumbercontroller.value.text.isEmpty) {
+                              showErrrorSnackbar(
+                                  message: "Please fill all fields ");
+                            } else {
+                              Get.toNamed(RouteConstants.sellersetupshop);
+                            }
+                          }
                         })
                   ],
                 ),

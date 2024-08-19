@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/authcontroller.dart';
 // import 'package:sms/constants/route_constants.dart';
 // import 'package:sms/controller/storecontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/custombutton.dart';
 
 class SellerDashboardScreen extends StatefulWidget {
   const SellerDashboardScreen({super.key});
@@ -15,6 +18,16 @@ class SellerDashboardScreen extends StatefulWidget {
 
 class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    storecontroller.getSellerProfileData();
+    storecontroller.getSellerTotalSalesStats(storecontroller.todaysalesselectedmonth.value.toString());
+    storecontroller.getSellerItemsSoldStats(storecontroller.itemssoldselectedmonth.value.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,76 +38,95 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed(RouteConstants.sellerprofilescreen);
-                  },
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            CircleAvatar(
-                              radius: 25.sp,
-                              backgroundColor: Colors.white,
-                              backgroundImage: AssetImage(
-                                  'assets/images/sellerprofileimage.png'),
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 48,
-                              child: Container(
-                                width: 5.w,
-                                height: 3.h,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 2.07,
-                                        offset: Offset(0, 2.07),
-                                        color:
-                                            Color(0xff000000).withOpacity(0.25))
-                                  ],
-                                  color: Color(0xffFFFFFF),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  size: 13.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 1.w,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8, left: 8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                Obx(
+                  () => GestureDetector(
+                    onTap: () {
+                      Get.toNamed(RouteConstants.sellerprofilescreen);
+                    },
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Stack(
+                            clipBehavior: Clip.none,
                             children: [
-                              Text(
-                                'Mathew Wade',
-                                style: TextStyle(
-                                    color: Color(0xff2E3192),
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18.sp),
+                              CircleAvatar(
+                                radius: 25.sp,
+                                backgroundColor: Colors.white,
+                                backgroundImage: NetworkImage(
+                                  storecontroller
+                                        .getsellerprofiledata
+                                        .value == null || storecontroller
+                                        .getsellerprofiledata
+                                        .value!.data!.media!.isEmpty  ? AppConstants.noimage : 
+                                  storecontroller
+                                        .getsellerprofiledata
+                                        .value
+                                        ?.data
+                                        ?.media?.first.originalUrl ??
+                                    AppConstants.noimage),
                               ),
-                              SizedBox(
-                                width: 1.w,
-                              ),
-                              Text(
-                                'Hello Mathew',
-                                style: TextStyle(
-                                    color: Color(0xff2E3192),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15.sp),
+                              Positioned(
+                                right: 0,
+                                top: 48,
+                                child: Container(
+                                  width: 5.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 2.07,
+                                          offset: Offset(0, 2.07),
+                                          color: Color(0xff000000)
+                                              .withOpacity(0.25))
+                                    ],
+                                    color: Color(0xffFFFFFF),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    size: 13.sp,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        )
-                      ],
+                          SizedBox(
+                            width: 1.w,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8, left: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  storecontroller
+                                        .getsellerprofiledata
+                                        .value
+                                        ?.data?.name ??
+                                      "",
+                                  style: TextStyle(
+                                      color: Color(0xff2E3192),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18.sp),
+                                ),
+                                SizedBox(
+                                  width: 1.w,
+                                ),
+                                Text(
+                                  'Hello ${storecontroller
+                                        .getsellerprofiledata
+                                        .value
+                                        ?.data?.name ?? ""}',
+                                  style: TextStyle(
+                                      color: Color(0xff2E3192),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15.sp),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -116,25 +148,25 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 25, top: 17, right: 20, bottom: 17),
-                    child: Column(
+                    child: Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 2.h,
-                          child: Obx(
-                            () => DropdownButton<String>(
+                          child:  DropdownButton<String>(
                               value:
                                   storecontroller.todaysalesselectedmonth.value,
                               onChanged: (newValue) {
                                 storecontroller.todaysalesselectedmonth.value =
                                     newValue!;
+                                storecontroller.getSellerTotalSalesStats(newValue);
                               },
                               items:
-                                  storecontroller.selectmonthslist.map((bank) {
+                                  storecontroller.selectmonthslist.map((months) {
                                 return DropdownMenuItem<String>(
-                                  value: bank,
+                                  value: months,
                                   child: Text(
-                                    bank,
+                                    months,
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       color: Color(0xffFFFFFF),
@@ -150,7 +182,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                               ),
                               dropdownColor: Color(0xff1375EA),
                             ),
-                          ),
+                          
                         ),
                         SizedBox(
                           height: 1.5.h,
@@ -169,14 +201,14 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '\$500.90',
+                                  '\$${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
                                   style: TextStyle(
                                       color: Color(0xffFFFFFF),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 25.sp),
                                 ),
                                 Text(
-                                  '+15% month over month',
+                                  '+${storecontroller.getsellertotalsalesstats.value?.data?.percentageGrowth ?? ""}% month over month',
                                   style: TextStyle(
                                       color: Color(0xffFFFFFF),
                                       // fontWeight: FontWeight.w500,
@@ -191,7 +223,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                           ],
                         )
                       ],
-                    ),
+                    ),)
                   ),
                 ),
                 SizedBox(
@@ -213,18 +245,18 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 25, top: 17, right: 20, bottom: 15),
-                    child: Column(
+                    child: Obx(() => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 2.h,
-                          child: Obx(
-                            () => DropdownButton<String>(
+                          child: DropdownButton<String>(
                               value:
                                   storecontroller.itemssoldselectedmonth.value,
                               onChanged: (newValue) {
                                 storecontroller.itemssoldselectedmonth.value =
                                     newValue!;
+                                    storecontroller.getSellerItemsSoldStats(newValue);
                               },
                               items:
                                   storecontroller.selectmonthslist.map((bank) {
@@ -246,7 +278,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                                 size: 17.sp,
                               ),
                             ),
-                          ),
+                          
                         ),
                         SizedBox(
                           height: 1.5.h,
@@ -265,14 +297,14 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '78',
+                                storecontroller.getselleritemssoldstats.value?.data?.totalProductsSoldCurrentMonth.toString() ??   '',
                                   style: TextStyle(
                                       color: Color(0xff2E3192),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 25.sp),
                                 ),
                                 Text(
-                                  '+15% month over month',
+                                  '+${ storecontroller.getselleritemssoldstats.value?.data?.percentageGrowth.toString() ??   ''}% month over month',
                                   style: TextStyle(
                                       color: Color(0xff828282),
                                       // fontWeight: FontWeight.w500,
@@ -288,7 +320,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                           ],
                         )
                       ],
-                    ),
+                    ),)
                   ),
                 ),
                 SizedBox(
@@ -355,6 +387,11 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                 SizedBox(
                   height: 2.h,
                 ),
+                 custombutton(
+                    hinttext: "Sign Out",
+                    ontap: () {
+                     authcontroller.signout();
+                    }),
               ],
             ),
           ),

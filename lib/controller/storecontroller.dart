@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,9 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
 import 'package:smsseller/models/selectcategory_model.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/repositries/storerepo.dart';
-// import 'package:sms/views/seller/sellerchatlistscreen.dart';
+import 'package:smsseller/models/selleritemssoldstats_model.dart';
+import 'package:smsseller/models/sellerprofiledata_model.dart';
+import 'package:smsseller/models/sellershopprofiledata_model.dart';
+import 'package:smsseller/models/sellertotalsalestats_model.dart';
 import 'package:smsseller/repositries/storerepo.dart';
 import 'package:smsseller/seller/sellerchatlistscreen.dart';
 
@@ -23,6 +25,8 @@ class StoreController extends GetxController {
       getCategoriesSearchbykey(
           searchcategorykeycontroller.value.text.toString());
     });
+    todaysalesselectedmonth.value = selectmonthslist[getCurrentMonthIndex()];
+    itemssoldselectedmonth.value = selectmonthslist[getCurrentMonthIndex()];
   }
 
 ///////////seller createshop profile image
@@ -70,6 +74,7 @@ class StoreController extends GetxController {
   }
 
   ///////////create bank dropdown list
+
   var selectedbank;
   final List<String> selectbanklist = [
     "Bank of America",
@@ -78,7 +83,12 @@ class StoreController extends GetxController {
   ];
 
   ///////////seller dashboard months dropdown list
-  var todaysalesselectedmonth = "January".obs;
+  int getCurrentMonthIndex() {
+    final now = DateTime.now();
+    return now.month - 1;
+  }
+
+  RxString todaysalesselectedmonth = ''.obs;
   final List<String> selectmonthslist = [
     'January',
     'February',
@@ -94,7 +104,7 @@ class StoreController extends GetxController {
     'December'
   ];
 
-  var itemssoldselectedmonth = "January".obs;
+  var itemssoldselectedmonth = "".obs;
 
   ////////////////seller order history container selection logic
   RxInt issellerselectedOrdercount = 1.obs;
@@ -232,50 +242,6 @@ class StoreController extends GetxController {
     }
   }
 
-///////////seller  profile screen image
-  var sellershopuploadedprofileImage = Rx<File?>(null);
-
-  void sellershopprofileImage(File? image) {
-    sellershopuploadedprofileImage.value = image;
-  }
-
-  Future<void> uploadsellershopprofileImage(BuildContext context) async {
-    final picker = ImagePicker();
-    final pickedImage = await showDialog<ImageSource>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Select Image Source"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                GestureDetector(
-                  child: const Text("Gallery"),
-                  onTap: () {
-                    Navigator.of(context).pop(ImageSource.gallery);
-                  },
-                ),
-                const SizedBox(height: 20),
-                GestureDetector(
-                  child: const Text("Camera"),
-                  onTap: () {
-                    Navigator.of(context).pop(ImageSource.camera);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    if (pickedImage != null) {
-      final pickedFile = await picker.pickImage(source: pickedImage);
-      if (pickedFile != null) {
-        sellershopprofileImage(File(pickedFile.path));
-      }
-    }
-  }
-
 /////////////////////seller setup shop cover image
 
   var sellersetupshopuploadedcoverImage = Rx<File?>(null);
@@ -331,15 +297,13 @@ class StoreController extends GetxController {
     },
     {"title": "DSLR Camera", "image": 'assets/images/homecatgeoryicon5.png'},
   ].obs;
-  
 
 /////////////////////seller setup shop add banner  images
 
   var sellersetupshopuploadedbannerimages = RxList<File?>([]);
- void setupshopremovebannerImage(int index) {
-   
-      sellersetupshopuploadedbannerimages.removeAt(index);
-    }
+  void setupshopremovebannerImage(int index) {
+    sellersetupshopuploadedbannerimages.removeAt(index);
+  }
 
   Future<void> uploadsellersetupshopbannerimages(BuildContext context) async {
     final picker = ImagePicker();
@@ -485,6 +449,7 @@ class StoreController extends GetxController {
       }
     }
   }
+
 ///////////////get categories searchbykey
   final searchcategorykeycontroller = TextEditingController().obs;
   final Rx<CategoriesSearchByKeyModel?> categoriesSearchbykey =
@@ -493,9 +458,9 @@ class StoreController extends GetxController {
   getCategoriesSearchbykey(String key) async {
     try {
       if (key.isEmpty) {
-      categoriesSearchbykey.value = null;
-      return;
-    }
+        categoriesSearchbykey.value = null;
+        return;
+      }
       categoriesSearchbykeyloading(true);
       await storeRepo.getCategoriessearchbykey(key.toString()).then((value) {
         categoriesSearchbykey.value = value;
@@ -507,48 +472,51 @@ class StoreController extends GetxController {
   }
 
 ///////select category
-RxList<SelectCategory> createshopselectedCategories = <SelectCategory>[].obs;
- RxList<int> createshopselectedCategoryIds = <int>[].obs;
-   void sellersetupshopremoveCategory(int index) {
+  RxList<SelectCategory> createshopselectedCategories = <SelectCategory>[].obs;
+  RxList<int> createshopselectedCategoryIds = <int>[].obs;
+  void sellersetupshopremoveCategory(int index) {
     createshopselectedCategories.removeAt(index);
   }
-void sellersetupshopremoveCategoryIds(int index) {
+
+  void sellersetupshopremoveCategoryIds(int index) {
     createshopselectedCategoryIds.removeAt(index);
   }
+
 /////////////sellercreateshop api
   final phonenumbercontroller = TextEditingController().obs;
-   final shopnamecontroller = TextEditingController().obs;
-    final whatyousellcontroller = TextEditingController().obs;
-    final shopregistrationnumcontroller = TextEditingController().obs;
+  final shopnamecontroller = TextEditingController().obs;
+  final whatyousellcontroller = TextEditingController().obs;
+  final shopregistrationnumcontroller = TextEditingController().obs;
+  final createaboutshop = TextEditingController().obs;
   final createshopphonecode = ''.obs;
   final RxBool sellercreateshoploading = false.obs;
- Future<void> sellerCreateShop({
+  Future<void> sellerCreateShop({
     required BuildContext context,
     required String address,
-      required String city,
-      required String state,
-        required String country,
-        required String zipcode,
+    required String city,
+    required String state,
+    required String country,
+    required String zipcode,
   }) async {
     try {
       sellercreateshoploading.value = true;
       await storeRepo.createsellershop(
-        context: context, 
-        name: shopnamecontroller.value.text.toString(), 
-        address: address, 
-        city: city, 
-        state: state, 
-        country: country, 
-        zipcode: zipcode, 
-        phonecode:createshopphonecode.toString(), 
-        phonenumber: phonenumbercontroller.value.text.toString(), 
-        whatyousell: whatyousellcontroller.value.text.toString(), 
-        registrationnumber: shopnamecontroller.value.text.toString(), 
-        description: "", 
-        categories: createshopselectedCategoryIds, 
-        mainimage: sellercreateshopuploadedprofileImage.value, 
-        coverimage: sellersetupshopuploadedcoverImage.value,
-         bannersimages: sellersetupshopuploadedbannerimages);
+          context: context,
+          name: shopnamecontroller.value.text.toString(),
+          address: address,
+          city: city,
+          state: state,
+          country: country,
+          zipcode: zipcode,
+          phonecode: createshopphonecode.toString(),
+          phonenumber: phonenumbercontroller.value.text.toString(),
+          whatyousell: whatyousellcontroller.value.text.toString(),
+          registrationnumber: shopnamecontroller.value.text.toString(),
+          description: createaboutshop.value.text.toString(),
+          categories: createshopselectedCategoryIds,
+          mainimage: sellercreateshopuploadedprofileImage.value,
+          coverimage: sellersetupshopuploadedcoverImage.value,
+          bannersimages: sellersetupshopuploadedbannerimages);
 
       sellercreateshoploading.value = false;
     } finally {
@@ -556,8 +524,165 @@ void sellersetupshopremoveCategoryIds(int index) {
     }
   }
 
+///////////////get seller shop profile data
+  final Rx<SellerShopProfileData?> getsellershopprofiledata =
+      Rx<SellerShopProfileData?>(null);
+  final RxBool getsellershopprofiledataloading = false.obs;
+  getSellerShopProfileData() async {
+    try {
+      getsellershopprofiledataloading(true);
+      await storeRepo.getSellerShopProfileData().then((value) {
+        getsellershopprofiledata.value = value;
+        getsellershopprofiledataloading(false);
+      });
+    } catch (e) {
+      getsellershopprofiledataloading(false);
+    }
+  }
+
+///////////////get seller profile data
+  final Rx<SellerProfileData?> getsellerprofiledata =
+      Rx<SellerProfileData?>(null);
+  final RxBool getsellerprofiledataloading = false.obs;
+  getSellerProfileData() async {
+    try {
+      getsellerprofiledataloading(true);
+      await storeRepo.getSellerProfileData().then((value) {
+        getsellerprofiledata.value = value;
+        getsellerprofiledataloading(false);
+      });
+    } catch (e) {
+      getsellerprofiledataloading(false);
+    }
+  }
+
+///////////seller  profile screen image
+  var sellershopuploadedprofileImage = Rx<File?>(null);
+
+  void sellershopprofileImage(File? image) {
+    sellershopuploadedprofileImage.value = image;
+  }
+
+  Future<void> uploadsellershopprofileImage(BuildContext context) async {
+    final picker = ImagePicker();
+    final pickedImage = await showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Select Image Source"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Text("Gallery"),
+                  onTap: () {
+                    Navigator.of(context).pop(ImageSource.gallery);
+                  },
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  child: const Text("Camera"),
+                  onTap: () {
+                    Navigator.of(context).pop(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (pickedImage != null) {
+      final pickedFile = await picker.pickImage(source: pickedImage);
+      if (pickedFile != null) {
+        sellershopprofileImage(File(pickedFile.path));
+      }
+    }
+  }
+
+///////////update seller profile data
+
+  final updatesellerprofilephonenumber = TextEditingController().obs;
+  final updatesellerprofilename = TextEditingController().obs;
+  final updatesellerprofilephonecode = ''.obs;
+
+  final RxBool updateSellerProfileDataloading = false.obs;
+  Future<void> updateSellerProfileData({
+    required BuildContext context,
+    required String address,
+    required String city,
+    required String state,
+    required String country,
+    required String zipcode,
+  }) async {
+    try {
+      updateSellerProfileDataloading.value = true;
+      await storeRepo
+          .updatesellerprofiledata(
+              context: context,
+              name: updatesellerprofilename.value.text.isEmpty
+                  ? getsellerprofiledata.value?.data?.name.toString() ?? ""
+                  : updatesellerprofilename.value.text.toString(),
+              address: address.isEmpty
+                  ? getsellerprofiledata.value?.data?.address.toString() ?? ""
+                  : address,
+              city: city.isEmpty
+                  ? getsellerprofiledata.value?.data?.city.toString() ?? ""
+                  : city,
+              state: state.isEmpty
+                  ? getsellerprofiledata.value?.data?.state.toString() ?? ""
+                  : state,
+              country: country.isEmpty
+                  ? getsellerprofiledata.value?.data?.country.toString() ?? ""
+                  : country,
+              zipcode: zipcode.isEmpty
+                  ? getsellerprofiledata.value?.data?.zipCode.toString() ?? ""
+                  : zipcode,
+              phonecode: updatesellerprofilephonecode.value.isEmpty
+                  ? getsellerprofiledata.value?.data?.phoneCode.toString() ?? ""
+                  : updatesellerprofilephonecode.toString(),
+              phonenumber: updatesellerprofilephonenumber.value.text.isEmpty
+                  ? getsellerprofiledata.value?.data?.phoneNumber.toString() ??
+                      ""
+                  : updatesellerprofilephonenumber.value.text.toString(),
+              profileimage: sellershopuploadedprofileImage.value)
+          .then((value) => getSellerProfileData());
+
+      updateSellerProfileDataloading.value = false;
+    } finally {
+      updateSellerProfileDataloading.value = false;
+    }
+  }
+
+///////////////get seller total sales stats
+  final Rx<SellerTotalSalesStatsModel?> getsellertotalsalesstats =
+      Rx<SellerTotalSalesStatsModel?>(null);
+  final RxBool getsellertotalsalesstatsloading = false.obs;
+  getSellerTotalSalesStats(String month) async {
+    try {
+      getsellertotalsalesstatsloading(true);
+      await storeRepo.getSellerTotalSalesStats(month).then((value) {
+        getsellertotalsalesstats.value = value;
+        getsellertotalsalesstatsloading(false);
+      });
+    } catch (e) {
+      getsellertotalsalesstatsloading(false);
+    }
+  }
+
+///////////////get seller items sold stats
+  final Rx<SellerItemsSoldStatsModel?> getselleritemssoldstats =
+      Rx<SellerItemsSoldStatsModel?>(null);
+  final RxBool getselleritemssoldstatsloading = false.obs;
+  getSellerItemsSoldStats(String month) async {
+    try {
+      getselleritemssoldstatsloading(true);
+      await storeRepo.getSellerItemsSoldStats(month).then((value) {
+        getselleritemssoldstats.value = value;
+        getselleritemssoldstatsloading(false);
+      });
+    } catch (e) {
+      getselleritemssoldstatsloading(false);
+    }
+  }
 }
-
-
-
-
