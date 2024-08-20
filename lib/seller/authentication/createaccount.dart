@@ -149,6 +149,7 @@ class _SignupState extends State<Signup> {
                     initialCountryCode: 'KE',
                     onChanged: (phone) {
                       logincontroller.signupphonecode.value = phone.countryCode;
+                      logincontroller.signupphonecountrycode.value = phone.countryISOCode;
                     },
                   ),
                   SizedBox(
@@ -334,6 +335,7 @@ class _SignupState extends State<Signup> {
                                     ? showErrrorSnackbar(
                                         message: "Please Enter Phone Number")
                                     : logincontroller.Signup(
+                                      phonecountrycode: logincontroller.signupphonecountrycode.value.toString(),
                                         name: fullnamecontroller.value.text
                                             .toString(),
                                         email: emailTextEditingContoller

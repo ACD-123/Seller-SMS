@@ -14,6 +14,10 @@ class AppConstants {
     static const updatesellerprofiledata = "user/update-profile";
     static const getsellertotalsalestats = "order/seller-stats?month=";
     static const getselleritemssoldstats = "order/seller-product-stats?month=";
+        static const getsellercategorieslist = "seller/get-seller-category";
+         static const getbrandslist = "brands?page_size=9999999999";
+         static const getcategorywiseattributes = "categories/attributes/";
+          static const createproduct = "products/store";
 }
 
 

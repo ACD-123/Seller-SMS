@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -489,6 +489,7 @@ class StoreController extends GetxController {
   final shopregistrationnumcontroller = TextEditingController().obs;
   final createaboutshop = TextEditingController().obs;
   final createshopphonecode = ''.obs;
+    final createshopphonecountrycode = ''.obs;
   final RxBool sellercreateshoploading = false.obs;
   Future<void> sellerCreateShop({
     required BuildContext context,
@@ -508,7 +509,8 @@ class StoreController extends GetxController {
           state: state,
           country: country,
           zipcode: zipcode,
-          phonecode: createshopphonecode.toString(),
+          phonecountrycode: createshopphonecountrycode.value.toString(),
+          phonecode: createshopphonecode.value.toString(),
           phonenumber: phonenumbercontroller.value.text.toString(),
           whatyousell: whatyousellcontroller.value.text.toString(),
           registrationnumber: shopnamecontroller.value.text.toString(),
@@ -605,6 +607,7 @@ class StoreController extends GetxController {
   final updatesellerprofilephonenumber = TextEditingController().obs;
   final updatesellerprofilename = TextEditingController().obs;
   final updatesellerprofilephonecode = ''.obs;
+  final updatesellerprofilephonecountrycode = ''.obs;
 
   final RxBool updateSellerProfileDataloading = false.obs;
   Future<void> updateSellerProfileData({
@@ -620,6 +623,9 @@ class StoreController extends GetxController {
       await storeRepo
           .updatesellerprofiledata(
               context: context,
+              phonecountrycode: updatesellerprofilephonecountrycode.value.isEmpty
+                  ? getsellerprofiledata.value?.data?.phonecountrycode.toString() ?? ""
+                  : updatesellerprofilephonecountrycode.value.toString(),
               name: updatesellerprofilename.value.text.isEmpty
                   ? getsellerprofiledata.value?.data?.name.toString() ?? ""
                   : updatesellerprofilename.value.text.toString(),
@@ -640,7 +646,7 @@ class StoreController extends GetxController {
                   : zipcode,
               phonecode: updatesellerprofilephonecode.value.isEmpty
                   ? getsellerprofiledata.value?.data?.phoneCode.toString() ?? ""
-                  : updatesellerprofilephonecode.toString(),
+                  : updatesellerprofilephonecode.value.toString(),
               phonenumber: updatesellerprofilephonenumber.value.text.isEmpty
                   ? getsellerprofiledata.value?.data?.phoneNumber.toString() ??
                       ""
@@ -685,4 +691,9 @@ class StoreController extends GetxController {
       getselleritemssoldstatsloading(false);
     }
   }
+
+
+
+  
+
 }

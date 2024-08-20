@@ -46,7 +46,7 @@ dependencies:
   get: ^4.3.8
   http: ^1.0.1
   awesome_bottom_bar: ^1.2.4
-  # flutter_chips_input: ^1.9.1
+  flutter_rating_bar: any
   shared_preferences: ^2.2.2
   syncfusion_flutter_charts: ^20.2.42
   card_slider: ^1.0.5

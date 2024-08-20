@@ -203,7 +203,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                 // },
                                 controller: storecontroller
                                     .updatesellerprofilephonenumber.value,
-                        
+
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
@@ -232,10 +232,14 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                     .getsellerprofiledata
                                     .value
                                     ?.data
-                                    ?.phoneCode,
+                                    ?.phonecountrycode,
                                 onChanged: (phone) {
                                   storecontroller.updatesellerprofilephonecode
                                       .value = phone.countryCode;
+                                  
+                                  storecontroller
+                                      .updatesellerprofilephonecountrycode
+                                      .value = phone.countryISOCode;
                                 },
                               ),
                               SizedBox(

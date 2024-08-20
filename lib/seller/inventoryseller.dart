@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/customcomponents/customelevatedbutton.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/customelevatedbutton.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
 class InventorySeller extends StatefulWidget {
   const InventorySeller({super.key});
@@ -16,10 +19,15 @@ class InventorySeller extends StatefulWidget {
 class _InventorySellerState extends State<InventorySeller>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final productcontroller = Get.put(ProductController(productRepo: Get.find()));
+  final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
 
   @override
   void initState() {
     super.initState();
+    productcontroller.getsellerCategoriesList();
+    productcontroller.getBrandsList();
+    storecontroller.getSellerShopProfileData();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -188,78 +196,142 @@ class _InventorySellerState extends State<InventorySeller>
   Widget _buildHeaderContent() {
     return Column(
       children: [
-        Card(
-          elevation: 1,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    "assets/images/sellerfrontpic.png",
-                    width: 80,
-                    height: 80,
+        Obx(
+          () => storecontroller.getsellershopprofiledataloading.value
+              ? Center(
+                  child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 1.h),
+                  child: SizedBox(
+                    height: 3.h,
+                    width: 5.w,
+                    child: customcircularprogress(),
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.03,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "SMS Store",
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+                ))
+              : storecontroller.getsellershopprofiledata.value == null
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 1.h),
+                      child: const Center(child: Text("No Shop Data")),
+                    )
+                  : Card(
+                      elevation: 1,
+                      child: Container(
+                        width: Get.width,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  storecontroller
+                                          .getsellershopprofiledata
+                                          .value!
+                                          .data!
+                                          .sellerData!
+                                          .mainImage!
+                                          .isEmpty
+                                      ? AppConstants.noimage
+                                      : storecontroller
+                                              .getsellershopprofiledata
+                                              .value
+                                              ?.data
+                                              ?.sellerData
+                                              ?.mainImage ??
+                                          AppConstants.noimage,
+                                  width: 23.w,
+                                  height: 7.h,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.03,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          storecontroller
+                                                  .getsellershopprofiledata
+                                                  .value
+                                                  ?.data
+                                                  ?.sellerData
+                                                  ?.shopName ??
+                                              "",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Created On',
+                                          style: TextStyle(
+                                              fontSize: 14.sp,
+                                              color: Color(0xff838589)),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 1,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            RatingBarIndicator(
+                                              rating: storecontroller
+                                                      .getsellershopprofiledata
+                                                      .value
+                                                      ?.data
+                                                      ?.sellerData
+                                                      ?.ratingAsDouble ??
+                                                  0.0,
+                                              itemBuilder: (context, index) =>
+                                                  Icon(
+                                                Icons.star,
+                                                color: Color(0xffFFAD33),
+                                              ),
+                                              itemCount: 5,
+                                              itemSize: 16.sp,
+                                              direction: Axis.horizontal,
+                                            ),
+                                            Text(
+                                                "(${storecontroller.getsellershopprofiledata.value?.data?.sellerData?.ratingCount.toString() ?? ""})",
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                )),
+                                          ],
+                                        ),
+                                        Text(storecontroller
+                                                .getsellershopprofiledata
+                                                .value
+                                                ?.data
+                                                ?.sellerData
+                                                ?.joined
+                                                .toString() ??
+                                            "")
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Text('00 Followers')
-                        ],
+                        ),
                       ),
-                      SizedBox(
-                        height: 1,
-                      ),
-                      Row(
-                        children: [
-                          Row(
-                              children: List.generate(
-                                  5,
-                                  (index) => Icon(
-                                        Icons.star_purple500_sharp,
-                                        color: const Color(0xffFFAD33),
-                                        size: 16.sp,
-                                      ))),
-                          SizedBox(
-                            width: 0.5.w,
-                          ),
-                          Text('(65)',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                              )),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          Text('01/02/2024')
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+                    ),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.01,
@@ -268,29 +340,46 @@ class _InventorySellerState extends State<InventorySeller>
           padding: const EdgeInsets.only(left: 4),
           child: Row(
             children: [
-              Card(
-                elevation: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 10.h,
-                    width: 40.w,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Products',
-                          style: TextStyle(fontSize: 16),
+              Obx(
+                () => storecontroller.getsellershopprofiledataloading.value
+                    ? const SizedBox()
+                    : Card(
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            height: 10.h,
+                            width: 40.w,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Products',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                Text(
+                                  storecontroller
+                                              .getsellershopprofiledata.value ==
+                                          null
+                                      ? "No Products"
+                                      : storecontroller
+                                              .getsellershopprofiledata
+                                              .value
+                                              ?.data
+                                              ?.sellerData
+                                              ?.productCount
+                                              .toString() ??
+                                          "",
+                                  style: TextStyle(fontSize: 20.sp),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                        Text(
-                          '70',
-                          style: TextStyle(fontSize: 30),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 17.0, right: 2.0),
@@ -302,10 +391,6 @@ class _InventorySellerState extends State<InventorySeller>
                       textColor: Colors.white,
                       ontap: () {
                         Get.toNamed(RouteConstants.stepper);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => ReportSeller()),
-                        // );
                       },
                       fontSize: 14,
                       width: MediaQuery.of(context).size.width * 0.45,

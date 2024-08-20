@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-SellerShopProfileData sellerShopProfileDataFromJson(String str) =>
-    SellerShopProfileData.fromJson(json.decode(str));
+SellerShopProfileData sellerShopProfileDataFromJson(String str) => SellerShopProfileData.fromJson(json.decode(str));
 
-String sellerShopProfileDataToJson(SellerShopProfileData data) =>
-    json.encode(data.toJson());
+String sellerShopProfileDataToJson(SellerShopProfileData data) => json.encode(data.toJson());
 
 class SellerShopProfileData {
   bool? status;
@@ -17,18 +15,17 @@ class SellerShopProfileData {
     this.message,
   });
 
-  factory SellerShopProfileData.fromJson(Map<String, dynamic> json) =>
-      SellerShopProfileData(
-        status: json["status"],
-        data: json["data"] != null ? Data.fromJson(json["data"]) : null,
-        message: json["message"],
-      );
+  factory SellerShopProfileData.fromJson(Map<String, dynamic> json) => SellerShopProfileData(
+    status: json["status"],
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    message: json["message"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "data": data?.toJson(),
-        "message": message,
-      };
+    "status": status,
+    "data": data?.toJson(),
+    "message": message,
+  };
 }
 
 class Data {
@@ -41,16 +38,14 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        user: json["user"] != null ? User.fromJson(json["user"]) : null,
-        sellerData: json["sellerData"] != null
-            ? SellerData.fromJson(json["sellerData"])
-            : null,
-      );
+    user: json["user"] == null ? null : User.fromJson(json["user"]),
+    sellerData: json["sellerData"] == null ? null : SellerData.fromJson(json["sellerData"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "user": user?.toJson(),
-        "sellerData": sellerData?.toJson(),
-      };
+    "user": user?.toJson(),
+    "sellerData": sellerData?.toJson(),
+  };
 }
 
 class SellerData {
@@ -68,15 +63,20 @@ class SellerData {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? shopDescription;
-  String? sell;
+  dynamic sell;
   String? registrationNumber;
+  dynamic phoneCountryCode;
   String? coverImage;
-  String? mainImage;String? joined;
-  List<String>? banners;
-  List<Category>? category;
+  String? mainImage;
+  List<dynamic>? banners;
+  List<dynamic>? category;
+  String? joined;
   bool? isFavourite;
   int? favouriteCount;
   String? rating;
+  int? ratingCount;
+  int? productCount;
+  List<Media>? media;
 
   SellerData({
     this.id,
@@ -95,6 +95,7 @@ class SellerData {
     this.shopDescription,
     this.sell,
     this.registrationNumber,
+    this.phoneCountryCode,
     this.coverImage,
     this.mainImage,
     this.banners,
@@ -103,125 +104,104 @@ class SellerData {
     this.isFavourite,
     this.favouriteCount,
     this.rating,
+    this.ratingCount,
+    this.productCount,
+    this.media,
+    
   });
-
+double get ratingAsDouble {
+    if (rating == null || rating!.isEmpty) {
+      return 0.0; 
+    }
+    return double.tryParse(rating!) ?? 0.0;
+  }
   factory SellerData.fromJson(Map<String, dynamic> json) => SellerData(
-        id: json["id"],
-        userId: json["user_id"],
-        shopName: json["shop_name"],
-        phoneCode: json["phone_code"],
-        phoneNumber: json["phone_number"],
-        address: json["address"],
-        city: json["city"],
-        state: json["state"],
-        country: json["country"],
-        zipCode: json["zip_code"],
-        guid: json["guid"],
-        createdAt: json["created_at"] != null
-            ? DateTime.parse(json["created_at"])
-            : null,
-        updatedAt: json["updated_at"] != null
-            ? DateTime.parse(json["updated_at"])
-            : null,
-        shopDescription: json["shop_description"],
-        sell: json["sell"],
-        registrationNumber: json["registration_number"],
-        coverImage: json["cover_image"],
-        mainImage: json["main_image"],
-        banners: json["banners"] != null
-            ? List<String>.from(json["banners"].map((x) => x))
-            : null,
-        category: json["category"] != null
-            ? List<Category>.from(
-                json["category"].map((x) => Category.fromJson(x)))
-            : null,
-        isFavourite: json["is_favourite"],
-        joined: json["joined"],
-        favouriteCount: json["favourite_count"],
-        rating: json["rating"],
-      );
+    id: json["id"],
+    userId: json["user_id"],
+    shopName: json["shop_name"],
+    phoneCode: json["phone_code"],
+    phoneNumber: json["phone_number"],
+    address: json["address"],
+    city: json["city"],
+    state: json["state"],
+    country: json["country"],
+    zipCode: json["zip_code"],
+    guid: json["guid"],
+    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    shopDescription: json["shop_description"],
+    sell: json["sell"],
+    registrationNumber: json["registration_number"],
+    phoneCountryCode: json["phone_country_code"],
+    coverImage: json["cover_image"],
+    mainImage: json["main_image"],
+    banners: json["banners"] == null ? null : List<dynamic>.from(json["banners"].map((x) => x)),
+    category: json["category"] == null ? null : List<dynamic>.from(json["category"].map((x) => x)),
+    joined: json["joined"],
+    isFavourite: json["is_favourite"],
+    favouriteCount: json["favourite_count"],
+    rating: json["rating"],
+    ratingCount: json["rating_count"],
+    productCount: json["product_count"],
+    media: json["media"] == null ? null : List<Media>.from(json["media"].map((x) => Media.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "user_id": userId,
-        "shop_name": shopName,
-        "phone_code": phoneCode,
-        "phone_number": phoneNumber,
-        "address": address,
-        "city": city,
-        "state": state,
-        "country": country,
-        "zip_code": zipCode,
-        "guid": guid,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "shop_description": shopDescription,
-        "sell": sell,
-        "registration_number": registrationNumber,
-        "cover_image": coverImage,
-        "main_image": mainImage,
-        "banners": banners != null ? List<dynamic>.from(banners!) : null,
-        "category": category != null
-            ? List<dynamic>.from(category!.map((x) => x.toJson()))
-            : null,
-        "is_favourite": isFavourite,
-         "joined": joined,
-        "favourite_count": favouriteCount,
-        "rating": rating,
-      };
+    "id": id,
+    "user_id": userId,
+    "shop_name": shopName,
+    "phone_code": phoneCode,
+    "phone_number": phoneNumber,
+    "address": address,
+    "city": city,
+    "state": state,
+    "country": country,
+    "zip_code": zipCode,
+    "guid": guid,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "shop_description": shopDescription,
+    "sell": sell,
+    "registration_number": registrationNumber,
+    "phone_country_code": phoneCountryCode,
+    "cover_image": coverImage,
+    "main_image": mainImage,
+    "banners": banners == null ? [] : List<dynamic>.from(banners!.map((x) => x)),
+    "category": category == null ? [] : List<dynamic>.from(category!.map((x) => x)),
+    "joined": joined,
+    "is_favourite": isFavourite,
+    "favourite_count": favouriteCount,
+    "rating": rating,
+    "rating_count": ratingCount,
+    "product_count": productCount,
+    "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
+  };
 }
 
-class Category {
+class Media {
   int? id;
-  String? name;
-  String? description;
-  int? active;
-  String? guid;
-  dynamic parentId;
-  DateTime createdAt;
-  DateTime updatedAt;
+  String? originalUrl;
 
-  Category({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.active,
-    required this.guid,
-    this.parentId,
-    required this.createdAt,
-    required this.updatedAt,
+  Media({
+    this.id,
+    this.originalUrl,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) => Category(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"],
-        active: json["active"],
-        guid: json["guid"],
-        parentId: json["parent_id"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-      );
+  factory Media.fromJson(Map<String, dynamic> json) => Media(
+    id: json["id"],
+    originalUrl: json["original_url"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "active": active,
-        "guid": guid,
-        "parent_id": parentId,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-      };
+    "id": id,
+    "original_url": originalUrl,
+  };
 }
 
 class User {
   int? id;
   String? name;
   String? email;
-  DateTime emailVerifiedAt;
-  DateTime createdAt;
-  DateTime updatedAt;
   String? phoneCode;
   String? phoneNumber;
   String? address;
@@ -231,88 +211,65 @@ class User {
   String? zipCode;
   String? provider;
   dynamic accessToken;
-  int importantNotification;
-  int chatsNotification;
-  int buyingNotification;
-  int sellingNotification;
-  int isUser;
-  bool isTrustedSeller;
-  List<dynamic>? media;
+  int? isUser;
+  String? phoneCountryCode;
+  bool? isTrustedSeller;
+  List<Media>? media;
 
   User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.emailVerifiedAt,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.phoneCode,
-    required this.phoneNumber,
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.zipCode,
-    required this.provider,
+    this.id,
+    this.name,
+    this.email,
+    this.phoneCode,
+    this.phoneNumber,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.zipCode,
+    this.provider,
     this.accessToken,
-    required this.importantNotification,
-    required this.chatsNotification,
-    required this.buyingNotification,
-    required this.sellingNotification,
-    required this.isUser,
-    required this.isTrustedSeller,
+    this.isUser,
+    this.phoneCountryCode,
+    this.isTrustedSeller,
     this.media,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        name: json["name"],
-        email: json["email"],
-        emailVerifiedAt: DateTime.parse(json["email_verified_at"]),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        phoneCode: json["phone_code"],
-        phoneNumber: json["phone_number"],
-        address: json["address"],
-        city: json["city"],
-        state: json["state"],
-        country: json["country"],
-        zipCode: json["zip_code"],
-        provider: json["provider"],
-        accessToken: json["access_token"],
-        importantNotification: json["important_notification"],
-        chatsNotification: json["chats_notification"],
-        buyingNotification: json["buying_notification"],
-        sellingNotification: json["selling_notification"],
-        isUser: json["is_user"],
-        isTrustedSeller: json["is_trusted_seller"],
-        media: json["media"] != null
-            ? List<dynamic>.from(json["media"].map((x) => x))
-            : null,
-      );
+    id: json["id"],
+    name: json["name"],
+    email: json["email"],
+    phoneCode: json["phone_code"],
+    phoneNumber: json["phone_number"],
+    address: json["address"],
+    city: json["city"],
+    state: json["state"],
+    country: json["country"],
+    zipCode: json["zip_code"],
+    provider: json["provider"],
+    accessToken: json["access_token"],
+    isUser: json["is_user"],
+    phoneCountryCode: json["phone_country_code"],
+    isTrustedSeller: json["is_trusted_seller"],
+    media: json["media"] == null ? null : List<Media>.from(json["media"].map((x) => Media.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "email": email,
-        "email_verified_at": emailVerifiedAt.toIso8601String(),
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "phone_code": phoneCode,
-        "phone_number": phoneNumber,
-        "address": address,
-        "city": city,
-        "state": state,
-        "country": country,
-        "zip_code": zipCode,
-        "provider": provider,
-        "access_token": accessToken,
-        "important_notification": importantNotification,
-        "chats_notification": chatsNotification,
-        "buying_notification": buyingNotification,
-        "selling_notification": sellingNotification,
-        "is_user": isUser,
-        "is_trusted_seller": isTrustedSeller,
-        "media": media != null ? List<dynamic>.from(media!) : null,
-      };
+    "id": id,
+    "name": name,
+    "email": email,
+    "phone_code": phoneCode,
+    "phone_number": phoneNumber,
+    "address": address,
+    "city": city,
+    "state": state,
+    "country": country,
+    "zip_code": zipCode,
+    "provider": provider,
+    "access_token": accessToken,
+    "is_user": isUser,
+    "phone_country_code": phoneCountryCode,
+    "is_trusted_seller": isTrustedSeller,
+    "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
+  };
 }

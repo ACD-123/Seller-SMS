@@ -169,6 +169,8 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                       onChanged: (phone) {
                         storecontroller.createshopphonecode.value =
                             phone.countryCode;
+                             storecontroller.createshopphonecountrycode.value =
+                            phone.countryISOCode;
                       },
                     ),
                     SizedBox(

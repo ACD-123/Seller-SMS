@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/border/gf_border.dart';
 import 'package:getwidget/types/gf_border_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
-import 'package:smsseller/customcomponents/whitecustomdialogpopup.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
 class MyStepperApp extends StatefulWidget {
   @override
@@ -13,14 +16,15 @@ class MyStepperApp extends StatefulWidget {
 }
 
 class _MyStepperAppState extends State<MyStepperApp> {
+  final productcontroller = Get.put(ProductController(productRepo: Get.find()));
+  GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   int currentStep = 0;
   bool isSwitchOn = false;
   bool isSwitchOn1 = false;
   // Color? selectedColor; // Initially, no color is selected
   int? selectedOption = 1;
-  String? _selectedCountry; // Set your default country here
-  String? _selectedcompany; // Set your default country here
-  String? _selectedduration; // Set / Set your default country here
+
   // bool _isObscure2 = true;
   String? selectedCountry;
   String? selectedCity;
@@ -29,18 +33,6 @@ class _MyStepperAppState extends State<MyStepperApp> {
   // File? _image;
 
   get activecolor => null;
-
-  // Future<void> _getImageFromGalleryOrCamera() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(
-  //       source: ImageSource.gallery); // You can also use ImageSource.camera
-
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 
   int selectedSizeIndex = -1; // Initially, no size is selected
   List<String> cities = ["City 1", "City 2", "City 3"];
@@ -87,6 +79,21 @@ class _MyStepperAppState extends State<MyStepperApp> {
   final List<String> sizes = ['S', 'M', 'L', 'XL'];
   final List<String> colors = ['Red', 'Green', 'Blue', 'Black'];
   final List<String> brands = ['Brand A', 'Brand B', 'Brand C'];
+  @override
+  void initState() {
+    super.initState();
+    productcontroller.createproductselectedAttributes.clear();
+    productcontroller.createselectedcategoryattributesList.clear();
+    productcontroller.getcategoryattributes.value = null;
+    productcontroller.createproductuploadimages.clear();
+    productcontroller.createproductnamecontroller.value.clear();
+    productcontroller.createproductstockcontroller.value.clear();
+    productcontroller.createproductdescriptioncontroller.value.clear();
+    productcontroller.createproductsetpricecontroller.value.clear();
+    productcontroller.createproductsalepricecontroller.value.clear();
+    productcontroller.createproductbrand.value = '';
+    productcontroller.createproductcategory.value = '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +144,8 @@ class _MyStepperAppState extends State<MyStepperApp> {
             return Container(); // This will remove the default buttons
           },
           steps: <Step>[
-            // _customStep(0, "Product Condition"),
             _customStep2(0, "Product Specifications"),
             _customStep3(1, "Product Pricings"),
-            _customStep4(2, "Delivery Setup"),
           ],
         ));
   }
@@ -385,7 +390,6 @@ class _MyStepperAppState extends State<MyStepperApp> {
           ),
         ),
         SizedBox(height: 10),
-       
       ],
     );
   }
@@ -409,265 +413,534 @@ class _MyStepperAppState extends State<MyStepperApp> {
           ),
         ],
       ),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Describe Your Item',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.only(left: 40.0, top: 30, right: 50),
-              child: Container(
-                width: Get.width,
-                height: 90,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: GFBorder(
-                    dashedLine: [3, 4],
-                    type: GFBorderType.rect,
-                    color: Colors.black,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/images/uploadicon.png'),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          'Upload Images',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        )
-                      ],
-                    )),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.04,
-          ),
-          Row(children: [
-            Image.asset('assets/images/abc.png'),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.03,
-            ),
+      content: Form(
+        key: formKey1,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
-              'Add Minimum 5 Images Covering All Angles.',
-              style: TextStyle(fontSize: 9),
+              'Describe Your Item',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-          ]),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Product Name'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
+            GestureDetector(
+              onTap: () {
+                productcontroller.uploadcreateproductimages(context);
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 40.0, top: 30, right: 50),
+                child: Container(
+                  width: Get.width,
+                  height: 90,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: GFBorder(
+                      dashedLine: [3, 4],
+                      type: GFBorderType.rect,
+                      color: Colors.black,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/uploadicon.png'),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            'Upload Images',
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          )
+                        ],
+                      )),
+                ),
               ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
             ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Category'),
-          Column(
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              DropdownButtonFormField<String>(
+            SizedBox(
+              height: 1.h,
+            ),
+            Obx(() => productcontroller.createproductuploadimages.isEmpty
+                ? SizedBox()
+                : SizedBox(
+                    height: 10.h,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: productcontroller
+                                  .createproductuploadimages.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                final productimages = productcontroller
+                                    .createproductuploadimages[index];
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 1.w),
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          child: Image.file(
+                                            File(productimages?.path ?? ""),
+                                            fit: BoxFit.fill,
+                                            width: 25.w,
+                                            height: 8.h,
+                                          )),
+                                      Positioned(
+                                        right: -5,
+                                        top: -0,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            productcontroller
+                                                .createproductremoveimages(
+                                                    index);
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 13.sp,
+                                            backgroundColor: Color(0xff2E3192),
+                                            child: Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                              size: 16.sp,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ],
+                      ),
+                    ))),
+            SizedBox(
+              height: 1.h,
+            ),
+            Row(children: [
+              Image.asset('assets/images/abc.png'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.03,
+              ),
+              Text(
+                'Add Minimum 5 Images Covering All Angles.',
+                style: TextStyle(fontSize: 9),
+              ),
+            ]),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Text('Product Name'),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+            TextFormField(
+              controller: productcontroller.createproductnamecontroller.value,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(15),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                fillColor: Colors.white,
+                // hintText: 'Street Address',
+              ),
+              validator: (v) {
+                if (v!.isEmpty) {
+                  return 'Product Name can\'t be empty';
+                }
+                return null;
+              },
+              onSaved: (value) {},
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Text('Category'),
+            Column(
+              children: <Widget>[
+                SizedBox(height: 10.0),
+                DropdownButtonFormField<String>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) {
+                    if (v == null) {
+                      return 'Category can\'t be empty';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(12),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    fillColor: Colors.white,
+                    hintText: 'Select Category',
+                  ),
+                  value: productcontroller.createproductselectedcategory?.value,
+                  items: productcontroller.getsellercategorieslist.value?.data
+                      ?.map((categories) {
+                    return DropdownMenuItem<String>(
+                      value: categories.id.toString(),
+                      child: Text(categories.name.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      productcontroller.createproductcategory.value = value!;
+                      var selectedCategory = productcontroller
+                          .getsellercategorieslist.value?.data
+                          ?.firstWhere(
+                              (category) => category.id.toString() == value);
+                      productcontroller
+                          .getCategoryAttributes(selectedCategory?.guid ?? "");
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Obx(
+              () => Wrap(
+                spacing: 8.0,
+                children: productcontroller.createselectedcategoryattributesList
+                    .map((attribute) {
+                  final name = attribute['name'];
+                  final attributeId = attribute['attribute_id'];
+
+                  return Chip(
+                    label: Text('$name'),
+                    deleteIcon: Icon(Icons.close),
+                    onDeleted: () {
+                      if (name == null || attributeId == null) return;
+                      productcontroller.createselectedcategoryattributesList
+                          .removeWhere(
+                        (entry) =>
+                            entry['name'] == name &&
+                            entry['attribute_id'] == attributeId,
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+
+            Obx(() => productcontroller.getcategoryattributesloading.value
+                ? Center(
+                    child: SizedBox(
+                    height: 3.h,
+                    width: 5.w,
+                    child: customcircularprogress(),
+                  ))
+                : productcontroller.getcategoryattributes.value == null
+                    ? const SizedBox()
+                    : productcontroller.getcategoryattributes.value!.data!
+                            .attributes!.isEmpty
+                        ? const SizedBox()
+                        : ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: productcontroller.getcategoryattributes
+                                .value?.data?.attributes?.length,
+                            itemBuilder: (context, index) {
+                              final categoryAttributeData = productcontroller
+                                  .getcategoryattributes
+                                  .value
+                                  ?.data
+                                  ?.attributes?[index];
+                              final categoryname =
+                                  categoryAttributeData?.name ?? "";
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(categoryAttributeData?.name.toString() ??
+                                      ""),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.01,
+                                  ),
+                                  DropdownButtonFormField<String>(
+                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    validator: (attribute) {
+                                      if (attribute == null ||
+                                          attribute.isEmpty) {
+                                        return "Please Select ${categoryAttributeData.name ?? ""}";
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          'Select ${categoryAttributeData?.name ?? ""}',
+                                      fillColor: Colors.white,
+                                      hintStyle: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                      contentPadding: EdgeInsets.all(15),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffDBDBDB)),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                    ),
+                                    value: productcontroller
+                                        .createproductselectedAttributes[
+                                            categoryname]
+                                        ?.first,
+                                    onChanged: (newValue) {
+                                      if (newValue == null) return;
+
+                                      final categoryAttributeData =
+                                          productcontroller
+                                              .getcategoryattributes
+                                              .value
+                                              ?.data
+                                              ?.attributes?[index];
+                                      if (categoryAttributeData == null) return;
+
+                                      final attributeId =
+                                          categoryAttributeData.id;
+                                      if (attributeId == null) return;
+
+                                      final selectedOption =
+                                          (categoryAttributeData.options ?? [])
+                                              .firstWhere(
+                                        (option) =>
+                                            '${categoryAttributeData.name}_$option' ==
+                                            newValue,
+                                        orElse: () => '',
+                                      );
+
+                                      if (selectedOption.isEmpty) return;
+
+                                      final entry = {
+                                        'name': selectedOption,
+                                        'attribute_id': attributeId,
+                                      };
+
+                                      final existingEntryIndex = productcontroller
+                                          .createselectedcategoryattributesList
+                                          .indexWhere(
+                                        (entry) =>
+                                            entry['attribute_id'] ==
+                                                attributeId &&
+                                            entry['name'] == selectedOption,
+                                      );
+
+                                      if (existingEntryIndex != -1) {
+                                        productcontroller
+                                                .createselectedcategoryattributesList[
+                                            existingEntryIndex] = entry;
+                                      } else {
+                                        productcontroller
+                                            .createselectedcategoryattributesList
+                                            .add(entry);
+                                      }
+
+                                      final currentAttributes =
+                                          productcontroller
+                                              .createproductselectedAttributes
+                                              .putIfAbsent(
+                                                  categoryname, () => []);
+
+                                      if (!currentAttributes
+                                          .contains(newValue)) {
+                                        productcontroller
+                                                .createproductselectedAttributes[
+                                            categoryname] = [
+                                          ...currentAttributes,
+                                          newValue,
+                                        ];
+                                      }
+
+                                      print(productcontroller
+                                          .createselectedcategoryattributesList);
+                                    },
+                                    items: categoryAttributeData!.options!
+                                        .map<DropdownMenuItem<String>>(
+                                            (option) {
+                                      final categoryvalue =
+                                          '${categoryAttributeData.name}_$option';
+                                      return DropdownMenuItem<String>(
+                                        value: categoryvalue,
+                                        child: Text(option),
+                                      );
+                                    }).toList(),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.01,
+                                  ),
+                                ],
+                              );
+                            })),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Text('Brands'),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+            SizedBox(
+              width: double.infinity, // Set the width to match parent width
+              child: DropdownButtonFormField<String>(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (v) {
+                  if (v == null) {
+                    return 'Brands can\'t be empty';
+                  }
+                  return null;
+                },
+                value: productcontroller.createproductselectedbrand?.value,
+                hint: Text('Select Brand'),
+                items: productcontroller.getbrandslist.value?.data?.brands
+                    ?.map((brand) {
+                  return DropdownMenuItem<String>(
+                    value: brand.id.toString(),
+                    child: Text(brand.name.toString()),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    productcontroller.createproductbrand.value = newValue!;
+                    print(productcontroller.createproductbrand.value);
+                  });
+                },
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(12),
+                  contentPadding: EdgeInsets.all(15),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Color(0xffDBDBDB)),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   fillColor: Colors.white,
-                  hintText: 'Men Shoes',
                 ),
-                value: _selectedCountry,
-                items: countries.map((country) {
-                  return DropdownMenuItem<String>(
-                    value: country,
-                    child: Text(country),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCountry = value;
-                  });
-                },
               ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Brands'),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-        ),
-        SizedBox(
-          width: double.infinity, // Set the width to match parent width
-          child: DropdownButtonFormField<String>(
-            value: selectedBrand,
-            hint: Text('Select Brand'),
-            items: brands.map((String brand) {
-              return DropdownMenuItem<String>(
-                value: brand,
-                child: Text(brand),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedBrand = newValue;
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
             ),
-          ),
-        ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Stock Capacity'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
             ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
+            Text('Stock Capacity'),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+            TextFormField(
+              controller: productcontroller.createproductstockcontroller.value,
+              keyboardType: TextInputType.number,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(15),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                fillColor: Colors.white,
+              ),
+              validator: (v) {
+                if (v!.isEmpty) {
+                  return 'Stock can\'t be empty';
+                }
+                return null;
+              },
+              onSaved: (value) {},
+            ),
 
-          // Text('Item Model'),
-          // SizedBox(
-          //   height: MediaQuery.of(context).size.height * 0.01,
-          // ),
-          // TextFormField(
-          //   decoration: InputDecoration(
-          //     contentPadding: EdgeInsets.all(15),
-          //     border: OutlineInputBorder(
-          //       borderSide: BorderSide(color: Color(0xffDBDBDB)),
-          //       borderRadius: BorderRadius.circular(15.0),
-          //     ),
-          //     fillColor: Colors.white,
-          //     // hintText: 'Street Address',
-          //   ),
-          //   validator: null,
-          //   onSaved: (value) {},
-          // ),
-          _buildDropdowns(),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          Text('Description'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              // errorBorder: Border.all(),
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
             ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Add TAGS'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              // errorBorder: Border.all(),
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
+            Text('Description'),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.01,
             ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Row(
-            children: [
-              Image.asset('assets/images/abc.png'),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.02,
+            TextFormField(
+              controller:
+                  productcontroller.createproductdescriptioncontroller.value,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(15),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                fillColor: Colors.white,
+                // hintText: 'Street Address',
               ),
-              Text(
-                'Add Tags as much as possible to make your more easily searchable',
-                style: TextStyle(fontSize: 12.5.sp),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          CustomElevetedButton(
-            height: 40,
-            buttonName: 'Next',
-            textColor: Colors.white,
-            ontap: () {
-              if (currentStep < 2) {
-                setState(() {
-                  currentStep += 1;
-                });
-              }
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => CompletedOrderDetails(),
-              //   ),
-              // );
-            },
-            fontSize: 10,
-            width: MediaQuery.of(context).size.width * 0.92,
-            color: Color(0xff2E3192),
-          ),
-        ],
+              validator: (v) {
+                if (v!.isEmpty) {
+                  return 'Description can\'t be empty';
+                }
+                return null;
+              },
+              onSaved: (value) {},
+            ),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.02,
+            // ),
+            // Text('Add TAGS'),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.01,
+            // ),
+            // TextFormField(
+            //   decoration: InputDecoration(
+            //     // errorBorder: Border.all(),
+            //     contentPadding: EdgeInsets.all(15),
+            //     border: OutlineInputBorder(
+            //       borderSide: BorderSide(color: Color(0xffDBDBDB)),
+            //       borderRadius: BorderRadius.circular(15.0),
+            //     ),
+            //     fillColor: Colors.white,
+            //     // hintText: 'Street Address',
+            //   ),
+            //   validator: null,
+            //   onSaved: (value) {},
+            // ),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.02,
+            // ),
+            // Row(
+            //   children: [
+            //     Image.asset('assets/images/abc.png'),
+            //     SizedBox(
+            //       width: MediaQuery.of(context).size.width * 0.02,
+            //     ),
+            //     Text(
+            //       'Add Tags as much as possible to make your more easily searchable',
+            //       style: TextStyle(fontSize: 12.5.sp),
+            //     ),
+            //   ],
+            // ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+            CustomElevetedButton(
+              height: 40,
+              buttonName: 'Next',
+              textColor: Colors.white,
+              ontap: () {
+                if (formKey1.currentState!.validate()) {
+                  if (productcontroller.createproductuploadimages.isEmpty) {
+                    showErrrorSnackbar(message: "Please Upload Product Images");
+                  } else {
+                    if (currentStep < 2) {
+                      setState(() {
+                        currentStep += 1;
+                      });
+                    }
+                  }
+                }
+              },
+              fontSize: 10,
+              width: MediaQuery.of(context).size.width * 0.92,
+              color: Color(0xff2E3192),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -691,530 +964,508 @@ class _MyStepperAppState extends State<MyStepperApp> {
           ),
         ],
       ),
-      content: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Divider(),
-        Text('Set Price'),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-        ),
-        TextFormField(
-          decoration: InputDecoration(
-            hintText: '\$65.00',
-            // errorBorder: Border.all(),
-            contentPadding: EdgeInsets.all(15),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffDBDBDB)),
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            fillColor: Colors.white,
-            // hintText: 'Street Address',
+      content: Form(
+        key: formKey2,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Set Price'),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.01,
           ),
-           keyboardType: TextInputType.number,
-          validator: null,
-          onSaved: (value) {},
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.02,
-        ),
-        Text('Sale Price'),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-        ),
-        TextFormField(
-          decoration: InputDecoration(
-            hintText: '\$65.00',
-            // errorBorder: Border.all(),
-            contentPadding: EdgeInsets.all(15),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffDBDBDB)),
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            fillColor: Colors.white,
-            // hintText: 'Street Address',
-          ),
-          keyboardType: TextInputType.number,
-          validator: null,
-          onSaved: (value) {},
-        ),
-         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.02,
-        ),
-Text('Min Purchase'),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-        ),
-         TextFormField(
-          decoration: InputDecoration(
-            hintText: '1',
-            // errorBorder: Border.all(),
-            contentPadding: EdgeInsets.all(15),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xffDBDBDB)),
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            fillColor: Colors.white,
-            // hintText: 'Street Address',
-          ),
-          keyboardType: TextInputType.number,
-          validator: null,
-          onSaved: (value) {},
-        ),
-        // Padding(
-        //   padding: EdgeInsets.all(5.0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       Text(
-        //         'Min Purchase',
-        //         style: TextStyle(color: Color(0xff757474), fontSize: 12),
-        //       ),
-        //       Text(
-        //         '1',
-        //         style: TextStyle(color: Color(0xff757474), fontSize: 12),
-        //       )
-        //     ],
-        //   ),
-        // ),
-        Divider(),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.3,
-        ),
-        CustomElevetedButton(
-          height: 40,
-          buttonName: 'Next',
-          textColor: Colors.white,
-          ontap: () {
-            if (currentStep < 3) {
-              setState(() {
-                currentStep += 1;
-              });
-            }
+          TextFormField(
+            controller: productcontroller.createproductsetpricecontroller.value,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              hintText: '\$65.00',
 
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => CompletedOrderDetails(),
-            //   ),
-            // );
-          },
-          fontSize: 10,
-          color: Color(0xff2E3192),
-          width: MediaQuery.of(context).size.width * 0.92,
-          // gradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-        ),
-      ]),
-    );
-  }
-
-  Step _customStep4(int index, String title) {
-    return Step(
-      isActive: currentStep == index,
-      state: currentStep == index
-          ? StepState.indexed
-          : currentStep > index
-              ? StepState.complete
-              : StepState.indexed,
-      title: Row(
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 6,
-              color: currentStep == index ? Color(0xff2E3192) : Colors.black,
-            ),
-          ),
-        ],
-      ),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(),
-          // Padding(
-          //   padding: EdgeInsets.all(5.0),
-          //   child: _buildListItem(
-          //     'Deliver Domestically',
-          //     switchValue: isSwitchOn,
-          //     onSwitchChanged: (value) {
-          //       setState(() {
-          //         isSwitchOn = value;
-          //       });
-          //     },
-          //     lineargradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-          //     text2: 'Add minimum 5 images covering all angles.',
-          //     onTap: () {
-          //       // Handle tap event
-          //     },
-          //   ),
-          // ),
-          Text('Select Delivery Company'),
-          Column(
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(12),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  fillColor: Colors.white,
-                  hintText: 'FEDX',
-                ),
-                value: _selectedcompany,
-                items: comapines.map((company) {
-                  return DropdownMenuItem<String>(
-                    value: company,
-                    child: Text(company),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedcompany = value;
-                  });
-                },
+              contentPadding: EdgeInsets.all(15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                borderRadius: BorderRadius.circular(15.0),
               ),
-            ],
+              fillColor: Colors.white,
+              // hintText: 'Street Address',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (v) {
+              if (v!.isEmpty) {
+                return 'Set Price can\'t be empty';
+              }
+              return null;
+            },
+            onSaved: (value) {},
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 150.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('State'), Text('City')],
-            ),
-          ),
+          Text('Sale Price'),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.01,
           ),
-          Container(
-            // margin: EdgeInsets.only(left: 20.0, right: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          TextFormField(
+            controller:
+                productcontroller.createproductsalepricecontroller.value,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              hintText: '\$50.00',
+              // errorBorder: Border.all(),
+              contentPadding: EdgeInsets.all(15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              fillColor: Colors.white,
+              // hintText: 'Street Address',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (v) {
+              if (v!.isEmpty) {
+                return 'Sale Price can\'t be empty';
+              }
+              return null;
+            },
+            onSaved: (value) {},
+          ),
+          Divider(),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3,
+          ),
+          Obx(
+            () => productcontroller.createproductloading.value
+                ? Center(
+                    child: customcircularprogress(),
+                  )
+                : CustomElevetedButton(
+                    height: 40,
+                    buttonName: 'Create',
+                    textColor: Colors.white,
+                    ontap: () {
+                      if (formKey1.currentState!.validate() &&
+                          formKey2.currentState!.validate()) {
+                        productcontroller.createproductuploadimages.isEmpty
+                            ? showErrrorSnackbar(
+                                message: "Please Upload Product Images")
+                            : productcontroller.createProduct(context: context);
+                      }
+                    },
+                    fontSize: 10,
+                    color: Color(0xff2E3192),
+                    width: MediaQuery.of(context).size.width * 0.92,
+                  ),
+          )
+        ]),
+      ),
+    );
+  }
+
+//   Step _customStep4(int index, String title) {
+//     return Step(
+//       isActive: currentStep == index,
+//       state: currentStep == index
+//           ? StepState.indexed
+//           : currentStep > index
+//               ? StepState.complete
+//               : StepState.indexed,
+//       title: Row(
+//         children: <Widget>[
+//           Text(
+//             title,
+//             style: TextStyle(
+//               fontSize: 6,
+//               color: currentStep == index ? Color(0xff2E3192) : Colors.black,
+//             ),
+//           ),
+//         ],
+//       ),
+//       content: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: <Widget>[
+//           Divider(),
+//           // Padding(
+//           //   padding: EdgeInsets.all(5.0),
+//           //   child: _buildListItem(
+//           //     'Deliver Domestically',
+//           //     switchValue: isSwitchOn,
+//           //     onSwitchChanged: (value) {
+//           //       setState(() {
+//           //         isSwitchOn = value;
+//           //       });
+//           //     },
+//           //     lineargradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
+//           //     text2: 'Add minimum 5 images covering all angles.',
+//           //     onTap: () {
+//           //       // Handle tap event
+//           //     },
+//           //   ),
+//           // ),
+//           Text('Select Delivery Company'),
+//           Column(
+//             children: <Widget>[
+//               SizedBox(height: 10.0),
+//               DropdownButtonFormField<String>(
+//                 decoration: InputDecoration(
+//                   contentPadding: EdgeInsets.all(12),
+//                   border: OutlineInputBorder(
+//                     borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                     borderRadius: BorderRadius.circular(15.0),
+//                   ),
+//                   fillColor: Colors.white,
+//                   hintText: 'FEDX',
+//                 ),
+//                 value: _selectedcompany,
+//                 items: comapines.map((company) {
+//                   return DropdownMenuItem<String>(
+//                     value: company,
+//                     child: Text(company),
+//                   );
+//                 }).toList(),
+//                 onChanged: (value) {
+//                   setState(() {
+//                     _selectedcompany = value;
+//                   });
+//                 },
+//               ),
+//             ],
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.02,
+//           ),
+//           Padding(
+//             padding: EdgeInsets.only(right: 150.0),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [Text('State'), Text('City')],
+//             ),
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.01,
+//           ),
+//           Container(
+//             // margin: EdgeInsets.only(left: 20.0, right: 20),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Row(
+//                   children: [
+//                     Expanded(
+//                       child: buildDropdown("Michigan, MI", cities, selectedCity,
+//                           (String? newValue) {
+//                         setState(() {
+//                           selectedCity = newValue;
+//                         });
+//                       }),
+//                     ),
+//                     SizedBox(width: 10),
+//                     Expanded(
+//                       child: TextFormField(
+//                         controller: zipCodeController,
+//                         decoration: InputDecoration(
+//                           hintText: 'Detroit',
+//                           fillColor: Colors.white,
+//                           hintStyle: TextStyle(
+//                             fontSize: 14,
+//                             color: Colors.grey,
+//                           ),
+//                           enabledBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(15),
+//                             borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                           ),
+//                           focusedBorder: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(15),
+//                             borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                           ),
+//                           contentPadding: EdgeInsets.all(15),
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(15),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.02,
+//           ),
+//           Text('Shipping Price'),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.01,
+//           ),
+//           TextFormField(
+//             decoration: InputDecoration(
+//               hintText: '\$45.00',
+//               contentPadding: EdgeInsets.all(15),
+//               border: OutlineInputBorder(
+//                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                 borderRadius: BorderRadius.circular(15.0),
+//               ),
+//               fillColor: Colors.white,
+//               // hintText: 'Street Address',
+//             ),
+//             validator: null,
+//             onSaved: (value) {},
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.02,
+//           ),
+//           Text('Shipping Duration'),
+//           Column(
+//             children: <Widget>[
+//               SizedBox(height: 10.0),
+//               DropdownButtonFormField<String>(
+//                 decoration: InputDecoration(
+//                   contentPadding: EdgeInsets.all(12),
+//                   border: OutlineInputBorder(
+//                     borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                     borderRadius: BorderRadius.circular(15.0),
+//                   ),
+//                   fillColor: Colors.white,
+//                   hintText: 'FEDX',
+//                 ),
+//                 value: _selectedduration,
+//                 items: duration.map((durations) {
+//                   return DropdownMenuItem<String>(
+//                     value: durations,
+//                     child: Text(durations),
+//                   );
+//                 }).toList(),
+//                 onChanged: (value) {
+//                   setState(() {
+//                     _selectedduration = value;
+//                   });
+//                 },
+//               ),
+//             ],
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.02,
+//           ),
+//           Text('Return Shipping Price'),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.01,
+//           ),
+//           TextFormField(
+//             decoration: InputDecoration(
+//               hintText: '\$45.00',
+//               contentPadding: EdgeInsets.all(15),
+//               border: OutlineInputBorder(
+//                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                 borderRadius: BorderRadius.circular(15.0),
+//               ),
+//               fillColor: Colors.white,
+//               // hintText: 'Street Address',
+//             ),
+//             validator: null,
+//             onSaved: (value) {},
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.02,
+//           ),
+//           Text('Return Shipping Location'),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.01,
+//           ),
+//           TextFormField(
+//             decoration: InputDecoration(
+//               hintText: '\$45.00',
+//               contentPadding: EdgeInsets.all(15),
+//               border: OutlineInputBorder(
+//                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
+//                 borderRadius: BorderRadius.circular(15.0),
+//               ),
+//               fillColor: Colors.white,
+//               // hintText: 'Street Address',
+//             ),
+//             validator: null,
+//             onSaved: (value) {},
+//           ),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.03,
+//           ),
+//           // Divider(),
+//           // Padding(
+//           //   padding: EdgeInsets.all(5.0),
+//           //   child: _buildListItem(
+//           //     'Deliver Domestically',
+//           //     switchValue: isSwitchOn,
+//           //     onSwitchChanged: (value) {
+//           //       setState(() {
+//           //         isSwitchOn = value;
+//           //       });
+//           //     },
+//           //     lineargradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
+//           //     text2: 'Add minimum 5 images covering all angles',
+//           //     onTap: () {
+//           //       // Handle tap event
+//           //     },
+//           //   ),
+//           // ),
+//           Divider(),
+//           SizedBox(
+//             height: MediaQuery.of(context).size.height * 0.02,
+//           ),
+//           CustomElevetedButton(
+//             height: 40,
+//             buttonName: 'Product Preview',
+//             textColor: Colors.white,
+//             ontap: () {
+//               // if (currentStep < 2) {
+//               //   setState(() {
+//               //     currentStep += 1;
+//               //   });
+//               // }
+//               showDialog(
+//                   context: context,
+//                   builder: (BuildContext context) {
+//                     return customsuccessalertpopup(
+//                         message: "Product has been uploaded");
+//                   });
+//               Future.delayed(Duration(seconds: 2), () {
+//                 Get.offAllNamed(RouteConstants.userbottomnavbar);
+//               });
+//             },
+//             color: Color(0xff2E3192),
+//             fontSize: 10,
+//             width: MediaQuery.of(context).size.width * 0.92,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+  Widget buildDropdown(String hint, List<String> items, String? selectedValue,
+      void Function(String?)? onChanged) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(13),
+          hintText: hint,
+          fillColor: Colors.black,
+          hintStyle: TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Color(0xffDBDBDB)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Color(0xffDBDBDB)),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        value: selectedValue,
+        onChanged: onChanged,
+        items: items.map<DropdownMenuItem<String>>((String item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(item),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildListItem(
+    String text, {
+    String? text2,
+    Color? borderColour,
+    bool switchValue = false,
+    ValueChanged<bool>? onSwitchChanged,
+    VoidCallback? onTap,
+    List<Color>? lineargradientColors,
+  }) {
+    return Container(
+      width: double.infinity,
+      height: 80,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: borderColour ?? Colors.transparent,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            text,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          if (text2 != null)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: buildDropdown("Michigan, MI", cities, selectedCity,
-                          (String? newValue) {
-                        setState(() {
-                          selectedCity = newValue;
-                        });
-                      }),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: TextFormField(
-                        controller: zipCodeController,
-                        decoration: InputDecoration(
-                          hintText: 'Detroit',
-                          fillColor: Colors.white,
-                          hintStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                          ),
-                          contentPadding: EdgeInsets.all(15),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                Text(
+                  text2,
+                  style: TextStyle(fontSize: 10, color: Color(0xff757474)),
+                ),
+                _customGradientSwitch(
+                  switchValue: switchValue,
+                  onSwitchChanged: onSwitchChanged!,
+                  gradientColors: lineargradientColors,
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Shipping Price'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: '\$45.00',
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
-            ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Shipping Duration'),
-          Column(
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(12),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  fillColor: Colors.white,
-                  hintText: 'FEDX',
-                ),
-                value: _selectedduration,
-                items: duration.map((durations) {
-                  return DropdownMenuItem<String>(
-                    value: durations,
-                    child: Text(durations),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedduration = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Return Shipping Price'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: '\$45.00',
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
-            ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          Text('Return Shipping Location'),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: '\$45.00',
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-              // hintText: 'Street Address',
-            ),
-            validator: null,
-            onSaved: (value) {},
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.03,
-          ),
-          // Divider(),
-          // Padding(
-          //   padding: EdgeInsets.all(5.0),
-          //   child: _buildListItem(
-          //     'Deliver Domestically',
-          //     switchValue: isSwitchOn,
-          //     onSwitchChanged: (value) {
-          //       setState(() {
-          //         isSwitchOn = value;
-          //       });
-          //     },
-          //     lineargradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-          //     text2: 'Add minimum 5 images covering all angles',
-          //     onTap: () {
-          //       // Handle tap event
-          //     },
-          //   ),
-          // ),
-          Divider(),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.02,
-          ),
-          CustomElevetedButton(
-            height: 40,
-            buttonName: 'Product Preview',
-            textColor: Colors.white,
-            ontap: () {
-              // if (currentStep < 2) {
-              //   setState(() {
-              //     currentStep += 1;
-              //   });
-              // }
-               showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return customsuccessalertpopup(
-                            message: "Product has been uploaded");
-                      });
-               Future.delayed(Duration(seconds: 2), () {
-    
-    Get.offAllNamed(RouteConstants.userbottomnavbar);
-  });
-            },
-            color: Color(0xff2E3192),
-            fontSize: 10,
-            width: MediaQuery.of(context).size.width * 0.92,
-          ),
         ],
       ),
     );
   }
-}
 
-Widget buildDropdown(String hint, List<String> items, String? selectedValue,
-    void Function(String?)? onChanged) {
-  return Container(
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(13),
-        hintText: hint,
-        fillColor: Colors.black,
-        hintStyle: TextStyle(
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Color(0xffDBDBDB)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Color(0xffDBDBDB)),
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
-      value: selectedValue,
-      onChanged: onChanged,
-      items: items.map<DropdownMenuItem<String>>((String item) {
-        return DropdownMenuItem<String>(
-          value: item,
-          child: Text(item),
-        );
-      }).toList(),
-    ),
-  );
-}
-
-Widget _buildListItem(
-  String text, {
-  String? text2,
-  Color? borderColour,
-  bool switchValue = false,
-  ValueChanged<bool>? onSwitchChanged,
-  VoidCallback? onTap,
-  List<Color>? lineargradientColors,
-}) {
-  return Container(
-    width: double.infinity,
-    height: 80,
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: borderColour ?? Colors.transparent,
-          width: 1,
-        ),
-      ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          text,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        SizedBox(
-          height: 3,
-        ),
-        if (text2 != null)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                text2,
-                style: TextStyle(fontSize: 10, color: Color(0xff757474)),
-              ),
-              _customGradientSwitch(
-                switchValue: switchValue,
-                onSwitchChanged: onSwitchChanged!,
-                gradientColors: lineargradientColors,
-              ),
-            ],
+  Widget _customGradientSwitch({
+    required bool switchValue,
+    required ValueChanged<bool> onSwitchChanged,
+    List<Color>? gradientColors,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        onSwitchChanged(!switchValue);
+      },
+      child: Container(
+        width: 50.0, // Adjust the width as needed
+        height: 30.0,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: gradientColors ?? [Colors.grey, Colors.grey],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
           ),
-      ],
-    ),
-  );
-}
-
-Widget _customGradientSwitch({
-  required bool switchValue,
-  required ValueChanged<bool> onSwitchChanged,
-  List<Color>? gradientColors,
-}) {
-  return GestureDetector(
-    onTap: () {
-      onSwitchChanged(!switchValue);
-    },
-    child: Container(
-      width: 50.0, // Adjust the width as needed
-      height: 30.0,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradientColors ?? [Colors.grey, Colors.grey],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+          borderRadius: BorderRadius.circular(30.0),
         ),
-        borderRadius: BorderRadius.circular(30.0),
-      ),
-      child: Stack(
-        children: [
-          AnimatedPositioned(
-            duration: Duration(milliseconds: 200),
-            left: switchValue ? 20.0 : 0.0,
-            right: switchValue ? 0.0 : 20.0,
-            child: Container(
-              width: 30.0,
-              height: 30.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
+        child: Stack(
+          children: [
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 200),
+              left: switchValue ? 20.0 : 0.0,
+              right: switchValue ? 0.0 : 20.0,
+              child: Container(
+                width: 30.0,
+                height: 30.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

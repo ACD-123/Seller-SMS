@@ -49,6 +49,7 @@ class StoreRepo extends GetxService {
     required String zipcode,
     required String phonecode,
     required String phonenumber,
+    required String phonecountrycode,
     required String whatyousell,
     required String registrationnumber,
     required String description,
@@ -67,6 +68,7 @@ class StoreRepo extends GetxService {
       "zip_code": zipcode,
       "phone_code": phonecode,
       "phone_number": phonenumber,
+      "phone_country_code": phonecountrycode,
       "sell": whatyousell,
       "registration_number": registrationnumber,
       "categories": categories,
@@ -145,17 +147,20 @@ class StoreRepo extends GetxService {
     required String zipcode,
     required String phonecode,
     required String phonenumber,
+    required String phonecountrycode,
     required File? profileimage,
   }) async {
     final mapData = {
       "name": name,
       "phone_code": phonecode,
       "phone_number": phonenumber,
+      "phone_country_code": phonecountrycode,
        "address": address,
       "city": city,
       "state": state,
       "country": country,
       "zip_code": zipcode,
+
       
     };
     Map<String, String> stringMapData =

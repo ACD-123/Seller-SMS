@@ -122,16 +122,19 @@ class AuthenticationController extends GetxController {
   //////////signup api
   var signuploading = false.obs;
   final RxString signupphonecode = "".obs;
+  final RxString signupphonecountrycode = "".obs;
   Future<void> Signup({
     required String name,
     required String email,
     required String password,
     required String phonecode,
+    required String phonecountrycode,
     required String phonenumber,
   }) async {
     try {
       signuploading.value = true;
       await authRepo.signup(
+        phonecountrycode: signupphonecountrycode.toString(),
           name: name.toString(),
           email: email.toString(),
           password: password.toString(),

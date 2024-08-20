@@ -45,6 +45,7 @@ class Data {
   String? state;
   String? country;
   String? zipCode;
+    String? phonecountrycode;
   String? provider;
   dynamic accessToken;
   String? joined;
@@ -71,6 +72,7 @@ class Data {
     this.joined,
     this.isUser,
     this.isTrustedSeller,
+    this.phonecountrycode,
     this.media,
   });
 
@@ -96,6 +98,7 @@ class Data {
         zipCode: json["zip_code"],
         provider: json["provider"],
         accessToken: json["access_token"],
+        phonecountrycode: json["phone_country_code"],
         joined: json["joined"],
         isUser: json["is_user"],
         isTrustedSeller: json["is_trusted_seller"],
@@ -122,6 +125,7 @@ class Data {
         "access_token": accessToken,
         "joined": joined,
         "is_user": isUser,
+        "phonecountrycode": phonecountrycode,
         "is_trusted_seller": isTrustedSeller,
         "media": media?.map((x) => x.toJson()).toList(),
       };
