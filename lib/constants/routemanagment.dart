@@ -10,6 +10,7 @@ import 'package:smsseller/seller/authentication/setprofile.dart';
 import 'package:smsseller/seller/banksetting.dart';
 import 'package:smsseller/seller/inventoryseller.dart';
 import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
+import 'package:smsseller/seller/productsdetail_screen.dart';
 import 'package:smsseller/seller/selleractiveorderdetails.dart';
 import 'package:smsseller/seller/sellerbankaccountsetting.dart';
 import 'package:smsseller/seller/sellerchatscreen.dart';
@@ -27,6 +28,7 @@ import 'package:smsseller/seller/sellersideshop.dart';
 import 'package:smsseller/seller/sellerwelcomescreen.dart';
 import 'package:smsseller/seller/splashscreen.dart';
 import 'package:smsseller/seller/steppper.dart';
+import 'package:smsseller/seller/updatestepper.dart';
 
 import '../seller/sellerchatlistscreen.dart';
 
@@ -156,10 +158,14 @@ class RouteGenerator {
         name: RouteConstants.stepper,
         page: () => MyStepperApp(),
       ),
-      // GetPage(
-      //   name: RouteConstants.productdetailscreen,
-      //   page: () => const ProductDetailScreen(),
-      // ),
+       GetPage(
+        name: RouteConstants.updatestepper,
+        page: () => UpdateStepper(),
+      ),
+      GetPage(
+        name: RouteConstants.productpreviewscreen,
+        page: () => const ProductPreviewScreen(),
+      ),
       // GetPage(
       //   name: RouteConstants.searchscreen,
       //   page: () => const SearchScreen(),

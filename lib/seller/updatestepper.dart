@@ -5,93 +5,33 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/border/gf_border.dart';
 import 'package:getwidget/types/gf_border_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
-class MyStepperApp extends StatefulWidget {
+class UpdateStepper extends StatefulWidget {
   @override
-  _MyStepperAppState createState() => _MyStepperAppState();
+  _UpdateStepperState createState() => _UpdateStepperState();
 }
 
-class _MyStepperAppState extends State<MyStepperApp> {
+class _UpdateStepperState extends State<UpdateStepper> {
   final productcontroller = Get.put(ProductController(productRepo: Get.find()));
   GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   int currentStep = 0;
-  bool isSwitchOn = false;
-  bool isSwitchOn1 = false;
-  // Color? selectedColor; // Initially, no color is selected
-  int? selectedOption = 1;
-
-  // bool _isObscure2 = true;
-  String? selectedCountry;
-  String? selectedCity;
-  String? selectedZipCode;
-  TextEditingController zipCodeController = TextEditingController();
-  // File? _image;
-
-  get activecolor => null;
-
-  int selectedSizeIndex = -1; // Initially, no size is selected
-  List<String> cities = ["City 1", "City 2", "City 3"];
-  String? selectedSize;
-  String? selectedColor;
-  // String? selectedColor;
-  String? selectedBrand;
-  final List<String> comapines = [
-    'Poland',
-    'Argentina',
-    'Brazil',
-    'Botswana',
-  ];
-  final List<String> countries = [
-    'Poland',
-    'Argentina',
-    'Brazil',
-    'Botswana',
-  ];
-  final List<String> brand = [
-    'brand1'
-        'brand2',
-    'brand3',
-    'brand3',
-  ];
-  final List<String> duration = [
-    'Poland',
-    'Argentina',
-    'Brazil',
-    'Botswana',
-  ];
-  final List<String> returnduration = [
-    'Poland',
-    'Argentina',
-    'Brazil',
-    'Botswana',
-  ];
-  final List<String> returnshipping = [
-    'Poland',
-    'Argentina',
-    'Brazil',
-    'Botswana',
-  ];
-  final List<String> sizes = ['S', 'M', 'L', 'XL'];
-  final List<String> colors = ['Red', 'Green', 'Blue', 'Black'];
-  final List<String> brands = ['Brand A', 'Brand B', 'Brand C'];
+  
+  
   @override
   void initState() {
     super.initState();
-    productcontroller.createproductselectedAttributes.clear();
-    productcontroller.createselectedcategoryattributesList.clear();
-    productcontroller.getcategoryattributes.value = null;
-    productcontroller.createproductuploadimages.clear();
-    productcontroller.createproductnamecontroller.value.clear();
-    productcontroller.createproductstockcontroller.value.clear();
-    productcontroller.createproductdescriptioncontroller.value.clear();
-    productcontroller.createproductsetpricecontroller.value.clear();
-    productcontroller.createproductsalepricecontroller.value.clear();
-    productcontroller.createproductbrand.value = '';
-    productcontroller.createproductcategory.value = '';
+     productcontroller.updateoldproductimageids.clear();
+    productcontroller.updateproductuploadimages.clear();
+    productcontroller.updateproductnamecontroller.value.clear();
+    productcontroller.updateproductstockcontroller.value.clear();
+    productcontroller.updateproductdescriptioncontroller.value.clear();
+    productcontroller.updateproductsetpricecontroller.value.clear();
+    productcontroller.updateproductsalepricecontroller.value.clear();
   }
 
   @override
@@ -104,7 +44,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
           title: Padding(
             padding: EdgeInsets.only(top: 8.0), // Adjust the padding as needed
             child: Text(
-              'Product Condition',
+              'Update Product',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,
@@ -124,7 +64,27 @@ class _MyStepperAppState extends State<MyStepperApp> {
             ),
           ),
         ),
-        body: Stepper(
+        body: Obx(() => 
+        productcontroller.getproductpreviewbyidloading.value ? 
+
+        Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40.h),
+                  child: Center(
+                    child: customcircularprogress(),
+                  ),
+                )
+
+
+        : productcontroller.getproductpreviewbyid.value == null || productcontroller.getproductpreviewbyid.value?.data == null ? 
+        Padding(
+                      padding: EdgeInsets.symmetric(vertical: 40.h),
+                      child: Center(
+                          child: Text(
+                        "No Product Details",
+                        style: TextStyle(fontSize: 15.sp),
+                      )),
+                    ) : 
+        Stepper(
           connectorColor: MaterialStateColor.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
               return Colors.grey; // Color when the step is disabled
@@ -146,252 +106,11 @@ class _MyStepperAppState extends State<MyStepperApp> {
             _customStep2(0, "Product Specifications"),
             _customStep3(1, "Product Pricings"),
           ],
-        ));
-  }
-
-  Step _customStep(int index, String title) {
-    return Step(
-      isActive: currentStep == index,
-      state: currentStep == index
-          ? StepState.indexed
-          : currentStep > index
-              ? StepState.complete
-              : StepState.indexed,
-      title: Row(
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 6,
-              color: currentStep == index ? Color(0xff2E3192) : Colors.black,
-            ),
-          ),
-        ],
-      ),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Select Condition Of Your Item',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Brand New'),
-              ],
-            ),
-            leading: Radio<int>(
-              value: 1,
-              groupValue: selectedOption,
-              activeColor:
-                  Colors.blue, // Change the active radio button color here
-              fillColor: MaterialStateProperty.all(
-                  Colors.blue), // Change the fill color when selected
-              splashRadius: 20, // Change the splash radius when clicked
-              onChanged: (int? value) {
-                setState(() {
-                  selectedOption = value!;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Used'),
-              ],
-            ),
-            leading: Radio<int>(
-              value: 2,
-              groupValue: selectedOption,
-              activeColor:
-                  Colors.blue, // Change the active radio button color here
-              fillColor: MaterialStateProperty.all(
-                  Colors.blue), // Change the fill color when selected
-              splashRadius: 20, // Change the splash radius when clicked
-              onChanged: (int? value) {
-                setState(() {
-                  selectedOption = value!;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Refurbished'),
-              ],
-            ),
-            leading: Radio<int>(
-              value: 3,
-              groupValue: selectedOption,
-              activeColor:
-                  Colors.blue, // Change the active radio button color here
-              fillColor: MaterialStateProperty.all(
-                  Colors.blue), // Change the fill color when selected
-              splashRadius: 20, // Change the splash radius when clicked
-              onChanged: (int? value) {
-                setState(() {
-                  selectedOption = value!;
-                });
-              },
-            ),
-          ),
-          ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('Vintage'),
-              ],
-            ),
-            leading: Radio<int>(
-              value: 4,
-              groupValue: selectedOption,
-              activeColor:
-                  Colors.blue, // Change the active radio button color here
-              fillColor: MaterialStateProperty.all(
-                  Colors.blue), // Change the fill color when selected
-              splashRadius: 20, // Change the splash radius when clicked
-              onChanged: (int? value) {
-                setState(() {
-                  selectedOption = value!;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Describe In Your Terms',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                TextField(
-                  decoration: InputDecoration(
-                    // hintText: 'Message',
-                    hintStyle: TextStyle(fontSize: 16),
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(fontSize: 14, color: Colors.black),
-                  maxLines: 5,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.04,
-          ),
-          CustomElevetedButton(
-            height: 40,
-            buttonName: 'Next',
-            textColor: Colors.white,
-            ontap: () {
-              if (currentStep < 2) {
-                setState(() {
-                  currentStep += 1;
-                });
-              }
-
-// Get.toNamed()
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => CompletedOrderDetails(),
-              //   ),
-              // );
-            },
-            fontSize: 10,
-            width: MediaQuery.of(context).size.width * 0.92,
-            color: Color(0xff2E3192),
-            // gradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-          ),
-        ],
-      ),
+        ))
+        
     );
   }
 
-  Widget _buildDropdowns() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Size'),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-        ),
-        SizedBox(
-          width: double.infinity, // Set the width to match parent width
-          child: DropdownButtonFormField<String>(
-            value: selectedSize,
-            hint: Text('Select Size'),
-            items: sizes.map((String size) {
-              return DropdownMenuItem<String>(
-                value: size,
-                child: Text(size),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedSize = newValue;
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        Text('Available Colors'),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-        ),
-        SizedBox(
-          width: double.infinity, // Set the width to match parent width
-          child: DropdownButtonFormField<String>(
-            value: selectedColor,
-            hint: Text('Select Color'),
-            items: colors.map((String color) {
-              return DropdownMenuItem<String>(
-                value: color,
-                child: Text(color),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedColor = newValue;
-              });
-            },
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(15),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xffDBDBDB)),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              fillColor: Colors.white,
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-      ],
-    );
-  }
 
   Step _customStep2(int index, String title) {
     return Step(
@@ -423,7 +142,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
             ),
             GestureDetector(
               onTap: () {
-                productcontroller.uploadcreateproductimages(context);
+                productcontroller.uploadupdateproductimages(context);
               },
               child: Padding(
                 padding: EdgeInsets.only(left: 40.0, top: 30, right: 50),
@@ -456,22 +175,23 @@ class _MyStepperAppState extends State<MyStepperApp> {
             SizedBox(
               height: 1.h,
             ),
-            Obx(() => productcontroller.createproductuploadimages.isEmpty
-                ? SizedBox()
-                : SizedBox(
+            Obx(() => 
+                SizedBox(
                     height: 10.h,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
+                          productcontroller.updateproductuploadimages.isEmpty
+                ? const SizedBox() :
                           ListView.builder(
                               shrinkWrap: true,
                               itemCount: productcontroller
-                                  .createproductuploadimages.length,
+                                  .updateproductuploadimages.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 final productimages = productcontroller
-                                    .createproductuploadimages[index];
+                                    .updateproductuploadimages[index];
                                 return Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 1.w),
@@ -493,8 +213,60 @@ class _MyStepperAppState extends State<MyStepperApp> {
                                         child: GestureDetector(
                                           onTap: () {
                                             productcontroller
-                                                .createproductremoveimages(
+                                                .updateproductremoveimages(
                                                     index);
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 13.sp,
+                                            backgroundColor: Color(0xff2E3192),
+                                            child: Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                              size: 16.sp,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                productcontroller
+                                  .getproductpreviewbyid.value!.data!.media!.isEmpty ? const SizedBox() : 
+                                             ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: productcontroller
+                                  .getproductpreviewbyid.value?.data?.media?.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                final oldproductimages = productcontroller
+                                  .getproductpreviewbyid.value?.data?.media?[index];
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 1.w),
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          child: Image.network(
+                                            oldproductimages?.originalUrl ?? AppConstants.noimage,
+                                            fit: BoxFit.fill,
+                                            width: 25.w,
+                                            height: 8.h,
+                                          )),
+                                      Positioned(
+                                        right: -5,
+                                        top: -0,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                  productcontroller.updateoldproductimageids.add( oldproductimages?.id ?? 0);
+                                  setState(() {
+                                         productcontroller
+                                  .getproductpreviewbyid.value?.data?.media?.removeAt(index);  
+                                  });   
+                                  print(productcontroller.updateoldproductimageids);
                                           },
                                           child: CircleAvatar(
                                             radius: 13.sp,
@@ -517,25 +289,14 @@ class _MyStepperAppState extends State<MyStepperApp> {
             SizedBox(
               height: 1.h,
             ),
-            Row(children: [
-              Image.asset('assets/images/abc.png'),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Text(
-                'Add Minimum 5 Images Covering All Angles.',
-                style: TextStyle(fontSize: 9),
-              ),
-            ]),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
+            
+           
             Text('Product Name'),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
             ),
             TextFormField(
-              controller: productcontroller.createproductnamecontroller.value,
+              controller: productcontroller.updateproductnamecontroller.value,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(15),
@@ -544,7 +305,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 fillColor: Colors.white,
-                // hintText: 'Street Address',
+                hintText: productcontroller.getproductpreviewbyid.value?.data?.title ?? "",
               ),
               validator: (v) {
                 if (v!.isEmpty) {
@@ -830,10 +591,11 @@ class _MyStepperAppState extends State<MyStepperApp> {
               height: MediaQuery.of(context).size.height * 0.01,
             ),
             TextFormField(
-              controller: productcontroller.createproductstockcontroller.value,
+              controller: productcontroller.updateproductstockcontroller.value,
               keyboardType: TextInputType.number,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
+                 hintText: productcontroller.getproductpreviewbyid.value?.data?.stock.toString() ?? "",
                 contentPadding: EdgeInsets.all(15),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xffDBDBDB)),
@@ -841,6 +603,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
                 ),
                 fillColor: Colors.white,
               ),
+              
               validator: (v) {
                 if (v!.isEmpty) {
                   return 'Stock can\'t be empty';
@@ -859,7 +622,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
             ),
             TextFormField(
               controller:
-                  productcontroller.createproductdescriptioncontroller.value,
+                  productcontroller.updateproductdescriptioncontroller.value,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(15),
@@ -868,7 +631,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 fillColor: Colors.white,
-                // hintText: 'Street Address',
+               hintText: productcontroller.getproductpreviewbyid.value?.data?.description.toString() ?? "",
               ),
               validator: (v) {
                 if (v!.isEmpty) {
@@ -878,42 +641,8 @@ class _MyStepperAppState extends State<MyStepperApp> {
               },
               onSaved: (value) {},
             ),
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.02,
-            // ),
-            // Text('Add TAGS'),
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.01,
-            // ),
-            // TextFormField(
-            //   decoration: InputDecoration(
-            //     // errorBorder: Border.all(),
-            //     contentPadding: EdgeInsets.all(15),
-            //     border: OutlineInputBorder(
-            //       borderSide: BorderSide(color: Color(0xffDBDBDB)),
-            //       borderRadius: BorderRadius.circular(15.0),
-            //     ),
-            //     fillColor: Colors.white,
-            //     // hintText: 'Street Address',
-            //   ),
-            //   validator: null,
-            //   onSaved: (value) {},
-            // ),
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.02,
-            // ),
-            // Row(
-            //   children: [
-            //     Image.asset('assets/images/abc.png'),
-            //     SizedBox(
-            //       width: MediaQuery.of(context).size.width * 0.02,
-            //     ),
-            //     Text(
-            //       'Add Tags as much as possible to make your more easily searchable',
-            //       style: TextStyle(fontSize: 12.5.sp),
-            //     ),
-            //   ],
-            // ),
+           
+           
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
@@ -971,10 +700,10 @@ class _MyStepperAppState extends State<MyStepperApp> {
             height: MediaQuery.of(context).size.height * 0.01,
           ),
           TextFormField(
-            controller: productcontroller.createproductsetpricecontroller.value,
+            controller: productcontroller.updateproductsetpricecontroller.value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: '\$65.00',
+              hintText: productcontroller.getproductpreviewbyid.value?.data?.price.toString() ?? "",
 
               contentPadding: EdgeInsets.all(15),
               border: OutlineInputBorder(
@@ -1002,11 +731,11 @@ class _MyStepperAppState extends State<MyStepperApp> {
           ),
           TextFormField(
             controller:
-                productcontroller.createproductsalepricecontroller.value,
+                productcontroller.updateproductsalepricecontroller.value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: '\$50.00',
-              // errorBorder: Border.all(),
+              hintText: productcontroller.getproductpreviewbyid.value?.data?.discountPrice.toString() ?? "",
+             
               contentPadding: EdgeInsets.all(15),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
@@ -1035,7 +764,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
                   )
                 : CustomElevetedButton(
                     height: 40,
-                    buttonName: 'Create',
+                    buttonName: 'Update',
                     textColor: Colors.white,
                     ontap: () {
                       if (formKey1.currentState!.validate() &&
@@ -1056,415 +785,6 @@ class _MyStepperAppState extends State<MyStepperApp> {
     );
   }
 
-//   Step _customStep4(int index, String title) {
-//     return Step(
-//       isActive: currentStep == index,
-//       state: currentStep == index
-//           ? StepState.indexed
-//           : currentStep > index
-//               ? StepState.complete
-//               : StepState.indexed,
-//       title: Row(
-//         children: <Widget>[
-//           Text(
-//             title,
-//             style: TextStyle(
-//               fontSize: 6,
-//               color: currentStep == index ? Color(0xff2E3192) : Colors.black,
-//             ),
-//           ),
-//         ],
-//       ),
-//       content: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: <Widget>[
-//           Divider(),
-//           // Padding(
-//           //   padding: EdgeInsets.all(5.0),
-//           //   child: _buildListItem(
-//           //     'Deliver Domestically',
-//           //     switchValue: isSwitchOn,
-//           //     onSwitchChanged: (value) {
-//           //       setState(() {
-//           //         isSwitchOn = value;
-//           //       });
-//           //     },
-//           //     lineargradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-//           //     text2: 'Add minimum 5 images covering all angles.',
-//           //     onTap: () {
-//           //       // Handle tap event
-//           //     },
-//           //   ),
-//           // ),
-//           Text('Select Delivery Company'),
-//           Column(
-//             children: <Widget>[
-//               SizedBox(height: 10.0),
-//               DropdownButtonFormField<String>(
-//                 decoration: InputDecoration(
-//                   contentPadding: EdgeInsets.all(12),
-//                   border: OutlineInputBorder(
-//                     borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                     borderRadius: BorderRadius.circular(15.0),
-//                   ),
-//                   fillColor: Colors.white,
-//                   hintText: 'FEDX',
-//                 ),
-//                 value: _selectedcompany,
-//                 items: comapines.map((company) {
-//                   return DropdownMenuItem<String>(
-//                     value: company,
-//                     child: Text(company),
-//                   );
-//                 }).toList(),
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _selectedcompany = value;
-//                   });
-//                 },
-//               ),
-//             ],
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.02,
-//           ),
-//           Padding(
-//             padding: EdgeInsets.only(right: 150.0),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: [Text('State'), Text('City')],
-//             ),
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.01,
-//           ),
-//           Container(
-//             // margin: EdgeInsets.only(left: 20.0, right: 20),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Row(
-//                   children: [
-//                     Expanded(
-//                       child: buildDropdown("Michigan, MI", cities, selectedCity,
-//                           (String? newValue) {
-//                         setState(() {
-//                           selectedCity = newValue;
-//                         });
-//                       }),
-//                     ),
-//                     SizedBox(width: 10),
-//                     Expanded(
-//                       child: TextFormField(
-//                         controller: zipCodeController,
-//                         decoration: InputDecoration(
-//                           hintText: 'Detroit',
-//                           fillColor: Colors.white,
-//                           hintStyle: TextStyle(
-//                             fontSize: 14,
-//                             color: Colors.grey,
-//                           ),
-//                           enabledBorder: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(15),
-//                             borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                           ),
-//                           focusedBorder: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(15),
-//                             borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                           ),
-//                           contentPadding: EdgeInsets.all(15),
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(15),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.02,
-//           ),
-//           Text('Shipping Price'),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.01,
-//           ),
-//           TextFormField(
-//             decoration: InputDecoration(
-//               hintText: '\$45.00',
-//               contentPadding: EdgeInsets.all(15),
-//               border: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                 borderRadius: BorderRadius.circular(15.0),
-//               ),
-//               fillColor: Colors.white,
-//               // hintText: 'Street Address',
-//             ),
-//             validator: null,
-//             onSaved: (value) {},
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.02,
-//           ),
-//           Text('Shipping Duration'),
-//           Column(
-//             children: <Widget>[
-//               SizedBox(height: 10.0),
-//               DropdownButtonFormField<String>(
-//                 decoration: InputDecoration(
-//                   contentPadding: EdgeInsets.all(12),
-//                   border: OutlineInputBorder(
-//                     borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                     borderRadius: BorderRadius.circular(15.0),
-//                   ),
-//                   fillColor: Colors.white,
-//                   hintText: 'FEDX',
-//                 ),
-//                 value: _selectedduration,
-//                 items: duration.map((durations) {
-//                   return DropdownMenuItem<String>(
-//                     value: durations,
-//                     child: Text(durations),
-//                   );
-//                 }).toList(),
-//                 onChanged: (value) {
-//                   setState(() {
-//                     _selectedduration = value;
-//                   });
-//                 },
-//               ),
-//             ],
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.02,
-//           ),
-//           Text('Return Shipping Price'),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.01,
-//           ),
-//           TextFormField(
-//             decoration: InputDecoration(
-//               hintText: '\$45.00',
-//               contentPadding: EdgeInsets.all(15),
-//               border: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                 borderRadius: BorderRadius.circular(15.0),
-//               ),
-//               fillColor: Colors.white,
-//               // hintText: 'Street Address',
-//             ),
-//             validator: null,
-//             onSaved: (value) {},
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.02,
-//           ),
-//           Text('Return Shipping Location'),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.01,
-//           ),
-//           TextFormField(
-//             decoration: InputDecoration(
-//               hintText: '\$45.00',
-//               contentPadding: EdgeInsets.all(15),
-//               border: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
-//                 borderRadius: BorderRadius.circular(15.0),
-//               ),
-//               fillColor: Colors.white,
-//               // hintText: 'Street Address',
-//             ),
-//             validator: null,
-//             onSaved: (value) {},
-//           ),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.03,
-//           ),
-//           // Divider(),
-//           // Padding(
-//           //   padding: EdgeInsets.all(5.0),
-//           //   child: _buildListItem(
-//           //     'Deliver Domestically',
-//           //     switchValue: isSwitchOn,
-//           //     onSwitchChanged: (value) {
-//           //       setState(() {
-//           //         isSwitchOn = value;
-//           //       });
-//           //     },
-//           //     lineargradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-//           //     text2: 'Add minimum 5 images covering all angles',
-//           //     onTap: () {
-//           //       // Handle tap event
-//           //     },
-//           //   ),
-//           // ),
-//           Divider(),
-//           SizedBox(
-//             height: MediaQuery.of(context).size.height * 0.02,
-//           ),
-//           CustomElevetedButton(
-//             height: 40,
-//             buttonName: 'Product Preview',
-//             textColor: Colors.white,
-//             ontap: () {
-//               // if (currentStep < 2) {
-//               //   setState(() {
-//               //     currentStep += 1;
-//               //   });
-//               // }
-//               showDialog(
-//                   context: context,
-//                   builder: (BuildContext context) {
-//                     return customsuccessalertpopup(
-//                         message: "Product has been uploaded");
-//                   });
-//               Future.delayed(Duration(seconds: 2), () {
-//                 Get.offAllNamed(RouteConstants.userbottomnavbar);
-//               });
-//             },
-//             color: Color(0xff2E3192),
-//             fontSize: 10,
-//             width: MediaQuery.of(context).size.width * 0.92,
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
-  Widget buildDropdown(String hint, List<String> items, String? selectedValue,
-      void Function(String?)? onChanged) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(13),
-          hintText: hint,
-          fillColor: Colors.black,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Color(0xffDBDBDB)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Color(0xffDBDBDB)),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        value: selectedValue,
-        onChanged: onChanged,
-        items: items.map<DropdownMenuItem<String>>((String item) {
-          return DropdownMenuItem<String>(
-            value: item,
-            child: Text(item),
-          );
-        }).toList(),
-      ),
-    );
-  }
 
-  Widget _buildListItem(
-    String text, {
-    String? text2,
-    Color? borderColour,
-    bool switchValue = false,
-    ValueChanged<bool>? onSwitchChanged,
-    VoidCallback? onTap,
-    List<Color>? lineargradientColors,
-  }) {
-    return Container(
-      width: double.infinity,
-      height: 80,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: borderColour ?? Colors.transparent,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            text,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(
-            height: 3,
-          ),
-          if (text2 != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  text2,
-                  style: TextStyle(fontSize: 10, color: Color(0xff757474)),
-                ),
-                _customGradientSwitch(
-                  switchValue: switchValue,
-                  onSwitchChanged: onSwitchChanged!,
-                  gradientColors: lineargradientColors,
-                ),
-              ],
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _customGradientSwitch({
-    required bool switchValue,
-    required ValueChanged<bool> onSwitchChanged,
-    List<Color>? gradientColors,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        onSwitchChanged(!switchValue);
-      },
-      child: Container(
-        width: 50.0, // Adjust the width as needed
-        height: 30.0,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: gradientColors ?? [Colors.grey, Colors.grey],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 200),
-              left: switchValue ? 20.0 : 0.0,
-              right: switchValue ? 0.0 : 20.0,
-              child: Container(
-                width: 30.0,
-                height: 30.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

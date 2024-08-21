@@ -28,7 +28,7 @@ class RouteConstants {
   static String addtocart = '/addtocart';
   static String setyourprofile = '/setyourprofile';
   static String homeguestscreen = '/homeguestscreen';
-  static String productdetailscreen = '/productdetailscreen';
+  static String productpreviewscreen = '/productpreviewscreen';
   static String searchscreen = '/searchscreen';
   static String categoriesscreen = '/categoriesscreen';
   static String searchfilterscreen = '/searchfilterscreen';
@@ -50,7 +50,7 @@ class RouteConstants {
   static String helpsupportscreen2 = '/helpsupportscreen2';
   static String chatslistscreen = '/chatslistscreen';
   static String chatscreen = '/chatscreen';
-
+static String updatestepper = '/updatestepper';
   static String addnewcardpaymentmethod = '/addnewcardpaymentmethod';
   static String homeuserscreen = '/homeuserscreen';
   static String almosttherescreen = '/almosttherescreen';

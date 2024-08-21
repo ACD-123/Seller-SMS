@@ -18,6 +18,10 @@ class AppConstants {
          static const getbrandslist = "brands?page_size=9999999999";
          static const getcategorywiseattributes = "categories/attributes/";
           static const createproduct = "products/store";
+          static const updateproduct = "products/update";
+          static const getactiveproducts = "seller/active-product";
+          static const getinactiveproducts = "seller/in-active-product";
+          static const getproductpreviewbyid = "products/";
 }
 
 
