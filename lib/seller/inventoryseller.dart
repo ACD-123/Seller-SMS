@@ -8,8 +8,9 @@ import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/customelevatedbutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
-import 'package:smsseller/seller/aciveproducts.dart';
+import 'package:smsseller/seller/activeproducts.dart';
 import 'package:smsseller/seller/inactiveproducts.dart';
+import 'package:smsseller/seller/outofstockproducts.dart';
 
 class InventorySeller extends StatefulWidget {
   const InventorySeller({super.key});
@@ -29,8 +30,7 @@ class _InventorySellerState extends State<InventorySeller>
     super.initState();
     productcontroller.getsellerCategoriesList();
     productcontroller.getBrandsList();
-    storecontroller.getSellerShopProfileData();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -38,7 +38,6 @@ class _InventorySellerState extends State<InventorySeller>
     _tabController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +64,20 @@ class _InventorySellerState extends State<InventorySeller>
             _buildHeaderContent(),
             TabBar(
               controller: _tabController,
-              tabs: [
-                Tab(text: "Active Products"),
-                Tab(text: "Inactive Products"),
+              tabs: const [
+                Tab(text: "Active"),
+                Tab(text: "Out of Stock"),
+                Tab(text: "InActive "),
               ],
             ),
-            Container(
+            SizedBox(
               height: 57.h,
               child: TabBarView(
                 controller: _tabController,
                 children: const [
                   ActiveProducts(),
-                  InActiveProducts(),
+                  OutofStockProducts(),
+                  InActiveProducts()
                 ],
               ),
             ),

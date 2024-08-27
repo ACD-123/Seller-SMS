@@ -23,6 +23,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    storecontroller.getSellerShopProfileData();
     storecontroller.getSellerProfileData();
     storecontroller.getSellerTotalSalesStats(storecontroller.todaysalesselectedmonth.value.toString());
     storecontroller.getSellerItemsSoldStats(storecontroller.itemssoldselectedmonth.value.toString());

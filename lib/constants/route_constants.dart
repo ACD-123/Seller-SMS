@@ -79,5 +79,6 @@ static String updatestepper = '/updatestepper';
   static String useractiveorderdetails = '/useractiveorderdetails';
   static String userrefundorderdetails = '/userrefundorderdetails';
   static String usercompletedorderdetails = '/usercompletedorderdetails';
-  static String editsellershop = '/editsellershop';
+  static String sellerupdateshopdetails = '/sellerupdateshopdetails';
+  static String sellerupdateshop = '/sellerupdateshop';
 }

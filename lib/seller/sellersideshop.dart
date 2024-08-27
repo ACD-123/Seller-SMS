@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:share_plus/share_plus.dart';
-// import 'package:get/get.dart';
-
+import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/seller/aboutseller.dart';
 import 'package:smsseller/seller/feedbacksellerside.dart';
 import 'package:smsseller/seller/sellershop.dart';
 
 class SellerSideShop extends StatefulWidget {
+  
   @override
   State<SellerSideShop> createState() => _SellerShopState();
 }
 
-class _SellerShopState extends State<SellerSideShop> {
-  // final wishlistproductsdata = wishlistproductgridlist[index];
-  // final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+class _SellerShopState extends State<SellerSideShop> 
+    with SingleTickerProviderStateMixin{
+  final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+   late TabController _tabController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     _tabController = TabController(length: 3, vsync: this);
+    storecontroller.getSellerShopAbout();
+  }
+ @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,211 +58,196 @@ class _SellerShopState extends State<SellerSideShop> {
             ),
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Share.share("Check out my latest tutorial");
-            },
-            child: Container(
-              height: 15, // Set the desired height here
-
-              child: Image.asset('assets/images/shareicon.png'),
-            ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Background image
-            Container(
-              height: MediaQuery.of(context).size.height * 0.26,
-              child: Stack(
-                children: [
-                  // Background image
-                  Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/sellerbackimg.png"),
-                        fit: BoxFit.cover,
+            Obx(
+              () => SizedBox(
+                height: MediaQuery.of(context).size.height * 0.26,
+                child: Stack(
+                  children: [
+                    // Background image
+                    Container(
+                      height: 18.h,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(storecontroller.getsellershopabout
+                                      .value?.data?.coverImage?.isEmpty ??
+                                  false
+                              ? AppConstants.noimage
+                              : storecontroller.getsellershopabout.value?.data
+                                      ?.coverImage ??
+                                  AppConstants.noimage),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Shop Information
-                  Positioned(
-                    top: 100,
-                    left: 10,
-                    right: 10,
-                    child: Card(
-                      elevation: 1,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 28),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                "assets/images/sellerfrontpic.png",
-                                width: 80,
-                                height: 80,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.03,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                    // Shop Information
+                    Positioned(
+                      top: 100,
+                      left: 10,
+                      right: 10,
+                      child: Card(
+                        elevation: 1,
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 28),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    storecontroller.getsellershopabout.value
+                                                ?.data?.mainImage?.isEmpty ??
+                                            false
+                                        ? AppConstants.noimage
+                                        : storecontroller.getsellershopabout
+                                                .value?.data?.mainImage ??
+                                            AppConstants.noimage,
+                                    width: 20.w,
+                                    height: 7.h,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.03,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 1.h,
                                     ),
-                                  ),
-                                  // const SizedBox(height: 10),
-                                  Text(
-                                    "SMS Store",
-                                    style: const TextStyle(
-                                      fontSize: 14,
+                                    SizedBox(
+                                      width: 55.w,
+                                      child: Text(
+                                        storecontroller.getsellershopabout.value
+                                                ?.data?.shopName ??
+                                            "",
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 1,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Row(
-                                          children: List.generate(
-                                              5,
-                                              (index) => Icon(
-                                                    Icons.star_purple500_sharp,
-                                                    color:
-                                                        const Color(0xffFFAD33),
-                                                    size: 16.sp,
-                                                  ))),
-                                      SizedBox(
-                                        width: 0.5.w,
-                                      ),
-                                      Text('(65)',
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                          )),
-                                      SizedBox(
-                                        width: 8.w,
-                                      ),
-                                      // GestureDetector(
-                                      //   onTap: () {
-                                      //     Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder: (context) =>
-                                      //               ReportSeller()),
-                                      //     );
-                                      //   },
-                                      //   child: Container(
-                                      //     decoration: BoxDecoration(
-                                      //         borderRadius:
-                                      //             BorderRadius.circular(10),
-                                      //         border: Border.all(
-                                      //             color: Color(0xffD16363))),
-                                      //     width: 100,
-                                      //     height: 30,
-                                      //     child: Center(
-                                      //         child: Row(
-                                      //       mainAxisAlignment:
-                                      //           MainAxisAlignment.spaceEvenly,
-                                      //       children: [
-                                      //         Text(
-                                      //           'Report',
-                                      //           style: TextStyle(
-                                      //               color: Color(0xffD16363)),
-                                      //         ),
-                                      //         Image.asset(
-                                      //             'assets/images/reporticon.png')
-                                      //       ],
-                                      //     )),
-                                      //   ),
-                                      // ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 2.h,
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    SizedBox(
+                                      height: 0.3.h,
+                                    ),
+                                    Row(
+                                      children: [
+                                        RatingBarIndicator(
+                                          rating: storecontroller
+                                                  .getsellershopabout
+                                                  .value
+                                                  ?.data
+                                                  ?.ratingAsDouble() ??
+                                              0.0,
+                                          itemBuilder: (context, index) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Color(0xffFFAD33),
+                                          ),
+                                          itemCount: 5,
+                                          itemSize: 16.sp,
+                                          direction: Axis.horizontal,
+                                        ),
+                                        SizedBox(
+                                          width: 0.5.w,
+                                        ),
+                                        SizedBox(
+                                          width: 30.w,
+                                          child: Text(
+                                            '(${storecontroller.getsellershopabout.value?.data?.ratingCount ?? ""})',
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8.w,
+                                        ),
+                                        // GestureDetector(
+                                        //   onTap: () {
+                                        //     Navigator.push(
+                                        //       context,
+                                        //       MaterialPageRoute(
+                                        //           builder: (context) =>
+                                        //               ReportSeller()),
+                                        //     );
+                                        //   },
+                                        //   child: Container(
+                                        //     decoration: BoxDecoration(
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(10),
+                                        //         border: Border.all(
+                                        //             color: Color(0xffD16363))),
+                                        //     width: 100,
+                                        //     height: 30,
+                                        //     child: Center(
+                                        //         child: Row(
+                                        //       mainAxisAlignment:
+                                        //           MainAxisAlignment.spaceEvenly,
+                                        //       children: [
+                                        //         Text(
+                                        //           'Report',
+                                        //           style: TextStyle(
+                                        //               color: Color(0xffD16363)),
+                                        //         ),
+                                        //         Image.asset(
+                                        //             'assets/images/reporticon.png')
+                                        //       ],
+                                        //     )),
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 2.h,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             // Tabs
-            DefaultTabController(
-              length: 3,
-              child: Column(
-                children: [
-                  TabBar(
-                    labelColor: const Color(0xff525c6e),
-                    unselectedLabelColor: const Color(0xffacb3bf),
-                    indicatorPadding: const EdgeInsets.all(0.0),
-                    indicatorWeight: 3.0,
-                    labelPadding: const EdgeInsets.only(left: 0.0, right: 0.0),
-                    indicator: const ShapeDecoration(
-                        shape: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 2,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                        color: Color(0xff2E3192)),
-                    tabs: <Widget>[
-                      Container(
-                        height: 40,
-                        alignment: Alignment.center,
-                        color: Colors.white,
-                        child: const Text("Shop"),
-                      ),
-                      Container(
-                        height: 40,
-                        alignment: Alignment.center,
-                        color: Colors.white,
-                        child: const Text("About"),
-                      ),
-                      Container(
-                        height: 40,
-                        alignment: Alignment.center,
-                        color: Colors.white,
-                        child: const Text("Feedback"),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.55,
-                    child: TabBarView(
-                      children: [
-                        SellerShop(),
+             TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: "Shop"),
+                Tab(text: "About"),
+                Tab(text: "Feedback"),
+              ],
+            ),
+            SizedBox(
+              height: 57.h,
+              child: TabBarView(
+                controller: _tabController,
+                children:  [
+                  SellerShop(),
                         AboutSeller(),
                         SellerFeedback(),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
+           
           ],
         ),
       ),

@@ -98,7 +98,7 @@ class _WelcomeScreen1State extends State<WelcomeScreen1> {
                             child: Text(
                               "Next",
                               style: TextStyle(
-                                color: Color(0xff9A9A9A),
+                                color: Color(0xff2E3192),
                               ),
                             ),
                           ),

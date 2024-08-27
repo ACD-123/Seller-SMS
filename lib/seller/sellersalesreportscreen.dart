@@ -3,15 +3,42 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/route_constants.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/customcomponents/customappbar.dart';
-// import 'package:sms/customcomponents/customeleveted_button.dart';
+import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class SellerSalesReportScreen extends StatelessWidget {
+class SellerSalesReportScreen extends StatefulWidget {
   const SellerSalesReportScreen({super.key});
+
+  @override
+  State<SellerSalesReportScreen> createState() =>
+      _SellerSalesReportScreenState();
+}
+
+class _SellerSalesReportScreenState extends State<SellerSalesReportScreen> {
+  final ordercontroller = Get.put(OrderController(orderRepo: Get.find()));
+  final List<String> months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ordercontroller.getsellerSalesReportGraph();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,77 +64,101 @@ class SellerSalesReportScreen extends StatelessWidget {
                     ],
                     borderRadius: BorderRadius.circular(1.54)),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Total Sales",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.sp,
-                                color: Color(0xff000000)),
-                          ),
-                          SizedBox(
-                            width: 2.w,
-                          ),
-                          Text(
-                            "1,227",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17.sp,
-                                color: Color(0xff2E3192)),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        color: Color(0xff949BAB).withOpacity(0.35),
-                      ),
-                      SizedBox(
-                        height: 16.h,
-                        child: SfCartesianChart(
-                          plotAreaBorderWidth: 0,
-
-                          // X and Y axes configurations
-                          primaryXAxis: CategoryAxis(
-                            labelStyle:
-                                const TextStyle(color: Color(0xff838383)),
-                          ),
-                          primaryYAxis: NumericAxis(
-                            labelStyle:
-                                const TextStyle(color: Color(0xff838383)),
-                            numberFormat: NumberFormat.compact(),
-                          ),
-                          // Tooltip configuration
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                          // Series configuration
-                          series: <ChartSeries>[
-                            LineSeries<ChartData, String>(
-                              dataSource: [
-                                ChartData('Jan', 0),
-                                ChartData('Feb', 100000),
-                                ChartData('Mar', 50000),
-                                ChartData('Apr', 10000),
-                                ChartData('May', 15000),
-                                ChartData('Jun', 400000),
-                                ChartData('July', 100000),
-                                ChartData('Aug', 200000),
-                                ChartData('Sep', 50000),
-                                ChartData('Oct', 40000),
-                                ChartData('Nov', 70000),
-                                ChartData('Dec', 19000),
-                              ],
-                              xValueMapper: (ChartData sales, _) => sales.month,
-                              yValueMapper: (ChartData sales, _) => sales.sales,
-                              name: 'Total Sales',
-                              markerSettings:
-                                  const MarkerSettings(isVisible: false),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Total Orders",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13.sp,
+                                  color: Color(0xff000000)),
                             ),
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            Obx(
+                              () => Text(
+                                ordercontroller.getsellersalesreportgraph.value
+                                        ?.data?.totalOrders
+                                        .toString() ??
+                                    "",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17.sp,
+                                    color: Color(0xff2E3192)),
+                              ),
+                            )
                           ],
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Divider(
+                          color: Color(0xff949BAB).withOpacity(0.35),
+                        ),
+                      ),
+                      SizedBox(
+                          height: 16.h,
+                          child: Obx(() {
+                            List<ChartData> chartData = List.generate(
+                              months.length,
+                              (index) => ChartData(
+                                months[index],
+                                ordercontroller.getsellersalesreportgraph.value
+                                        ?.data?.ordersByMonthMobile?[index] ??
+                                    0,
+                              ),
+                            );
+
+                            return SfCartesianChart(
+                              plotAreaBorderWidth: 0,
+
+                              // X and Y axes configurations
+                              primaryXAxis: CategoryAxis(
+                                labelStyle:
+                                    const TextStyle(color: Color(0xff838383)),
+                              ),
+                              primaryYAxis: NumericAxis(
+                                labelStyle:
+                                    const TextStyle(color: Color(0xff838383)),
+                                numberFormat: NumberFormat.compact(),
+                              ),
+                              // Tooltip configuration
+                              tooltipBehavior: TooltipBehavior(enable: true),
+                              // Series configuration
+                              series: <ChartSeries>[
+                                LineSeries<ChartData, String>(
+                                  dataSource: chartData,
+                                  // [
+                                  //   ChartData('Jan', 0),
+                                  //   ChartData('Feb', 0),
+                                  //   ChartData('Mar', 1),
+                                  //   ChartData('Apr', 0),
+                                  //   ChartData('May', 0),
+                                  //   ChartData('Jun', 0),
+                                  //   ChartData('July', 0),
+                                  //   ChartData('Aug', 0),
+                                  //   ChartData('Sep', 0),
+                                  //   ChartData('Oct', 0),
+                                  //   ChartData('Nov', 0),
+                                  //   ChartData('Dec', 0),
+                                  // ],
+                                  xValueMapper: (ChartData sales, _) =>
+                                      sales.month,
+                                  yValueMapper: (ChartData sales, _) =>
+                                      sales.sales,
+                                  name: 'Total Sales',
+                                  markerSettings:
+                                      const MarkerSettings(isVisible: false),
+                                ),
+                              ],
+                            );
+                          }))
                     ],
                   ),
                 ),
@@ -119,7 +170,7 @@ class SellerSalesReportScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Container(
-                height: 20.h,
+                height: 23.h,
                 width: Get.width,
                 decoration: BoxDecoration(
                     color: Color(0xffFFFFFF),
@@ -151,29 +202,32 @@ class SellerSalesReportScreen extends StatelessWidget {
                               height: 1.h,
                             ),
                             customcolorrow(
-                                title: "60% Delivered",
-                                color: Color(0xff2E3192)),
+                                title: "60% Pending", color: Color(0xff2E3192)),
                             SizedBox(
                               height: 0.5.h,
                             ),
                             customcolorrow(
-                                title: "13% In process",
-                                color: Color(0xff8286F6)),
+                                title: "13% Active", color: Color(0xff8286F6)),
                             SizedBox(
                               height: 0.5.h,
                             ),
                             customcolorrow(
-                                title: "13% Disputed",
+                                title: "13% Completed",
                                 color: Color(0xffFFC120)),
                             SizedBox(
                               height: 0.5.h,
                             ),
                             customcolorrow(
-                                title: "14% Cancelled",
-                                color: Color(0xffFE3A30)),
+                                title: "14% Refund", color: Color(0xffFE3A30)),
+                            SizedBox(
+                              height: 0.5.h,
+                            ),
+                            customcolorrow(
+                                title: "14% Rejected",
+                                color: Color(0xff71D177)),
                           ],
                         ),
-                        Container(
+                        SizedBox(
                           height: 40.h,
                           width: 35.w,
                           child: SfCircularChart(
@@ -181,26 +235,29 @@ class SellerSalesReportScreen extends StatelessWidget {
                             series: <CircularSeries>[
                               DoughnutSeries<ChartData, String>(
                                 dataSource: [
-                                  ChartData('Jan', 1200000),
-                                  ChartData('Feb', 300000),
-                                  ChartData('Mar', 400000),
-                                  ChartData('Apr', 100000),
+                                  ChartData('Pending', 120000),
+                                  ChartData('Active', 300000),
+                                  ChartData('Completed', 400000),
+                                  ChartData('Refund', 100000),
+                                  ChartData('Rejected', 100000),
                                 ],
                                 xValueMapper: (ChartData data, _) => data.month,
                                 yValueMapper: (ChartData data, _) => data.sales,
                                 pointColorMapper: (ChartData data, _) {
                                   switch (data.month) {
-                                    case 'Jan':
-                                      return Color(0xff2E3192);
-                                    case 'Feb':
-                                      return Color(0xff8286F6);
-                                    case 'Mar':
-                                      return Color(0xffFFC120);
-                                    case 'Apr':
-                                      return Color(0xffFE3A30);
+                                    case 'Pending':
+                                      return const Color(0xff2E3192);
+                                    case 'Active':
+                                      return const Color(0xff8286F6);
+                                    case 'Completed':
+                                      return const Color(0xffFFC120);
+                                    case 'Refund':
+                                      return const Color(0xffFE3A30);
+                                    case 'Rejected':
+                                      return const Color(0xff71D177);
 
                                     default:
-                                      return Color(0xffFFC120);
+                                      return const Color(0xffFFC120);
                                   }
                                 },
                                 strokeColor: Colors.white,
@@ -346,7 +403,7 @@ class ChartData {
   ChartData(this.month, this.sales);
 
   final String month;
-  final double sales;
+  final int sales;
 }
 
 ////custom color row

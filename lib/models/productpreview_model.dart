@@ -134,37 +134,45 @@ double ratingasdouble(){
 class Attribute {
   int? id;
   String? name;
+  int? attributeid;
   Attribute({
     required this.id,
     required this.name,
+    required this.attributeid,
   });
 
   factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
         id: json["id"],
         name: json["name"],
+        attributeid: json["attribute_id"],
       );
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "attributeid": attributeid,
       };
 }
 
 class Brand {
   int? id;
   String? name;
+  String? guid;
   Brand({
     required this.id,
     required this.name,
+     required this.guid,
   });
 
   factory Brand.fromJson(Map<String, dynamic> json) => Brand(
         id: json["id"],
         name: json["name"],
+         guid: json["guid"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "guid": guid,
       };
 }
 

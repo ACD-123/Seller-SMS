@@ -1,14 +1,18 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/customcomponents/pickimages.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
 import 'package:smsseller/models/selectcategory_model.dart';
 import 'package:smsseller/models/selleritemssoldstats_model.dart';
 import 'package:smsseller/models/sellerprofiledata_model.dart';
+import 'package:smsseller/models/sellershopabout_model.dart';
+import 'package:smsseller/models/sellershopfeedback_model.dart';
+import 'package:smsseller/models/sellershopproduct_model.dart';
 import 'package:smsseller/models/sellershopprofiledata_model.dart';
 import 'package:smsseller/models/sellertotalsalestats_model.dart';
 import 'package:smsseller/repositries/storerepo.dart';
@@ -489,7 +493,7 @@ class StoreController extends GetxController {
   final shopregistrationnumcontroller = TextEditingController().obs;
   final createaboutshop = TextEditingController().obs;
   final createshopphonecode = ''.obs;
-    final createshopphonecountrycode = ''.obs;
+  final createshopphonecountrycode = ''.obs;
   final RxBool sellercreateshoploading = false.obs;
   Future<void> sellerCreateShop({
     required BuildContext context,
@@ -623,9 +627,12 @@ class StoreController extends GetxController {
       await storeRepo
           .updatesellerprofiledata(
               context: context,
-              phonecountrycode: updatesellerprofilephonecountrycode.value.isEmpty
-                  ? getsellerprofiledata.value?.data?.phonecountrycode.toString() ?? ""
-                  : updatesellerprofilephonecountrycode.value.toString(),
+              phonecountrycode:
+                  updatesellerprofilephonecountrycode.value.isEmpty
+                      ? getsellerprofiledata.value?.data?.phonecountrycode
+                              .toString() ??
+                          ""
+                      : updatesellerprofilephonecountrycode.value.toString(),
               name: updatesellerprofilename.value.text.isEmpty
                   ? getsellerprofiledata.value?.data?.name.toString() ?? ""
                   : updatesellerprofilename.value.text.toString(),
@@ -692,8 +699,298 @@ class StoreController extends GetxController {
     }
   }
 
+///////seller side shop products
+  final Rx<SellerShopProductsModel?> getsellersideshopproducts =
+      Rx<SellerShopProductsModel?>(null);
+  final RxBool getsellershopproductsloading = false.obs;
+  final RxBool getsellershopproductsreloading = false.obs;
+  RxInt sellershopproductspage = 1.obs;
+  getSellerShopProducts() async {
+    if (getsellershopproductsreloading.value ||
+        getsellershopproductsloading.value) return;
+    if (sellershopproductspage.value > 1 &&
+        sellershopproductspage.value >
+            (getsellersideshopproducts.value?.data?.pagination?.totalPages ??
+                0)) {
+      return;
+    }
+    try {
+      sellershopproductspage.value > 1
+          ? getsellershopproductsreloading.value = true
+          : getsellershopproductsloading.value = true;
+      final value = await storeRepo.getSellerShopProducts(
+          getsellershopprofiledata.value?.data?.sellerData?.guid ?? "",
+          sellershopproductspage.value);
+      if (sellershopproductspage.value > 1) {
+        getsellersideshopproducts.value?.data?.products
+            ?.addAll(value?.data?.products ?? []);
+      } else {
+        getsellersideshopproducts.value = value;
+      }
+      sellershopproductspage.value++;
+      getsellershopproductsreloading.value = false;
+      getsellershopproductsloading.value = false;
+    } catch (e) {
+      getsellershopproductsreloading.value = false;
+      getsellershopproductsloading.value = false;
+    }
+  }
 
+///////////////get seller shop about
+  final Rx<SellerShopAboutModel?> getsellershopabout =
+      Rx<SellerShopAboutModel?>(null);
+  final RxBool getsellershopaboutloading = false.obs;
+  getSellerShopAbout() async {
+    try {
+      getsellershopaboutloading(true);
+      await storeRepo
+          .getSellerShopAbout(
+              getsellershopprofiledata.value?.data?.sellerData?.guid ?? "")
+          .then((value) {
+        getsellershopabout.value = value;
+        getsellershopaboutloading(false);
+      });
+    } catch (e) {
+      getsellershopaboutloading(false);
+    }
+  }
 
-  
+//////seller side shop feedback
+  final Rx<SellerShopFeedbackModel?> getsellersideshoppfeedback =
+      Rx<SellerShopFeedbackModel?>(null);
+  final RxBool getsellersideshopfeedbackloading = false.obs;
+  final RxBool getsellersideshopfeedbackreloading = false.obs;
+  RxInt sellershopfeedbackspage = 1.obs;
+  getSellerShopFeedback() async {
+    if (getsellersideshopfeedbackreloading.value ||
+        getsellersideshopfeedbackloading.value) return;
+    if (sellershopfeedbackspage.value > 1 &&
+        sellershopfeedbackspage.value >
+            (getsellersideshoppfeedback.value?.data?.pagination?.totalPages ??
+                0)) {
+      return;
+    }
+    try {
+      sellershopfeedbackspage.value > 1
+          ? getsellersideshopfeedbackreloading.value = true
+          : getsellersideshopfeedbackloading.value = true;
+      final value = await storeRepo.getSellerShopFeedback(
+          getsellershopprofiledata.value?.data?.sellerData?.guid ?? "",
+          sellershopfeedbackspage.value);
+      if (sellershopfeedbackspage.value > 1) {
+        getsellersideshoppfeedback.value?.data?.feedback
+            ?.addAll(value?.data?.feedback ?? []);
+      } else {
+        getsellersideshoppfeedback.value = value;
+      }
+      sellershopfeedbackspage.value++;
+      getsellersideshopfeedbackloading.value = false;
+      getsellersideshopfeedbackreloading.value = false;
+    } catch (e) {
+      getsellersideshopfeedbackreloading.value = false;
+      getsellersideshopfeedbackloading.value = false;
+    }
+  }
 
+////////// reply feedback api
+  Map<int, TextEditingController> replyfeedbackControllers = {};
+  void reasonfeedbackcontroller() {
+    for (int i = 0;
+        i < (getsellersideshoppfeedback.value?.data?.feedback?.length ?? 0);
+        i++) {
+      replyfeedbackControllers[i] = TextEditingController();
+    }
+  }
+
+////////reply seller feedback
+  final RxBool replysellerfeedbackloading = false.obs;
+  Future<void> replySellerFeeback({
+    required int id,
+    required String reply,
+  }) async {
+    try {
+      replysellerfeedbackloading.value = true;
+      await storeRepo.replysellerFeedback(
+          id: id.toString(), comment: reply.toString());
+
+      replysellerfeedbackloading.value = false;
+    } finally {
+      replysellerfeedbackloading.value = false;
+    }
+  }
+
+/////////update seller shop data
+  var updatesellershopmainimage = Rx<File?>(null);
+  // Map<int, RxBool> iseditreplyfeedback = {};
+  // void iseditreplylist() {
+  //   iseditreplyfeedback.clear(); // Optional: clear the map if needed
+  //   for (int i = 0;
+  //       i < (getsellersideshoppfeedback.value?.data?.feedback?.length ?? 0);
+  //       i++) {
+  //     iseditreplyfeedback[i] = RxBool(false);
+  //     print("Key $i added to iseditreplyfeedback map.");
+  //   }
+  // }
+
+  // iseditreplyfeedbacktrue(int index) {
+  //   if (iseditreplyfeedback.containsKey(index)) {
+  //     iseditreplyfeedback[index]?.value = true;
+  //   } else {
+  //     print("Key $index not found in iseditreplyfeedback.");
+  //   }
+  // }
+
+  Future<void> updateSellershopmainimage(BuildContext context) async {
+    final File? pickedImage = await pickImage(context);
+    if (pickedImage != null) {
+      updatesellershopmainimage(File(pickedImage.path));
+    }
+  }
+
+  var updatesellershopcoverimage = Rx<File?>(null);
+  Future<void> updateSellershopcoverimage(BuildContext context) async {
+    final File? pickedImage = await pickImage(context);
+    if (pickedImage != null) {
+      updatesellershopcoverimage(File(pickedImage.path));
+    }
+  }
+
+  RxList<SelectCategory> updateshopselectedCategories = <SelectCategory>[].obs;
+  RxList<int> updateshopselectedCategoriesIds = <int>[].obs;
+  void updateSellershopremoveCategory(int index) {
+    if (index >= 0 && index < updateshopselectedCategories.length) {
+      updateshopselectedCategories.removeAt(index);
+      updateshopselectedCategoriesIds.removeAt(index);
+     
+    }
+  }
+
+  // void updateSellerremoveCategoryIds(int index) {
+  //   if (index >= 0 && index < updateshopselectedCategoriesIds.length) {
+  //     updateshopselectedCategoriesIds.removeAt(index);
+  //   }
+  //    print("Removed Categories Id:${updateshopselectedCategoriesIds}");
+  // }
+
+  var updatesellershopuploadedbannerimages = RxList<File?>([]);
+  void updateshopremovebannerImage(int index) {
+    updatesellershopuploadedbannerimages.removeAt(index);
+  }
+
+  RxList<int> updateshopremovedbannersimage = <int>[].obs;
+  void updateshopremovegetbannerImage(int index, int id) {
+    getsellershopprofiledata.update((value) {
+      value?.data?.sellerData?.banners?.removeAt(index);
+    });
+    updateshopremovedbannersimage.add(id);
+   
+  }
+
+  getsellershopcategoriesandstore() {
+    updateshopselectedCategories.addAll(getsellershopprofiledata
+        .value!.data!.sellerData!.categories!
+        .map((categorydata) => SelectCategory(
+            id: categorydata.id ?? 0,
+            name: categorydata.name ?? "",
+            image: categorydata.media?.first.originalUrl ??
+                AppConstants.noimage)));
+    updateshopselectedCategoriesIds.addAll(getsellershopprofiledata
+        .value!.data!.sellerData!.categories!
+        .map((categorydata) => categorydata.id ?? 0));
+  }
+
+  var updatesellershopuploadbannerimages = RxList<File?>([]);
+  void updatesellerShopremovebannerImage(int index) {
+    updatesellershopuploadbannerimages.removeAt(index);
+  }
+
+  Future<void> updatesellershopUploadBanner(BuildContext context) async {
+    final File? pickedImage = await pickImage(context);
+    if (pickedImage != null) {
+      updatesellershopuploadbannerimages.add(pickedImage);
+    }
+  }
+
+  final updateshopnamecontroller = TextEditingController().obs;
+  final updateshopwhatyousellcontroller = TextEditingController().obs;
+  final updateshopregistrationnumcontroller = TextEditingController().obs;
+  final updateshopphonenumbercontroller = TextEditingController().obs;
+  final updateaboutshopcontroller = TextEditingController().obs;
+  final updateshopphonecode = ''.obs;
+  final updateshopphonecountrycode = ''.obs;
+  final RxBool updatesellershoploading = false.obs;
+  Future<void> updateSellerShop({
+    required BuildContext context,
+    required String address,
+    required String city,
+    required String state,
+    required String country,
+    required String zipcode,
+  }) async {
+    try {
+      updatesellershoploading.value = true;
+      await storeRepo.updateSellershop(
+          context: context,
+          name: updateshopnamecontroller.value.text.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.shopName ?? ''
+              : updateshopnamecontroller.value.text.toString(),
+          address: address.isEmpty ? 
+          getsellershopprofiledata.value?.data?.sellerData?.address ?? ''
+          :
+          address
+          ,
+          city:  city.isEmpty ? 
+          getsellershopprofiledata.value?.data?.sellerData?.city ?? ''
+          :
+          city,
+          state:  state.isEmpty ? 
+          getsellershopprofiledata.value?.data?.sellerData?.state ?? ''
+          :
+          state,
+          country: country.isEmpty ? 
+          getsellershopprofiledata.value?.data?.sellerData?.country ?? ''
+          :
+          country,
+          zipcode:  zipcode.isEmpty ? 
+          getsellershopprofiledata.value?.data?.sellerData?.zipCode ?? ''
+          :
+          zipcode,
+          phonecode: updateshopphonecode.value.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.phoneCode ??
+                  ''
+              : updateshopphonecode.value.toString(),
+          phonenumber: updateshopphonenumbercontroller.value.text.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.phoneNumber ??
+                  ''
+              : updateshopphonenumbercontroller.value.text.toString(),
+          phonecountrycode: updateshopphonecountrycode.value.isEmpty
+              ? getsellershopprofiledata
+                      .value?.data?.sellerData?.phoneCountryCode ??
+                  ''
+              : updateshopphonecountrycode.value.toString(),
+          whatyousell: updateshopwhatyousellcontroller.value.text.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.sell ?? ''
+              : updateshopwhatyousellcontroller.value.text.toString(),
+          registrationnumber:
+              updateshopregistrationnumcontroller.value.text.isEmpty
+                  ? getsellershopprofiledata
+                          .value?.data?.sellerData?.registrationNumber ??
+                      ''
+                  : updateshopregistrationnumcontroller.value.text.toString(),
+          description: updateaboutshopcontroller.value.text.isEmpty
+              ? getsellershopprofiledata
+                      .value?.data?.sellerData?.shopDescription ??
+                  ''
+              : updateaboutshopcontroller.value.text.toString(),
+          categories: updateshopselectedCategoriesIds,
+          mainimage: updatesellershopmainimage.value,
+          coverimage: updatesellershopcoverimage.value,
+          bannersimages: updatesellershopuploadbannerimages,
+          deletedids: updateshopremovedbannersimage);
+
+      updatesellershoploading.value = false;
+    } finally {
+      updatesellershoploading.value = false;
+    }
+  }
 }

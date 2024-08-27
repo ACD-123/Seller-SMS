@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,18 +21,33 @@ class _UpdateStepperState extends State<UpdateStepper> {
   GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
   GlobalKey<FormState> formKey2 = GlobalKey<FormState>();
   int currentStep = 0;
-  
-  
+
   @override
   void initState() {
     super.initState();
-     productcontroller.updateoldproductimageids.clear();
+    productcontroller.updateproductcategory.value = '';
+    productcontroller.updateproductbrand.value = '';
+    productcontroller.updateproductselectedAttributes.clear();
+    productcontroller.updateselectedcategoryattributesList.clear();
+    productcontroller.updateoldproductimageids.clear();
     productcontroller.updateproductuploadimages.clear();
     productcontroller.updateproductnamecontroller.value.clear();
     productcontroller.updateproductstockcontroller.value.clear();
     productcontroller.updateproductdescriptioncontroller.value.clear();
     productcontroller.updateproductsetpricecontroller.value.clear();
     productcontroller.updateproductsalepricecontroller.value.clear();
+    productcontroller.updateproductcategory.value = productcontroller
+            .getproductpreviewbyid.value?.data?.categoryId
+            .toString() ??
+        "";
+    productcontroller.updateproductbrand.value = productcontroller
+            .getproductpreviewbyid.value?.data?.brandId
+            .toString() ??
+        "";
+    productcontroller.getCategoryAttributes(
+        productcontroller.getproductpreviewbyid.value?.data?.category?.guid ??
+            "");
+    productcontroller.mapNewAttributesToSelectedAttributes();
   }
 
   @override
@@ -64,53 +80,48 @@ class _UpdateStepperState extends State<UpdateStepper> {
             ),
           ),
         ),
-        body: Obx(() => 
-        productcontroller.getproductpreviewbyidloading.value ? 
-
-        Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40.h),
-                  child: Center(
-                    child: customcircularprogress(),
-                  ),
-                )
-
-
-        : productcontroller.getproductpreviewbyid.value == null || productcontroller.getproductpreviewbyid.value?.data == null ? 
-        Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40.h),
-                      child: Center(
-                          child: Text(
-                        "No Product Details",
-                        style: TextStyle(fontSize: 15.sp),
-                      )),
-                    ) : 
-        Stepper(
-          connectorColor: MaterialStateColor.resolveWith((states) {
-            if (states.contains(MaterialState.disabled)) {
-              return Colors.grey; // Color when the step is disabled
-            }
-            return Color(0xff2E3192); // Color when the step is active
-          }),
-          // activeColor: Colors.blue, // Color for the active step
-          type: StepperType.horizontal,
-          currentStep: currentStep,
-          onStepTapped: (step) {
-            setState(() {
-              currentStep = step;
-            });
-          },
-          controlsBuilder: (BuildContext context, ControlsDetails controls) {
-            return Container(); // This will remove the default buttons
-          },
-          steps: <Step>[
-            _customStep2(0, "Product Specifications"),
-            _customStep3(1, "Product Pricings"),
-          ],
-        ))
-        
-    );
+        body: Obx(() => productcontroller.getproductpreviewbyidloading.value
+            ? Padding(
+                padding: EdgeInsets.symmetric(vertical: 40.h),
+                child: Center(
+                  child: customcircularprogress(),
+                ),
+              )
+            : productcontroller.getproductpreviewbyid.value == null ||
+                    productcontroller.getproductpreviewbyid.value?.data == null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40.h),
+                    child: Center(
+                        child: Text(
+                      "No Product Details",
+                      style: TextStyle(fontSize: 15.sp),
+                    )),
+                  )
+                : Stepper(
+                    connectorColor: MaterialStateColor.resolveWith((states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey; // Color when the step is disabled
+                      }
+                      return Color(0xff2E3192); // Color when the step is active
+                    }),
+                    // activeColor: Colors.blue, // Color for the active step
+                    type: StepperType.horizontal,
+                    currentStep: currentStep,
+                    onStepTapped: (step) {
+                      setState(() {
+                        currentStep = step;
+                      });
+                    },
+                    controlsBuilder:
+                        (BuildContext context, ControlsDetails controls) {
+                      return Container(); // This will remove the default buttons
+                    },
+                    steps: <Step>[
+                      _customStep2(0, "Product Specifications"),
+                      _customStep3(1, "Product Pricings"),
+                    ],
+                  )));
   }
-
 
   Step _customStep2(int index, String title) {
     return Step(
@@ -175,16 +186,15 @@ class _UpdateStepperState extends State<UpdateStepper> {
             SizedBox(
               height: 1.h,
             ),
-            Obx(() => 
-                SizedBox(
-                    height: 10.h,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          productcontroller.updateproductuploadimages.isEmpty
-                ? const SizedBox() :
-                          ListView.builder(
+            Obx(() => SizedBox(
+                height: 10.h,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      productcontroller.updateproductuploadimages.isEmpty
+                          ? const SizedBox()
+                          : ListView.builder(
                               shrinkWrap: true,
                               itemCount: productcontroller
                                   .updateproductuploadimages.length,
@@ -231,16 +241,20 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                   ),
                                 );
                               }),
-                productcontroller
-                                  .getproductpreviewbyid.value!.data!.media!.isEmpty ? const SizedBox() : 
-                                             ListView.builder(
+                      productcontroller
+                              .getproductpreviewbyid.value!.data!.media!.isEmpty
+                          ? const SizedBox()
+                          : ListView.builder(
                               shrinkWrap: true,
-                              itemCount: productcontroller
-                                  .getproductpreviewbyid.value?.data?.media?.length,
+                              itemCount: productcontroller.getproductpreviewbyid
+                                  .value?.data?.media?.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 final oldproductimages = productcontroller
-                                  .getproductpreviewbyid.value?.data?.media?[index];
+                                    .getproductpreviewbyid
+                                    .value
+                                    ?.data
+                                    ?.media?[index];
                                 return Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 1.w),
@@ -251,7 +265,8 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                           borderRadius:
                                               BorderRadius.circular(4),
                                           child: Image.network(
-                                            oldproductimages?.originalUrl ?? AppConstants.noimage,
+                                            oldproductimages?.originalUrl ??
+                                                AppConstants.noimage,
                                             fit: BoxFit.fill,
                                             width: 25.w,
                                             height: 8.h,
@@ -261,12 +276,12 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                         top: -0,
                                         child: GestureDetector(
                                           onTap: () {
-                                  productcontroller.updateoldproductimageids.add( oldproductimages?.id ?? 0);
-                                  setState(() {
-                                         productcontroller
-                                  .getproductpreviewbyid.value?.data?.media?.removeAt(index);  
-                                  });   
-                                  print(productcontroller.updateoldproductimageids);
+                                            productcontroller
+                                                .removeoldupdateproductimages(
+                                                    oldimageid:
+                                                        oldproductimages?.id ??
+                                                            0,
+                                                    index: index);
                                           },
                                           child: CircleAvatar(
                                             radius: 13.sp,
@@ -283,14 +298,12 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                   ),
                                 );
                               }),
-                        ],
-                      ),
-                    ))),
+                    ],
+                  ),
+                ))),
             SizedBox(
               height: 1.h,
             ),
-            
-           
             Text('Product Name'),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
@@ -305,7 +318,9 @@ class _UpdateStepperState extends State<UpdateStepper> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 fillColor: Colors.white,
-                hintText: productcontroller.getproductpreviewbyid.value?.data?.title ?? "",
+                hintText: productcontroller
+                        .getproductpreviewbyid.value?.data?.title ??
+                    "",
               ),
               validator: (v) {
                 if (v!.isEmpty) {
@@ -339,7 +354,10 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     fillColor: Colors.white,
                     hintText: 'Select Category',
                   ),
-                  value: productcontroller.createproductselectedcategory?.value,
+                  value: productcontroller
+                          .getproductpreviewbyid.value?.data?.category?.id
+                          .toString() ??
+                      "",
                   items: productcontroller.getsellercategorieslist.value?.data
                       ?.map((categories) {
                     return DropdownMenuItem<String>(
@@ -348,15 +366,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    setState(() {
-                      productcontroller.createproductcategory.value = value!;
-                      var selectedCategory = productcontroller
-                          .getsellercategorieslist.value?.data
-                          ?.firstWhere(
-                              (category) => category.id.toString() == value);
-                      productcontroller
-                          .getCategoryAttributes(selectedCategory?.guid ?? "");
-                    });
+                    productcontroller.updateproductcategorydropdown(value!);
                   },
                 ),
               ],
@@ -367,8 +377,9 @@ class _UpdateStepperState extends State<UpdateStepper> {
             Obx(
               () => Wrap(
                 spacing: 8.0,
-                children: productcontroller.createselectedcategoryattributesList
+                children: productcontroller.updateselectedcategoryattributesList
                     .map((attribute) {
+                  final id = attribute['id'];
                   final name = attribute['name'];
                   final attributeId = attribute['attribute_id'];
 
@@ -376,10 +387,12 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     label: Text('$name'),
                     deleteIcon: Icon(Icons.close),
                     onDeleted: () {
-                      if (name == null || attributeId == null) return;
-                      productcontroller.createselectedcategoryattributesList
+                      if (name == null || id == null || attributeId == null)
+                        return;
+                      productcontroller.updateselectedcategoryattributesList
                           .removeWhere(
                         (entry) =>
+                            entry['id'] == id &&
                             entry['name'] == name &&
                             entry['attribute_id'] == attributeId,
                       );
@@ -388,7 +401,6 @@ class _UpdateStepperState extends State<UpdateStepper> {
                 }).toList(),
               ),
             ),
-
             Obx(() => productcontroller.getcategoryattributesloading.value
                 ? Center(
                     child: SizedBox(
@@ -425,7 +437,8 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                         0.01,
                                   ),
                                   DropdownButtonFormField<String>(
-                                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
                                     validator: (attribute) {
                                       if (attribute == null ||
                                           attribute.isEmpty) {
@@ -451,7 +464,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                       ),
                                     ),
                                     value: productcontroller
-                                        .createproductselectedAttributes[
+                                        .updateproductselectedAttributes[
                                             categoryname]
                                         ?.first,
                                     onChanged: (newValue) {
@@ -479,41 +492,44 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                       );
 
                                       if (selectedOption.isEmpty) return;
-
+                                      
+                                      final randomId = productcontroller.generateUniqueRandomString(5);
                                       final entry = {
+                                        'id': randomId,
                                         'name': selectedOption,
                                         'attribute_id': attributeId,
                                       };
 
                                       final existingEntryIndex = productcontroller
-                                          .createselectedcategoryattributesList
+                                          .updateselectedcategoryattributesList
                                           .indexWhere(
                                         (entry) =>
                                             entry['attribute_id'] ==
                                                 attributeId &&
-                                            entry['name'] == selectedOption,
+                                            entry['name'] == selectedOption &&
+                                            entry['id'] == randomId,
                                       );
 
                                       if (existingEntryIndex != -1) {
                                         productcontroller
-                                                .createselectedcategoryattributesList[
+                                                .updateselectedcategoryattributesList[
                                             existingEntryIndex] = entry;
                                       } else {
                                         productcontroller
-                                            .createselectedcategoryattributesList
+                                            .updateselectedcategoryattributesList
                                             .add(entry);
                                       }
 
                                       final currentAttributes =
                                           productcontroller
-                                              .createproductselectedAttributes
+                                              .updateproductselectedAttributes
                                               .putIfAbsent(
                                                   categoryname, () => []);
 
                                       if (!currentAttributes
                                           .contains(newValue)) {
                                         productcontroller
-                                                .createproductselectedAttributes[
+                                                .updateproductselectedAttributes[
                                             categoryname] = [
                                           ...currentAttributes,
                                           newValue,
@@ -521,7 +537,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                       }
 
                                       print(productcontroller
-                                          .createselectedcategoryattributesList);
+                                          .updateselectedcategoryattributesList);
                                     },
                                     items: categoryAttributeData!.options!
                                         .map<DropdownMenuItem<String>>(
@@ -558,7 +574,10 @@ class _UpdateStepperState extends State<UpdateStepper> {
                   }
                   return null;
                 },
-                value: productcontroller.createproductselectedbrand?.value,
+                value: productcontroller
+                        .getproductpreviewbyid.value?.data?.brand?.id
+                        .toString() ??
+                    "",
                 hint: Text('Select Brand'),
                 items: productcontroller.getbrandslist.value?.data?.brands
                     ?.map((brand) {
@@ -568,10 +587,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
                   );
                 }).toList(),
                 onChanged: (newValue) {
-                  setState(() {
-                    productcontroller.createproductbrand.value = newValue!;
-                    print(productcontroller.createproductbrand.value);
-                  });
+                  productcontroller.updateproductbranddropdown(newValue!);
                 },
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(15),
@@ -595,7 +611,10 @@ class _UpdateStepperState extends State<UpdateStepper> {
               keyboardType: TextInputType.number,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               decoration: InputDecoration(
-                 hintText: productcontroller.getproductpreviewbyid.value?.data?.stock.toString() ?? "",
+                hintText: productcontroller
+                        .getproductpreviewbyid.value?.data?.stock
+                        .toString() ??
+                    "",
                 contentPadding: EdgeInsets.all(15),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xffDBDBDB)),
@@ -603,7 +622,6 @@ class _UpdateStepperState extends State<UpdateStepper> {
                 ),
                 fillColor: Colors.white,
               ),
-              
               validator: (v) {
                 if (v!.isEmpty) {
                   return 'Stock can\'t be empty';
@@ -612,7 +630,6 @@ class _UpdateStepperState extends State<UpdateStepper> {
               },
               onSaved: (value) {},
             ),
-
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.01,
             ),
@@ -631,7 +648,10 @@ class _UpdateStepperState extends State<UpdateStepper> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 fillColor: Colors.white,
-               hintText: productcontroller.getproductpreviewbyid.value?.data?.description.toString() ?? "",
+                hintText: productcontroller
+                        .getproductpreviewbyid.value?.data?.description
+                        .toString() ??
+                    "",
               ),
               validator: (v) {
                 if (v!.isEmpty) {
@@ -641,25 +661,23 @@ class _UpdateStepperState extends State<UpdateStepper> {
               },
               onSaved: (value) {},
             ),
-           
-           
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
             CustomElevetedButton(
-              height: 40,
+              height: 5.h,
               buttonName: 'Next',
               textColor: Colors.white,
               ontap: () {
-                if (formKey1.currentState!.validate()) {
-                  if (productcontroller.createproductuploadimages.isEmpty) {
-                    showErrrorSnackbar(message: "Please Upload Product Images");
-                  } else {
-                    if (currentStep < 2) {
-                      setState(() {
-                        currentStep += 1;
-                      });
-                    }
+                if (productcontroller
+                        .getproductpreviewbyid.value!.data!.media!.isEmpty &&
+                    productcontroller.updateproductuploadimages.isEmpty) {
+                  showErrrorSnackbar(message: "Please Upload Product Images");
+                } else {
+                  if (currentStep < 2) {
+                    setState(() {
+                      currentStep += 1;
+                    });
                   }
                 }
               },
@@ -686,7 +704,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
           Text(
             title,
             style: TextStyle(
-               fontSize: 14.sp,
+              fontSize: 14.sp,
               color: currentStep == index ? Color(0xff2E3192) : Colors.black,
             ),
           ),
@@ -703,7 +721,10 @@ class _UpdateStepperState extends State<UpdateStepper> {
             controller: productcontroller.updateproductsetpricecontroller.value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: productcontroller.getproductpreviewbyid.value?.data?.price.toString() ?? "",
+              hintText: productcontroller
+                      .getproductpreviewbyid.value?.data?.price
+                      .toString() ??
+                  "",
 
               contentPadding: EdgeInsets.all(15),
               border: OutlineInputBorder(
@@ -734,8 +755,11 @@ class _UpdateStepperState extends State<UpdateStepper> {
                 productcontroller.updateproductsalepricecontroller.value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: productcontroller.getproductpreviewbyid.value?.data?.discountPrice.toString() ?? "",
-             
+              hintText: productcontroller
+                      .getproductpreviewbyid.value?.data?.discountPrice
+                      .toString() ??
+                  "",
+
               contentPadding: EdgeInsets.all(15),
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xffDBDBDB)),
@@ -758,22 +782,35 @@ class _UpdateStepperState extends State<UpdateStepper> {
             height: MediaQuery.of(context).size.height * 0.3,
           ),
           Obx(
-            () => productcontroller.createproductloading.value
+            () => productcontroller.updateproductloading.value
                 ? Center(
                     child: customcircularprogress(),
                   )
                 : CustomElevetedButton(
-                    height: 40,
+                    height: 5.h,
                     buttonName: 'Update',
                     textColor: Colors.white,
                     ontap: () {
-                      if (formKey1.currentState!.validate() &&
-                          formKey2.currentState!.validate()) {
-                        productcontroller.createproductuploadimages.isEmpty
-                            ? showErrrorSnackbar(
-                                message: "Please Upload Product Images")
-                            : productcontroller.createProduct(context: context);
-                      }
+                  productcontroller.getcategoryattributes.value!.data!
+                            .attributes!.isNotEmpty && productcontroller.updateselectedcategoryattributesList.isEmpty ? 
+                            showErrrorSnackbar(
+                              message: "Please Select Attributes") :
+                      productcontroller.getproductpreviewbyid.value!.data!
+                                  .media!.isEmpty &&
+                              productcontroller
+                                  .updateproductuploadimages.isEmpty
+                          ? showErrrorSnackbar(
+                              message: "Please Upload Product Images")
+                          : 
+                          
+                          
+                          
+                          productcontroller.updateProduct(
+                              context: context,
+                              id: productcontroller
+                                      .getproductpreviewbyid.value?.data?.id
+                                      .toString() ??
+                                  "");
                     },
                     fontSize: 10,
                     color: Color(0xff2E3192),
@@ -784,7 +821,4 @@ class _UpdateStepperState extends State<UpdateStepper> {
       ),
     );
   }
-
-
-
 }

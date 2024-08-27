@@ -42,40 +42,71 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
         child: Column(
           children: [
             Container(
-                height: 15.h,
+                height: 25.h,
                 color: Color(0xff1375EA).withOpacity(0.25),
                 child: Obx(() => Padding(
                       padding: const EdgeInsets.all(18),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         children: [
-                          customordercountcontainer(
-                              title: 'Active Orders',
-                              count: '35',
-                              ontap: () {
-                                storecontroller.setsellerSelectedOrdercount(1);
-                              },
-                              isselected: storecontroller
-                                      .issellerselectedOrdercount.value ==
-                                  1),
-                          customordercountcontainer(
-                              title: 'Completed Orders',
-                              count: '70',
-                              ontap: () {
-                                storecontroller.setsellerSelectedOrdercount(2);
-                              },
-                              isselected: storecontroller
-                                      .issellerselectedOrdercount.value ==
-                                  2),
-                          customordercountcontainer(
-                              title: 'Refund Orders',
-                              count: '10',
-                              ontap: () {
-                                storecontroller.setsellerSelectedOrdercount(3);
-                              },
-                              isselected: storecontroller
-                                      .issellerselectedOrdercount.value ==
-                                  3),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              customordercountcontainer(
+                                  title: 'Active Orders',
+                                  count: '35',
+                                  ontap: () {
+                                    storecontroller.setsellerSelectedOrdercount(1);
+                                  },
+                                  isselected: storecontroller
+                                          .issellerselectedOrdercount.value ==
+                                      1),
+                                      
+                              customordercountcontainer(
+                                  title: 'Completed Orders',
+                                  count: '70',
+                                  ontap: () {
+                                    storecontroller.setsellerSelectedOrdercount(2);
+                                  },
+                                  isselected: storecontroller
+                                          .issellerselectedOrdercount.value ==
+                                      2),
+                              customordercountcontainer(
+                                  title: 'Refund Orders',
+                                  count: '10',
+                                  ontap: () {
+                                    storecontroller.setsellerSelectedOrdercount(3);
+                                  },
+                                  isselected: storecontroller
+                                          .issellerselectedOrdercount.value ==
+                                      3),
+                            ],
+                          ),
+                          SizedBox(height: 1.h,)
+,                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              customordercountcontainer(
+                                  title: 'Active Orders',
+                                  count: '35',
+                                  ontap: () {
+                                    storecontroller.setsellerSelectedOrdercount(1);
+                                  },
+                                  isselected: storecontroller
+                                          .issellerselectedOrdercount.value ==
+                                      1),
+                                    SizedBox(width: 7.w,)  ,
+                              
+                              customordercountcontainer(
+                                  title: 'Refund Orders',
+                                  count: '10',
+                                  ontap: () {
+                                    storecontroller.setsellerSelectedOrdercount(3);
+                                  },
+                                  isselected: storecontroller
+                                          .issellerselectedOrdercount.value ==
+                                      3),
+                            ],
+                          ),
                         ],
                       ),
                     ))),

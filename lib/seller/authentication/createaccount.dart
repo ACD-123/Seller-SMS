@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:show_up_animation/show_up_animation.dart';
+import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/customcomponents/customelevatedbutton.dart';
 import 'package:smsseller/customcomponents/customwidgets.dart';
@@ -366,11 +367,7 @@ class _SignupState extends State<Signup> {
                       buttonName: 'Login With Facebook',
                       textColor: Colors.white,
                       ontap: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgotEmailverification()),
-                        );
+                       showSuccessSnackbar(message: "Comming Soon");
                       },
                       fontSize: 14,
 
@@ -386,12 +383,8 @@ class _SignupState extends State<Signup> {
                     child: ElevetedButton(
                       buttonName: 'Login With Google',
                       textColor: Colors.black,
-                      ontap: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgotEmailverification()),
-                        );
+                      ontap: ()  {
+                        showSuccessSnackbar(message: "Comming Soon");
                       },
                       fontSize: 14,
                       borderColor: Colors.black,
@@ -404,10 +397,15 @@ class _SignupState extends State<Signup> {
                     height: MediaQuery.of(context).size.height * 0.05,
                   ),
                   Center(child: const Text('Already have an Account ')),
-                  Center(
-                    child: const Text(
-                      'Login ',
-                      style: TextStyle(color: Color(0xff2E3192)),
+                  GestureDetector(
+                    onTap: (){
+                      Get.offAllNamed(RouteConstants.loginscreen);
+                    },
+                    child: Center(
+                      child: const Text(
+                        'Login ',
+                        style: TextStyle(color: Color(0xff2E3192)),
+                      ),
                     ),
                   ),
                   SizedBox(

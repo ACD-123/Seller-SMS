@@ -48,7 +48,7 @@ class AuthRepo extends GetxService {
           endPoint: AppConstants.signup, data: mapData);
       if (res.statusCode == 200) {
         Get.toNamed(RouteConstants.emailverificaiton, arguments: email);
-        showSuccessSnackbar(message: "Successfully Registered");
+        showSuccessSnackbar(message: "Please Verify your Email");
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);

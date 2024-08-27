@@ -8,6 +8,7 @@ import 'package:smsseller/seller/authentication/forgotpassword.dart';
 import 'package:smsseller/seller/authentication/loginscreen.dart';
 import 'package:smsseller/seller/authentication/setprofile.dart';
 import 'package:smsseller/seller/banksetting.dart';
+import 'package:smsseller/seller/editsellershop.dart';
 import 'package:smsseller/seller/inventoryseller.dart';
 import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
 import 'package:smsseller/seller/productsdetail_screen.dart';
@@ -25,6 +26,8 @@ import 'package:smsseller/seller/sellersettingscreen.dart';
 import 'package:smsseller/seller/sellersetuppassword.dart';
 import 'package:smsseller/seller/sellersetupshop.dart';
 import 'package:smsseller/seller/sellersideshop.dart';
+import 'package:smsseller/seller/sellerupdateshopdetail.dart';
+import 'package:smsseller/seller/sellerupdateshopscreen.dart';
 import 'package:smsseller/seller/sellerwelcomescreen.dart';
 import 'package:smsseller/seller/splashscreen.dart';
 import 'package:smsseller/seller/steppper.dart';
@@ -352,10 +355,14 @@ class RouteGenerator {
       //   name: RouteConstants.usercompletedorderdetails,
       //   page: () => UserCompletedOrderDetails(),
       // ),
-      // GetPage(
-      //   name: RouteConstants.editsellershop,
-      //   page: () => EditSellerShop(),
-      // ),
+      GetPage(
+        name: RouteConstants.sellerupdateshop,
+        page: () => SellerUpdateShopScreen(),
+      ),
+       GetPage(
+        name: RouteConstants.sellerupdateshopdetails,
+        page: () => SellerUpdateShopDetails(),
+      ),
     ];
   }
 }

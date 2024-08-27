@@ -2,38 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/custom_textformfield.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
-import 'package:smsseller/customcomponents/errordailog.dart';
 
-class SellerCreateShopScreen extends StatefulWidget {
-  const SellerCreateShopScreen({super.key});
+class SellerUpdateShopScreen extends StatefulWidget {
+  const SellerUpdateShopScreen({super.key});
 
   @override
-  State<SellerCreateShopScreen> createState() => _SellerCreateShopScreenState();
+  State<SellerUpdateShopScreen> createState() => _SellerUpdateShopScreenState();
 }
 
-class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
+class _SellerUpdateShopScreenState extends State<SellerUpdateShopScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
   final authcontroller =
       Get.put(AuthenticationController(authRepo: Get.find()));
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  void getapidata() async {
+    storecontroller.updateshopselectedCategories.clear();
+    storecontroller.updateshopselectedCategoriesIds.clear();
+    storecontroller.updateshopremovedbannersimage.clear();
+    await storecontroller.getSellerShopProfileData();
+    storecontroller.getsellershopcategoriesandstore();
+  }
+
   @override
   void initState() {
     super.initState();
-    authcontroller.signupstreetaddrescontroller.value.clear();
-    authcontroller.signupstreetaddres.value = '';
-    authcontroller.signupcountryregioncontroller.value.clear();
-    authcontroller.signupcitycontroller.value.clear();
-    authcontroller.signupzipcodecontroller.value.clear();
-    authcontroller.signupstateprovincecontroller.value.clear();
-    storecontroller.phonenumbercontroller.value.clear();
-    storecontroller.shopnamecontroller.value.clear();
-    storecontroller.shopregistrationnumcontroller.value.clear();
-    storecontroller.whatyousellcontroller.value.clear();
+    getapidata();
   }
 
   @override
@@ -62,13 +61,40 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                     ),
                   ),
                   Positioned(
+                    top: 5.h,
+                    left: 2.w,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: SizedBox(
+                        width: 8.w,
+                        height: 4.h,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            padding: EdgeInsets.zero,
+                            backgroundColor: const Color(0xffEEEAEA),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(9.79),
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios_new_sharp,
+                            size: 17.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
                     top: 10.h,
                     left: 35.w,
                     right: 35.w,
                     child: GestureDetector(
                       onTap: () {
-                        storecontroller
-                            .uploadsellercreateshopprofileimage(context);
+                        storecontroller.updateSellershopmainimage(context);
                       },
                       child: Center(
                         child: Stack(
@@ -84,14 +110,18 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                                 child: CircleAvatar(
                                   radius: 32.sp,
                                   backgroundImage: storecontroller
-                                              .sellercreateshopuploadedprofileImage
+                                              .updatesellershopmainimage
                                               .value !=
                                           null
                                       ? FileImage(storecontroller
-                                          .sellercreateshopuploadedprofileImage
-                                          .value!)
-                                      : const AssetImage(
-                                              "assets/images/placeholderprofileimage.png")
+                                          .updatesellershopmainimage.value!)
+                                      : NetworkImage(storecontroller
+                                                  .getsellershopprofiledata
+                                                  .value
+                                                  ?.data
+                                                  ?.sellerData
+                                                  ?.mainImage ??
+                                              AppConstants.noimage)
                                           as ImageProvider,
                                 ),
                               ),
@@ -125,8 +155,11 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                 child: Column(
                   children: [
                     customtextformfield(
-                        controller: storecontroller.shopnamecontroller.value,
-                        hinttext: "Business Name",
+                        controller:
+                            storecontroller.updateshopnamecontroller.value,
+                        hinttext: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.shopName ??
+                            "Business Name",
                         validator: (v) {
                           if (v!.isEmpty) {
                             return "Please Enter Business Name";
@@ -138,13 +171,14 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                     ),
                     IntlPhoneField(
                       validator: (v) {
-                        if (storecontroller
-                            .phonenumbercontroller.value.text.isEmpty) {
+                        if (storecontroller.updateshopphonenumbercontroller
+                            .value.text.isEmpty) {
                           return 'Please Enter Phone Number';
                         }
                         return null;
                       },
-                      controller: storecontroller.phonenumbercontroller.value,
+                      controller:
+                          storecontroller.updateshopphonenumbercontroller.value,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -162,14 +196,21 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                         ),
                         filled: true,
                         fillColor: Colors.white,
-                        hintText: 'Phone Number',
+                        hintText: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.phoneNumber ??
+                            'Phone Number',
                         hintStyle: const TextStyle(color: Color(0xFF656565)),
                       ),
-                      initialCountryCode: 'KE',
+                      initialCountryCode: storecontroller
+                          .getsellershopprofiledata
+                          .value
+                          ?.data
+                          ?.sellerData
+                          ?.phoneCountryCode,
                       onChanged: (phone) {
-                        storecontroller.createshopphonecode.value =
+                        storecontroller.updateshopphonecode.value =
                             phone.countryCode;
-                             storecontroller.createshopphonecountrycode.value =
+                        storecontroller.updateshopphonecountrycode.value =
                             phone.countryISOCode;
                       },
                     ),
@@ -177,26 +218,32 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                       height: 1.5.h,
                     ),
                     customtextformfield(
-                        controller: storecontroller.whatyousellcontroller.value,
+                        controller: storecontroller
+                            .updateshopwhatyousellcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
                             return "Please Enter Sell";
                           }
                           return null;
                         },
-                        hinttext: "What you Sell"),
+                        hinttext: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.sell ??
+                            "What you Sell"),
                     SizedBox(
                       height: 1.5.h,
                     ),
                     customtextformfield(
-                        controller: storecontroller.shopregistrationnumcontroller.value,
+                        controller: storecontroller
+                            .updateshopregistrationnumcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
                             return "Please Enter ID";
                           }
                           return null;
                         },
-                        hinttext: "Commercial Registration ID"),
+                        hinttext: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.registrationNumber ??
+                            "Commercial Registration ID"),
                     SizedBox(
                       height: 1.5.h,
                     ),
@@ -215,8 +262,8 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                     // ),
                     Obx(
                       () => customtextformfield(
-                          controller:
-                              authcontroller.signupstreetaddrescontroller.value,
+                          controller: authcontroller
+                              .signupstreetaddrescontroller.value,
                           validator: (v) {
                             if (authcontroller
                                 .signupstreetaddres.value.isEmpty) {
@@ -226,7 +273,9 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                           },
                           hinttext:
                               authcontroller.signupstreetaddres.value.isEmpty
-                                  ? 'Street Address'
+                                  ? storecontroller.getsellershopprofiledata
+                                          .value?.data?.sellerData?.address ??
+                                      'Street Address'
                                   : authcontroller.signupstreetaddres.value),
                     ),
                     Obx(
@@ -265,7 +314,9 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                         controller:
                             authcontroller.signupcountryregioncontroller.value,
                         enabled: false,
-                        hinttext: "Country"),
+                        hinttext: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.country ??
+                            "Country"),
                     SizedBox(
                       height: 1.5.h,
                     ),
@@ -278,7 +329,9 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                               controller:
                                   authcontroller.signupcitycontroller.value,
                               enabled: false,
-                              hinttext: "City"),
+                              hinttext: storecontroller.getsellershopprofiledata
+                                      .value?.data?.sellerData?.city ??
+                                  "City"),
                         ),
                         Container(
                           width: 45.w,
@@ -286,7 +339,9 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                               controller:
                                   authcontroller.signupzipcodecontroller.value,
                               enabled: false,
-                              hinttext: "Zip Code"),
+                              hinttext: storecontroller.getsellershopprofiledata
+                                      .value?.data?.sellerData?.city ??
+                                  "Zip Code"),
                         )
                       ],
                     ),
@@ -296,25 +351,7 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                     custombutton(
                         hinttext: "Next",
                         ontap: () {
-                          if (formKey.currentState!.validate()) {
-                            if (storecontroller
-                                        .sellercreateshopuploadedprofileImage
-                                        .value ==
-                                    null ) {
-                              showErrrorSnackbar(
-                                  message: "Please Upload Profile Image");
-                            } else {
-                              if(
-                                storecontroller
-                                    .phonenumbercontroller.value.text.isEmpty){
-                                  showErrrorSnackbar(
-                                  message: "Please Enter Phone Number");
-                                    }else{
-Get.toNamed(RouteConstants.sellersetupshop);
-                                    }
-                              
-                            }
-                          }
+                          Get.toNamed(RouteConstants.sellerupdateshopdetails);
                         })
                   ],
                 ),

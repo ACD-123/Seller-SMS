@@ -7,26 +7,26 @@ import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
-class InActiveProducts extends StatefulWidget {
-  const InActiveProducts({super.key});
+class ActiveProducts extends StatefulWidget {
+  const ActiveProducts({super.key});
 
   @override
-  State<InActiveProducts> createState() => _InActiveProductsState();
+  State<ActiveProducts> createState() => _ActiveProductsState();
 }
 
-class _InActiveProductsState extends State<InActiveProducts> {
+class _ActiveProductsState extends State<ActiveProducts> {
   final productcontroller = Get.put(ProductController(productRepo: Get.find()));
   ScrollController scrollcontroller = ScrollController();
-  inactiveapidata()async{
-    productcontroller.inactivedeleteproductswitchbutton.clear();
-    productcontroller.deletedproductpage.value = 1;
-   await productcontroller.getDeletedProducts();
-  productcontroller.getinactivedeleteproductswitchboolvalue();
-  }
+void apidata()async{
+ productcontroller. deleteproductswitchbutton.clear();
+     productcontroller.page.value = 1;
+   await  productcontroller.getActiveProducts();
+    productcontroller.getactivedeleteproductswitchboolvalue();
+}
   @override
   void initState() {
     super.initState();
-    inactiveapidata();
+ apidata();
     scrollcontroller.addListener(_scrollListener);
   }
 
@@ -39,8 +39,7 @@ class _InActiveProductsState extends State<InActiveProducts> {
   void _scrollListener() {
     if (scrollcontroller.offset >= scrollcontroller.position.maxScrollExtent &&
         !scrollcontroller.position.outOfRange) {
-      productcontroller.getDeletedProducts();
-      
+      productcontroller.getActiveProducts();
     }
   }
 
@@ -48,15 +47,15 @@ class _InActiveProductsState extends State<InActiveProducts> {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Obx(() => productcontroller.getdeletedproductsloading.value
+        child: Obx(() => productcontroller.getactiveproductsloading.value
             ? Center(
                 child: customcircularprogress(),
               )
-            : productcontroller.getdeletedproducts.value == null ||
+            : productcontroller.getactiveproducts.value == null ||
                     productcontroller
-                        .getdeletedproducts.value!.data!.products!.isEmpty
+                        .getactiveproducts.value!.data!.products!.isEmpty
                 ? Center(
-                    child: nodatatext("No InActive Products"),
+                    child: nodatatext("No Active Products"),
                   )
                 : Column(
                     children: [
@@ -65,8 +64,8 @@ class _InActiveProductsState extends State<InActiveProducts> {
                             controller: scrollcontroller,
                             physics: const AlwaysScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: productcontroller.getdeletedproducts
-                                    .value?.data?.products?.length ??
+                            itemCount: productcontroller.getactiveproducts.value
+                                    ?.data?.products?.length ??
                                 0,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
@@ -75,15 +74,15 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                     mainAxisSpacing: 2.h,
                                     crossAxisCount: 3),
                             itemBuilder: (context, index) {
-                              final inactiveproducts = productcontroller
-                                  .getdeletedproducts
+                              final activeproducts = productcontroller
+                                  .getactiveproducts
                                   .value
                                   ?.data
                                   ?.products?[index];
                               return GestureDetector(
                                 onTap: () {
                                   productcontroller.getProductPreviewbyId(
-                                      inactiveproducts?.guid ?? "");
+                                      activeproducts?.guid.toString() ?? "");
                                   Get.toNamed(
                                       RouteConstants.productpreviewscreen);
                                 },
@@ -111,11 +110,11 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 child: Image.network(
-                                                  inactiveproducts?.media
+                                                  activeproducts?.media
                                                               ?.isEmpty ??
                                                           false
                                                       ? AppConstants.noimage
-                                                      : inactiveproducts
+                                                      : activeproducts
                                                               ?.media
                                                               ?.first
                                                               .originalUrl ??
@@ -127,14 +126,15 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                               ),
                                             ),
                                           ),
+                                          
                                           Positioned(
                                               top: 5,
                                               right: 5,
                                               child: GestureDetector(
-                                                onTap: () {
-                                                  productcontroller
+                                                onTap: () async {
+                                                  await productcontroller
                                                       .getProductPreviewbyId(
-                                                          inactiveproducts?.guid
+                                                          activeproducts?.guid
                                                                   .toString() ??
                                                               "");
                                                   Get.toNamed(RouteConstants
@@ -152,11 +152,11 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                                           0xff484BA0),
                                                     ))),
                                               )),
+                                         
                                         ],
                                       ),
                                       Text(
-                                        inactiveproducts?.title.toString() ??
-                                            "",
+                                        activeproducts?.title.toString() ?? "",
                                         style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w500),
@@ -166,10 +166,10 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                       Row(
                                         children: [
                                           Text(
-                                              inactiveproducts?.discountPrice ==
+                                              activeproducts?.discountPrice ==
                                                       "0"
-                                                  ? "\$${inactiveproducts?.price.toString() ?? ""}"
-                                                  : "\$${inactiveproducts?.discountPrice.toString() ?? ""}",
+                                                  ? "\$${activeproducts?.price.toString() ?? ""}"
+                                                  : "\$${activeproducts?.discountPrice.toString() ?? ""}",
                                               style: TextStyle(
                                                   fontSize: 14.sp,
                                                   color: Color(0xff2E3192),
@@ -178,9 +178,8 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                             width: 0.5.w,
                                           ),
                                           Text(
-                                            inactiveproducts?.discountPrice !=
-                                                    "0"
-                                                ? "\$${inactiveproducts?.price.toString() ?? ""}"
+                                            activeproducts?.discountPrice != "0"
+                                                ? "\$${activeproducts?.price.toString() ?? ""}"
                                                 : "",
                                             style: TextStyle(
                                                 fontSize: 12.sp,
@@ -195,9 +194,8 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                         Row(children: [
-                                           RatingBarIndicator(
-                                            rating: inactiveproducts
+                                        Row(children: [  RatingBarIndicator(
+                                            rating: activeproducts
                                                     ?.ratingAsDouble ??
                                                 0.0,
                                             itemBuilder: (context, index) =>
@@ -212,28 +210,29 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                           SizedBox(
                                             width: 0.5.w,
                                           ),
-                                          SizedBox(width: 7.5.w,
-                                          child: Text(
-                                              inactiveproducts?.ratingCount
-                                                      .toString() ??
-                                                  "",
-                                              style: TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 11.sp,
-                                              ))
-                                          
-                                          ,),
-                                         ],),
-                                         SizedBox(
+                                          SizedBox(
+                                            width: 7.5.w,
+                                            child: Text(
+                                              activeproducts?.ratingCount
+                                                        .toString() ??
+                                                    "",
+                                                 
+                                                style: TextStyle(
+                                                  fontSize: 11.sp,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  
+                                                )),
+                                          ),],),
+                                             SizedBox(
                                                 height: 4.h,
                                                 width: 9.w,
                                                 child: Transform.scale(
                                                   scale: 3.sp,
                                                   child: Obx(() =>  Switch(
-                                                    value: productcontroller.inactivedeleteproductswitchbutton[index]?.value ?? false,
+                                                    value: productcontroller.deleteproductswitchbutton[index]?.value ?? true,
                                                     onChanged: (value) {
-                                                     productcontroller.inactiveisdeleteactiveproduct(index, value);
-                                                     productcontroller.deleteProduct(id: inactiveproducts?.id ?? 0, status: 1);
+                                                     productcontroller.isdeleteactiveproduct(index, value);
+                                                     productcontroller.deleteProduct(id: activeproducts?.id ?? 0, status: 0);
                                                     },
                                                     activeTrackColor:
                                                         Colors.green,
@@ -250,11 +249,11 @@ class _InActiveProductsState extends State<InActiveProducts> {
                               );
                             }),
                       ),
-                      productcontroller.getdeletedproductsreloading.value
+                      productcontroller.getactiveproductsreloadloading.value
                           ? Center(
                               child: customcircularprogress(),
                             )
-                          : const SizedBox()
+                          : SizedBox()
                     ],
                   )));
   }

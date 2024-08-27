@@ -68,14 +68,14 @@ class SellerData {
   dynamic phoneCountryCode;
   String? coverImage;
   String? mainImage;
-  List<dynamic>? banners;
-  List<dynamic>? category;
+  List<Banners>? banners;
   String? joined;
   bool? isFavourite;
   int? favouriteCount;
   String? rating;
   int? ratingCount;
   int? productCount;
+  List<Category>? categories;
   List<Media>? media;
 
   SellerData({
@@ -99,13 +99,13 @@ class SellerData {
     this.coverImage,
     this.mainImage,
     this.banners,
-    this.category,
     this.joined,
     this.isFavourite,
     this.favouriteCount,
     this.rating,
     this.ratingCount,
     this.productCount,
+    this.categories,
     this.media,
     
   });
@@ -135,14 +135,14 @@ double get ratingAsDouble {
     phoneCountryCode: json["phone_country_code"],
     coverImage: json["cover_image"],
     mainImage: json["main_image"],
-    banners: json["banners"] == null ? null : List<dynamic>.from(json["banners"].map((x) => x)),
-    category: json["category"] == null ? null : List<dynamic>.from(json["category"].map((x) => x)),
+    banners: json["new_banners"] == null ? null : List<Banners>.from(json["new_banners"].map((x) => Banners.fromJson(x))),
     joined: json["joined"],
     isFavourite: json["is_favourite"],
     favouriteCount: json["favourite_count"],
     rating: json["rating"],
     ratingCount: json["rating_count"],
     productCount: json["product_count"],
+     categories: json["category"] == null ? null : List<Category>.from(json["category"].map((x) => Category.fromJson(x))),
     media: json["media"] == null ? null : List<Media>.from(json["media"].map((x) => Media.fromJson(x))),
   );
 
@@ -166,18 +166,81 @@ double get ratingAsDouble {
     "phone_country_code": phoneCountryCode,
     "cover_image": coverImage,
     "main_image": mainImage,
-    "banners": banners == null ? [] : List<dynamic>.from(banners!.map((x) => x)),
-    "category": category == null ? [] : List<dynamic>.from(category!.map((x) => x)),
+    "banners": banners == null ? [] : List<Banners>.from(banners!.map((x) => x.toJson())),
     "joined": joined,
     "is_favourite": isFavourite,
     "favourite_count": favouriteCount,
     "rating": rating,
     "rating_count": ratingCount,
     "product_count": productCount,
+    "categories": categories == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
     "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),
   };
 }
 
+class Category {
+  int? id;
+  String? name;
+  String? description;
+  int? active;
+  String? guid;
+  dynamic parentId;
+
+  List<Media>? media;
+
+  Category({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.active,
+    required this.guid,
+    required this.parentId,
+    required this.media,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        active: json["active"],
+        guid: json["guid"],
+        parentId: json["parent_id"],
+        media: json["media"] == null
+            ? null
+            : List<Media>.from(json["media"].map((x) => Media.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "active": active,
+        "guid": guid,
+        "parent_id": parentId,
+        "media": media == null
+            ? null
+            : List<dynamic>.from(media!.map((x) => x.toJson())),
+      };
+}
+class Banners {
+  int? id;
+  String? url;
+
+  Banners({
+    this.id,
+    this.url,
+  });
+
+  factory Banners.fromJson(Map<String, dynamic> json) => Banners(
+    id: json["id"],
+    url: json["url"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "url": url,
+  };
+}
 class Media {
   int? id;
   String? originalUrl;

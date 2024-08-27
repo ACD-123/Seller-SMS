@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:smsseller/constants/route_constants.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/customcomponents/custom_popup_dialogwhite.dart';
 
 typedef ButtonPressed = VoidCallback;
@@ -36,3 +36,15 @@ customcircularprogress() {
     color: Color(0xff2E3192),
   );
 }
+
+
+
+nodatatext(String message){
+  return  Text(message,
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold));
+}
+
+
+

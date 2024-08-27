@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -8,22 +7,26 @@ import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
-class ActiveProducts extends StatefulWidget {
-  const ActiveProducts({super.key});
+class OutofStockProducts extends StatefulWidget {
+  const OutofStockProducts({super.key});
 
   @override
-  State<ActiveProducts> createState() => _ActiveProductsState();
+  State<OutofStockProducts> createState() => _OutofStockProductsState();
 }
 
-class _ActiveProductsState extends State<ActiveProducts> {
+class _OutofStockProductsState extends State<OutofStockProducts> {
   final productcontroller = Get.put(ProductController(productRepo: Get.find()));
   ScrollController scrollcontroller = ScrollController();
-
+  outofstockapidata()async{
+    productcontroller.outofstockdeleteproductswitchbutton.clear();
+    productcontroller.inactiveproductpage.value = 1;
+    await productcontroller.getInActiveProducts();
+    productcontroller.getoutofstockdeleteproductswitchboolvalue();
+  }
   @override
   void initState() {
     super.initState();
-    productcontroller.page.value = 1;
-    productcontroller.getActiveProducts();
+    outofstockapidata();
     scrollcontroller.addListener(_scrollListener);
   }
 
@@ -35,8 +38,9 @@ class _ActiveProductsState extends State<ActiveProducts> {
 
   void _scrollListener() {
     if (scrollcontroller.offset >= scrollcontroller.position.maxScrollExtent &&
-        !scrollcontroller.position.outOfRange) {
-      productcontroller.getActiveProducts();
+        !scrollcontroller.position.outOfRange){
+       productcontroller.getInActiveProducts();
+       
     }
   }
 
@@ -44,14 +48,16 @@ class _ActiveProductsState extends State<ActiveProducts> {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Obx(() => productcontroller.getactiveproductsloading.value
+        child: Obx(() => productcontroller.getinactiveproductsloading.value
             ? Center(
                 child: customcircularprogress(),
               )
-            : productcontroller.getactiveproducts.value == null ||
+            : productcontroller.getinactiveproducts.value == null ||
                     productcontroller
-                        .getactiveproducts.value!.data!.products!.isEmpty
-                ? const Center(child: Text("No Active Products"))
+                        .getinactiveproducts.value!.data!.products!.isEmpty
+                ? Center(
+                    child: nodatatext("No Out of Stock Products"),
+                  )
                 : Column(
                     children: [
                       Expanded(
@@ -59,25 +65,25 @@ class _ActiveProductsState extends State<ActiveProducts> {
                             controller: scrollcontroller,
                             physics: const AlwaysScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: productcontroller.getactiveproducts.value
-                                    ?.data?.products?.length ??
+                            itemCount: productcontroller.getinactiveproducts
+                                    .value?.data?.products?.length ??
                                 0,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisSpacing: 2.w,
-                                    childAspectRatio: 3.4.sp,
+                                    childAspectRatio: 3.3.sp,
                                     mainAxisSpacing: 2.h,
                                     crossAxisCount: 3),
                             itemBuilder: (context, index) {
-                              final activeproducts = productcontroller
-                                  .getactiveproducts
+                              final inactiveproducts = productcontroller
+                                  .getinactiveproducts
                                   .value
                                   ?.data
                                   ?.products?[index];
                               return GestureDetector(
                                 onTap: () {
                                   productcontroller.getProductPreviewbyId(
-                                      activeproducts?.guid.toString() ?? "");
+                                      inactiveproducts?.guid ?? "");
                                   Get.toNamed(
                                       RouteConstants.productpreviewscreen);
                                 },
@@ -105,11 +111,11 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 child: Image.network(
-                                                  activeproducts?.media
+                                                  inactiveproducts?.media
                                                               ?.isEmpty ??
                                                           false
                                                       ? AppConstants.noimage
-                                                      : activeproducts
+                                                      : inactiveproducts
                                                               ?.media
                                                               ?.first
                                                               .originalUrl ??
@@ -126,10 +132,13 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                               right: 5,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  productcontroller.getProductPreviewbyId(
-                                      activeproducts?.guid.toString() ?? "");
-                                                  Get.toNamed(
-                                                      RouteConstants.updatestepper);
+                                                  productcontroller
+                                                      .getProductPreviewbyId(
+                                                          inactiveproducts?.guid
+                                                                  .toString() ??
+                                                              "");
+                                                  Get.toNamed(RouteConstants
+                                                      .updatestepper);
                                                 },
                                                 child: CircleAvatar(
                                                     radius: 14.sp,
@@ -146,7 +155,8 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                         ],
                                       ),
                                       Text(
-                                        activeproducts?.title.toString() ?? "",
+                                        inactiveproducts?.title.toString() ??
+                                            "",
                                         style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w500),
@@ -154,12 +164,13 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Row(
+
                                         children: [
                                           Text(
-                                              activeproducts?.discountPrice ==
+                                              inactiveproducts?.discountPrice ==
                                                       "0"
-                                                  ? "\$${activeproducts?.price.toString() ?? ""}"
-                                                  : "\$${activeproducts?.discountPrice.toString() ?? ""}",
+                                                  ? "\$${inactiveproducts?.price.toString() ?? ""}"
+                                                  : "\$${inactiveproducts?.discountPrice.toString() ?? ""}",
                                               style: TextStyle(
                                                   fontSize: 14.sp,
                                                   color: Color(0xff2E3192),
@@ -168,8 +179,9 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                             width: 0.5.w,
                                           ),
                                           Text(
-                                            activeproducts?.discountPrice != "0"
-                                                ? "\$${activeproducts?.price.toString() ?? ""}"
+                                            inactiveproducts?.discountPrice !=
+                                                    "0"
+                                                ? "\$${inactiveproducts?.price.toString() ?? ""}"
                                                 : "",
                                             style: TextStyle(
                                                 fontSize: 12.sp,
@@ -182,9 +194,11 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                         ],
                                       ),
                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          RatingBarIndicator(
-                                            rating: activeproducts
+                                         Row(children: [
+                                           RatingBarIndicator(
+                                            rating: inactiveproducts
                                                     ?.ratingAsDouble ??
                                                 0.0,
                                             itemBuilder: (context, index) =>
@@ -193,19 +207,40 @@ class _ActiveProductsState extends State<ActiveProducts> {
                                               color: Color(0xffFFAD33),
                                             ),
                                             itemCount: 5,
-                                            itemSize: 16.sp,
+                                            itemSize: 13.sp,
                                             direction: Axis.horizontal,
                                           ),
                                           SizedBox(
                                             width: 0.5.w,
                                           ),
-                                          Text(
-                                              activeproducts?.ratingCount
+                                         SizedBox(width: 7.5.w,child:  Text(
+                                              inactiveproducts?.ratingCount
                                                       .toString() ??
                                                   "",
                                               style: TextStyle(
                                                 fontSize: 11.sp,
-                                              )),
+                                                overflow: TextOverflow.ellipsis,
+                                              )),)
+                                         ],),
+
+                                          SizedBox(
+                                                height: 4.h,
+                                                width: 9.w,
+                                                child: Transform.scale(
+                                                  scale: 3.sp,
+                                                  child: Obx(() =>  Switch(
+                                                    value: productcontroller.outofstockdeleteproductswitchbutton[index]?.value ?? false,
+                                                    onChanged: (value) {
+                                                     productcontroller.outofstockisdeleteactiveproduct(index, value);
+                                                     productcontroller.deleteProduct(id: inactiveproducts?.id ?? 0, status: 0);
+                                                    },
+                                                    activeTrackColor:
+                                                        Colors.green,
+                                                  inactiveTrackColor: Colors.red,
+                                                    inactiveThumbColor: Colors.white,
+                                                  ),)
+                                                ),
+                                              )
                                         ],
                                       )
                                     ],
@@ -214,7 +249,7 @@ class _ActiveProductsState extends State<ActiveProducts> {
                               );
                             }),
                       ),
-                      productcontroller.getactiveproductsreloadloading.value
+                      productcontroller.getinactiveproductsreloading.value
                           ? Center(
                               child: customcircularprogress(),
                             )

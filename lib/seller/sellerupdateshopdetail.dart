@@ -11,18 +11,25 @@ import 'package:smsseller/customcomponents/custombutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/models/selectcategory_model.dart';
 
-class SellerSetupShop extends StatefulWidget {
-  const SellerSetupShop({super.key});
+class SellerUpdateShopDetails extends StatefulWidget {
+  const SellerUpdateShopDetails({super.key});
 
   @override
-  State<SellerSetupShop> createState() => _SellerSetupShopState();
+  State<SellerUpdateShopDetails> createState() =>
+      _SellerUpdateShopDetailsState();
 }
 
-class _SellerSetupShopState extends State<SellerSetupShop> {
+class _SellerUpdateShopDetailsState extends State<SellerUpdateShopDetails> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
   final authcontroller =
       Get.put(AuthenticationController(authRepo: Get.find()));
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +44,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
               children: [
                 GestureDetector(
                     onTap: () {
-                      storecontroller.uploadsellersetupshopcoverImage(context);
+                      storecontroller.updateSellershopcoverimage(context);
                     },
                     child: Obx(
                       () => Container(
@@ -48,34 +55,56 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                             border: Border.all(
                               color: Color(0xffD4D4D4),
                             )),
-                        child: storecontroller
-                                    .sellersetupshopuploadedcoverImage.value ==
-                                null
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/plusicon.png',
-                                    height: 7.h,
-                                  ),
-                                  Text(
-                                    'Upload Cover pic',
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Color(0xff878787),
-                                        fontWeight: FontWeight.w500),
+                        child:
+                            storecontroller.updatesellershopcoverimage.value ==
+                                        null &&
+                                    storecontroller
+                                            .getsellershopprofiledata
+                                            .value
+                                            ?.data
+                                            ?.sellerData
+                                            ?.coverImage
+                                            ?.isEmpty ==
+                                        null
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/plusicon.png',
+                                        height: 7.h,
+                                      ),
+                                      Text(
+                                        'Upload Cover pic',
+                                        style: TextStyle(
+                                            fontSize: 14.sp,
+                                            color: Color(0xff878787),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
                                   )
-                                ],
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
-                                child: Image.file(
-                                  File(storecontroller
-                                      .sellersetupshopuploadedcoverImage
-                                      .value!
-                                      .path),
-                                  fit: BoxFit.fill,
-                                )),
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: storecontroller
+                                                .updatesellershopcoverimage
+                                                .value ==
+                                            null
+                                        ? Image.network(
+                                            storecontroller
+                                                    .getsellershopprofiledata
+                                                    .value
+                                                    ?.data
+                                                    ?.sellerData
+                                                    ?.coverImage ??
+                                                AppConstants.noimage,
+                                            fit: BoxFit.fill,
+                                          )
+                                        : Image.file(
+                                            File(storecontroller
+                                                .updatesellershopcoverimage
+                                                .value!
+                                                .path),
+                                            fit: BoxFit.fill,
+                                          )),
                       ),
                     )),
                 SizedBox(
@@ -91,35 +120,56 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                 SizedBox(
                   height: 1.h,
                 ),
-                Container(
-                  height: 14.h,
-                  width: Get.width,
-                  decoration: BoxDecoration(
+                TextFormField(
+                  controller: storecontroller.updateaboutshopcontroller.value,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "Please Enter About Shop";
+                    }
+                    return null;
+                  },
+                  maxLines: 7,
+                  style: TextStyle(fontSize: 14.sp),
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7.84),
-                      border: Border.all(
+                      borderSide: BorderSide(
                         color: Color(0xffD4D4D4),
-                      )),
-                  child: TextFormField(
-                    controller: storecontroller.createaboutshop.value,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (v) {
-                      if (v!.isEmpty) {
-                        return "Please Enter About Shop";
-                      }
-                      return null;
-                    },
-                    maxLines: 7,
-                    style: TextStyle(fontSize: 14.sp),
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      border: InputBorder.none,
-                      hintText: "Write Something...",
-                      hintStyle:
-                          TextStyle(fontSize: 14.sp, color: Color(0xffD0D0D0)),
+                        width: 1.0,
+                      ),
                     ),
-                    onSaved: (value) {},
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7.84),
+                      borderSide: BorderSide(
+                        color: Color(0xffD4D4D4),
+                        width: 1.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7.84),
+                      borderSide: BorderSide(
+                        color: Color(0xffD4D4D4),
+                        width: 1.0,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7.84),
+                      borderSide: BorderSide(
+                        color: Colors.red,
+                        width: 1.0,
+                      ),
+                    ),
+                   
+                    hintText: storecontroller.getsellershopprofiledata.value
+                            ?.data?.sellerData?.shopDescription ??
+                        "Write Something...",
+                    hintStyle:
+                        TextStyle(fontSize: 14.sp, color: Color(0xffD0D0D0)),
                   ),
+                  onSaved: (value) {},
                 ),
                 SizedBox(
                   height: 2.h,
@@ -183,7 +233,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                   ?.categories?[index];
                               return GestureDetector(
                                 onTap: () {
-                                  storecontroller.createshopselectedCategories
+                                  storecontroller.updateshopselectedCategories
                                       .add(SelectCategory(
                                           id: categorydata?.id ?? 0,
                                           name: categorydata?.name.toString() ??
@@ -195,7 +245,8 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                                       ?.media?.first.originalUrl
                                                       .toString() ??
                                                   AppConstants.noimage));
-                                  storecontroller.createshopselectedCategoryIds
+                                  storecontroller
+                                      .updateshopselectedCategoriesIds
                                       .add(categorydata?.id ?? 0);
                                   storecontroller
                                       .searchcategorykeycontroller.value
@@ -212,7 +263,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                 SizedBox(
                   height: 2.h,
                 ),
-                Obx(() => storecontroller.createshopselectedCategories.isEmpty
+                Obx(() => storecontroller.updateshopselectedCategories.isEmpty
                     ? SizedBox()
                     : SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -224,10 +275,10 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
                                   itemCount: storecontroller
-                                      .createshopselectedCategories.length,
+                                      .updateshopselectedCategories.length,
                                   itemBuilder: (context, index) {
                                     final addcatgeorydata = storecontroller
-                                        .createshopselectedCategories[index];
+                                        .updateshopselectedCategories[index];
 
                                     return Padding(
                                         padding:
@@ -278,10 +329,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                               child: GestureDetector(
                                                 onTap: () {
                                                   storecontroller
-                                                      .sellersetupshopremoveCategory(
-                                                          index);
-                                                  storecontroller
-                                                      .sellersetupshopremoveCategoryIds(
+                                                      .updateSellershopremoveCategory(
                                                           index);
                                                 },
                                                 child: CircleAvatar(
@@ -318,8 +366,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                 ),
                 Obx(() => GestureDetector(
                       onTap: () {
-                        storecontroller
-                            .uploadsellersetupshopbannerimages(context);
+                        storecontroller.updatesellershopUploadBanner(context);
                       },
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -372,18 +419,18 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                       ),
                                     ),
                                     storecontroller
-                                            .sellersetupshopuploadedbannerimages
+                                            .updatesellershopuploadbannerimages
                                             .isEmpty
                                         ? SizedBox()
                                         : ListView.builder(
                                             shrinkWrap: true,
                                             itemCount: storecontroller
-                                                .sellersetupshopuploadedbannerimages
+                                                .updatesellershopuploadbannerimages
                                                 .length,
                                             scrollDirection: Axis.horizontal,
                                             itemBuilder: (context, index) {
                                               final bannerimages = storecontroller
-                                                      .sellersetupshopuploadedbannerimages[
+                                                      .updatesellershopuploadbannerimages[
                                                   index];
                                               return Padding(
                                                 padding: EdgeInsets.symmetric(
@@ -409,7 +456,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                                       child: GestureDetector(
                                                         onTap: () {
                                                           storecontroller
-                                                              .setupshopremovebannerImage(
+                                                              .updatesellerShopremovebannerImage(
                                                                   index);
                                                         },
                                                         child: CircleAvatar(
@@ -427,7 +474,85 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                                                   ],
                                                 ),
                                               );
-                                            })
+                                            }),
+                                    Obx(() => storecontroller
+                                                .getsellershopprofiledata
+                                                .value
+                                                ?.data
+                                                ?.sellerData
+                                                ?.banners
+                                                ?.isEmpty ??
+                                            false
+                                        ? SizedBox()
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: storecontroller
+                                                .getsellershopprofiledata
+                                                .value
+                                                ?.data
+                                                ?.sellerData
+                                                ?.banners
+                                                ?.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              final getbannerimages =
+                                                  storecontroller
+                                                      .getsellershopprofiledata
+                                                      .value
+                                                      ?.data
+                                                      ?.sellerData
+                                                      ?.banners?[index];
+                                              return Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 1.w),
+                                                child: Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(4),
+                                                        child: Image.network(
+                                                          getbannerimages ==
+                                                                  null
+                                                              ? AppConstants
+                                                                  .noimage
+                                                              : getbannerimages
+                                                                      .url ??
+                                                                  AppConstants
+                                                                      .noimage,
+                                                          fit: BoxFit.fill,
+                                                          width: 40.w,
+                                                          height: 15.h,
+                                                        )),
+                                                    Positioned(
+                                                      right: -5,
+                                                      top: -0,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          storecontroller
+                                                              .updateshopremovegetbannerImage(
+                                                                  index,
+                                                                  getbannerimages
+                                                                          ?.id ??
+                                                                      0);
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 13.sp,
+                                                          backgroundColor:
+                                                              Color(0xff2E3192),
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                            size: 16.sp,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }))
                                   ],
                                 )),
                           ],
@@ -438,61 +563,45 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                   height: 4.h,
                 ),
                 Obx(
-                  () => storecontroller.sellercreateshoploading.value
+                  () => storecontroller.updatesellershoploading.value
                       ? Center(
                           child: customcircularprogress(),
                         )
                       : custombutton(
-                          hinttext: "Create",
+                          hinttext: "Update",
                           ontap: () {
-                            if (formKey.currentState!.validate()) {
-                              storecontroller
-                                      .sellersetupshopuploadedbannerimages
-                                      .isEmpty
-                                  ? showErrrorSnackbar(
-                                      message: "Please Upload Banner Images")
-                                  : storecontroller
-                                          .createshopselectedCategoryIds.isEmpty
-                                      ? showErrrorSnackbar(
-                                          message: "Please Select Category")
-                                      : storecontroller.sellersetupshopuploadedcoverImage.value ==
-                                              null
-                                          ? showErrrorSnackbar(
-                                              message:
-                                                  "Please Upload Cover Image")
-                                          : storecontroller
-                                                      .sellercreateshopuploadedprofileImage
-                                                      .value ==
-                                                  null
-                                              ? showErrrorSnackbar(
-                                                  message:
-                                                      "Please Upload Main Image")
-                                              : storecontroller.sellerCreateShop(
-                                                  context: context,
-                                                  address: authcontroller
-                                                      .signupstreetaddres.value
-                                                      .toString(),
-                                                  city: authcontroller
-                                                      .signupcitycontroller
-                                                      .value
-                                                      .text
-                                                      .toString(),
-                                                  state: authcontroller
-                                                      .signupstateprovincecontroller
-                                                      .value
-                                                      .text
-                                                      .toString(),
-                                                  country: authcontroller
-                                                      .signupcountryregioncontroller
-                                                      .value
-                                                      .text
-                                                      .toString(),
-                                                  zipcode: authcontroller
-                                                      .signupzipcodecontroller
-                                                      .value
-                                                      .text
-                                                      .toString());
-                            }
+                            storecontroller.getsellershopprofiledata.value!
+                                        .data!.sellerData!.banners!.isEmpty &&
+                                    storecontroller
+                                        .updatesellershopuploadbannerimages
+                                        .isEmpty
+                                ? showErrrorSnackbar(
+                                    message: "Please Upload Banner Images")
+                                : storecontroller
+                                        .updateshopselectedCategoriesIds.isEmpty
+                                    ? showErrrorSnackbar(
+                                        message: "Please Select Category")
+                                    : storecontroller.updateSellerShop(
+                                        context: context,
+                                        address: authcontroller
+                                            .signupstreetaddres.value
+                                            .toString(),
+                                        city: authcontroller
+                                            .signupcitycontroller.value.text
+                                            .toString(),
+                                        state: authcontroller
+                                            .signupstateprovincecontroller
+                                            .value
+                                            .text
+                                            .toString(),
+                                        country: authcontroller
+                                            .signupcountryregioncontroller
+                                            .value
+                                            .text
+                                            .toString(),
+                                        zipcode: authcontroller
+                                            .signupzipcodecontroller.value.text
+                                            .toString());
                           }),
                 ),
                 SizedBox(

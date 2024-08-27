@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/models/activeproducts_model.dart';
 import 'package:smsseller/models/brandslist_model.dart';
 import 'package:smsseller/models/categorywiseattributes_model.dart';
+import 'package:smsseller/models/deletedproducts_model.dart';
 import 'package:smsseller/models/getcategories_model.dart';
 import 'package:smsseller/models/inactiveproduct_model.dart';
 import 'package:smsseller/models/productpreview_model.dart';
@@ -91,6 +93,8 @@ class ProductRepo extends GetxService {
       "brand_id": brandid,
       "price": price,
       "height": "1",
+
+      ///height,width,length,weight is default because moeed said shipping is not yet confirm so from backend side said post defualt 1.
       "width": "1",
       "length": "1",
       "weight": "1",
@@ -178,9 +182,27 @@ class ProductRepo extends GetxService {
     }
   }
 
+////////get deletedproducts
+  Future<DeletedProductsModel?> getDeletedProducts(int page) async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getdeletedproducts}?page_size=12&page=$page",
+      );
+      if (res.statusCode == 200) {
+        final listofdeletedproducts = deletedProductsModelFromJson(res.body);
+        return listofdeletedproducts;
+      } else {
+        throw Exception("No data field found in the GetDeletedProducts");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 /////updateproductapi
   Future updateproduct({
     required BuildContext context,
+    required String id,
     required String title,
     required String stock,
     required String categoryid,
@@ -190,16 +212,19 @@ class ProductRepo extends GetxService {
     required List<Map<String, dynamic>> productattributes,
     required String description,
     required List<File?> productimages,
-    required List<int> oldimageids,
+    required List<dynamic> oldimageids,
   }) async {
     final attrbiutesdata = jsonEncode(productattributes);
     final mapData = {
+      "id": id,
       "title": title,
       "stock": stock,
       "category_id": categoryid,
       "brand_id": brandid,
       "price": price,
       "height": "1",
+
+      ///height,width,length,weight is default because moeed said shipping is not yet confirm so from backend side said post defualt 1.
       "width": "1",
       "length": "1",
       "weight": "1",
@@ -219,11 +244,40 @@ class ProductRepo extends GetxService {
             "images[]": productimages,
           });
       if (res.statusCode == 200) {
-        Navigator.pop(context);
+        Get.offAllNamed(RouteConstants.sellerdashboard);
         final message = jsonDecode(res.body)['message'];
         showSuccessSnackbar(message: message);
       } else {
         print(res.body);
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+      showErrrorSnackbar(message: e.toString());
+    }
+  }
+
+//////delete product api
+  Future deleteProduct({
+    required String id,
+    required String status,
+  }) async {
+    final mapData = {
+      "id": id,
+      "status": status,
+    };
+
+    print(mapData);
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.deleteproduct, data: mapData);
+      if (res.statusCode == 200) {
+// Get.back();
+        final message = jsonDecode(res.body)['message'];
+        showSuccessSnackbar(message: message);
+      } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
       }
