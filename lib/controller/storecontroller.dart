@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smsseller/constants/appconstants.dart';
-import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/pickimages.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
 import 'package:smsseller/models/selectcategory_model.dart';
@@ -22,6 +22,7 @@ class StoreController extends GetxController {
   StoreRepo storeRepo;
 
   StoreController({required this.storeRepo});
+  final ordercontroller = Get.put(OrderController(orderRepo: Get.find()));
   @override
   void onInit() async {
     super.onInit();
@@ -109,142 +110,6 @@ class StoreController extends GetxController {
   ];
 
   var itemssoldselectedmonth = "".obs;
-
-  ////////////////seller order history container selection logic
-  RxInt issellerselectedOrdercount = 1.obs;
-
-  void setsellerSelectedOrdercount(int orderIndex) {
-    issellerselectedOrdercount.value = orderIndex;
-  }
-///////////seller order history active orders list
-
-  List<Map<String, dynamic>> selleractiveorderslist = [
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage1.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Pending'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage2.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Pending'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage3.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Pending'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage1.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Pending'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage2.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Pending'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage3.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Pending'
-    },
-  ];
-
-//////////seller orderhistory completed orders list
-  List<Map<String, dynamic>> sellercompletedorderslist = [
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage1.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage2.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage3.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-  ];
-
-//////////seller orderhistory refunded orders list
-  List<Map<String, dynamic>> sellerrefundorderslist = [
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage1.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage2.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage3.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-    {
-      "orderid": "Order #: 15s5d8e1",
-      "image": "assets/images/orderhistoryproductimage1.png",
-      "productname":
-          'Originals Gamepad Edition Men\'s Stan Cream  US 7 #GX6394',
-      "orderstatus": 'Delivered'
-    },
-  ];
-
-  // seller orderhistory orderslist show logic
-  List<Map<String, dynamic>> getSelectedsellerOrderList() {
-    switch (issellerselectedOrdercount.value) {
-      case 1:
-        return selleractiveorderslist;
-      case 2:
-        return sellercompletedorderslist;
-      case 3:
-        return sellerrefundorderslist;
-      default:
-        return selleractiveorderslist;
-    }
-  }
-
-// seller orderhistory viewdetails button logic
-  ontapsellerorderhistoryviewdetailsbutton() {
-    switch (issellerselectedOrdercount.value) {
-      case 1:
-        return RouteConstants.selleractiveorderdetailsscreen;
-      case 2:
-        return RouteConstants.sellercompletedorderdetailsscreen;
-      case 3:
-        return RouteConstants.sellerrefundorderdetailsscreen;
-    }
-  }
 
 /////////////////////seller setup shop cover image
 

@@ -109,6 +109,8 @@ class StoreRepo extends GetxService {
         endPoint: AppConstants.getsellershopprofiledata,
       );
       if (res.statusCode == 200) {
+        final String sellerguid = jsonDecode(res.body)['data']['sellerData']['guid'];
+        LocalStorage().setString("sellerguid", sellerguid);
         final listofsellershopprofiledata =
             sellerShopProfileDataFromJson(res.body);
         return listofsellershopprofiledata;
@@ -232,7 +234,7 @@ class StoreRepo extends GetxService {
             "image": profileimage,
           });
       if (res.statusCode == 200) {
-        // Navigator.pop(context);
+        Get.back();
         final message = jsonDecode(res.body)['message'];
         showSuccessSnackbar(message: message);
       } else {

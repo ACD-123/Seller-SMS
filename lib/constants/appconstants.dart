@@ -30,4 +30,19 @@ class AppConstants {
   static const getsalesreportgraph = "order/seller-order-dashboard";
   static const getdeletedproducts = "seller/deleted-product";
   static const deleteproduct = "products/update-status";
+  static const getsalesreportorderpercentage = "order/seller-order-percentage";
+  static const getsalesreportearningrefund = "order/seller-earing-refund";
+  static const getsalesreportrecentorders = "seller/orders";
+  static const getorderdetailsbyid = "order/getById/";
+   static const getorderhistorycount = "seller/order-count";
+    static const updateorderstatus = "seller/order/update-status/";
+    static const getpendingorders = "order/pending-seller";
+    static const getactiveorders = "order/accepted-seller";
+    static const getcompletedorders = "order/completed-seller";
+    static const getrefundedorders = "order/refunded-seller";
+     static const getrejectedorders = "order/rejected-seller";
+      static const getsellerchatlist = "chat/getChatListBUid?id=";
+       static const getsellerchatroomdetails = "chat/getById?room_id=";
+       static const sendmessage = "chat/sendMessage";
+       static const inappchangepassword = "user/update-password";
 }

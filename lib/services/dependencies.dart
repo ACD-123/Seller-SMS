@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
+import 'package:smsseller/repositries/chatrepo.dart';
 import 'package:smsseller/repositries/homeguest_repo.dart';
 import 'package:smsseller/repositries/orderrepo.dart';
 import 'package:smsseller/repositries/productrepo.dart';
@@ -13,4 +14,5 @@ Future<void> init() async {
   Get.lazyPut(() => StoreRepo(apiClient: Get.find()));
   Get.lazyPut(() => ProductRepo(apiClient: Get.find()));
   Get.lazyPut(() => OrderRepo(apiClient: Get.find()));
+  Get.lazyPut(() => ChatRepo(apiClient: Get.find()));
 }

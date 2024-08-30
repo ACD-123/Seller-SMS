@@ -284,10 +284,31 @@ class AuthenticationController extends GetxController {
       changepasswordloading.value = false;
     }
   }
+
+///////////in app change password
+  var inappchangepasswordloading = false.obs;
+  final inappcurrentpasswordcontroller = TextEditingController().obs;
+  final inappnewpasswordcontroller = TextEditingController().obs;
+  final inappconfirmnewpasswordcontroller = TextEditingController().obs;
+  Future<void> inAppChangePassword(  BuildContext context,) async {
+    try {
+      inappchangepasswordloading.value = true;
+      await authRepo.inAppChangePassword(
+        context: context,
+        oldpassword: inappcurrentpasswordcontroller.value.text.toString(), 
+        password: inappnewpasswordcontroller.value.text.toString(), 
+        confirmpassword: inappconfirmnewpasswordcontroller.value.text.toString());
+
+      inappchangepasswordloading.value = false;
+    } finally {
+      inappchangepasswordloading.value = false;
+    }
+  }
 ////////signout
 signout(){
    LocalStorage().remove("istrustedseller");
    LocalStorage().remove("token");
+   LocalStorage().remove("sellerguid"); 
    Get.offAllNamed(RouteConstants.loginscreen);
 }
 }

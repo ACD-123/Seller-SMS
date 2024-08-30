@@ -66,6 +66,10 @@ static String updatestepper = '/updatestepper';
       '/sellercompletedorderdetailsscreen';
   static String sellerrefundorderdetailsscreen =
       '/sellerrefundorderdetailsscreen';
+  static String sellerpendingdetailsscreen =
+      '/sellerpendingdetailsscreen';
+  static String sellerorderdetailsscreen =
+      '/sellerorderdetailsscreen';
   static String sellerprofilescreen = '/sellerprofilescreen';
   static String sellersettingscreen = '/sellersettingscreen';
   static String sellersetuppassword = '/sellersetuppassword';

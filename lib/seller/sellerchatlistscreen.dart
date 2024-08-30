@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/controller/storecontroller.dart';
-// import 'package:sms/customcomponents/customappbar.dart';
-// import 'package:sms/customcomponents/customeprofileinfo.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
 class SellerChatsListScreen extends StatefulWidget {
   @override
@@ -16,6 +15,13 @@ class SellerChatsListScreen extends StatefulWidget {
 
 class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+  final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    chatcontroller.getsellerChatList();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,13 +63,26 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                     onSaved: (value) {},
                   ),
                 )),
-            Obx(() => ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+            Obx(() => chatcontroller.getsellerchatlistloading.value ? 
+
+            Padding(
+              padding:  EdgeInsets.symmetric(vertical: 35.h),
+              child: Center(child: customcircularprogress(),),
+            )
+            : chatcontroller.getsellerchatlist.value == null || chatcontroller.getsellerchatlist.value!.data!.isEmpty ? 
+            Padding(
+              padding:  EdgeInsets.symmetric(vertical: 35.h),
+              child: Center(child: nodatatext("No Chats"),),
+            ) : 
+            
+            
+            ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: storecontroller.sellerchatslist.length,
+                  itemCount: chatcontroller.getsellerchatlist.value?.data?.length,
                   itemBuilder: (context, index) {
                     final chatslistdata =
-                        storecontroller.sellerchatslist[index];
+                        chatcontroller.getsellerchatlist.value?.data?[index];
                     return Dismissible(
                       key: UniqueKey(),
                       background: Container(
@@ -90,6 +109,7 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                       },
                       child: GestureDetector(
                         onTap: () {
+                          chatcontroller.getsellerChatRoomDetails(chatslistdata?.id ?? 0);
                           Get.toNamed(RouteConstants.sellerchatscreen);
                         },
                         child: Column(
@@ -104,25 +124,34 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                                 children: [
                                   ListTile(
                                     leading: CircleAvatar(
-                                      backgroundColor: Colors.white,
+                                      radius: 20.sp,
+                                      backgroundColor: Colors.greenAccent,
                                       backgroundImage:
-                                          AssetImage(chatslistdata.imageUrl),
+                                          NetworkImage(
+chatslistdata?.senderProfileImage == null ? 
+AppConstants.noimage : chatslistdata?.senderProfileImage ?? AppConstants.noimage
+
+                                          ),
                                     ),
                                     title: Text(
-                                      chatslistdata.userName,
+                                      chatslistdata?.senderName ?? "" ,
                                       style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 14.sp,
                                           color: Color(0xff1B1B1B),
                                           fontWeight: FontWeight.w600),
                                     ),
                                     subtitle: Text(
-                                      chatslistdata.userDescription,
+                                       chatslistdata?.message ?? "",
                                       style: TextStyle(
-                                          fontSize: 10,
-                                          color: Color(0xff757474)),
+                                        
+                                          fontSize: 13.sp,
+                                          color: Color(0xff757474),
+                                        overflow: TextOverflow.ellipsis
+                                          ),
+                                          maxLines: 2,
                                     ),
                                     trailing: Text(
-                                      chatslistdata.time,
+                                       chatslistdata?.date ?? "",
                                       style: TextStyle(
                                           fontSize: 10,
                                           color: Color(0xffC8BCBC)),

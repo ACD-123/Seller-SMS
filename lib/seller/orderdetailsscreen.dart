@@ -6,24 +6,18 @@ import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
-class SellerActiveOrderDetails extends StatefulWidget {
-  const SellerActiveOrderDetails({super.key});
+import '../customcomponents/customeleveted_button.dart';
+
+class SellerOrderDetails extends StatefulWidget {
+  const SellerOrderDetails({super.key});
 
   @override
-  State<SellerActiveOrderDetails> createState() =>
-      _SellerActiveOrderDetailsState();
+  State<SellerOrderDetails> createState() => _SellerOrderDetailsState();
 }
 
-class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
+class _SellerOrderDetailsState extends State<SellerOrderDetails> {
   final ordercontroller = Get.put(OrderController(orderRepo: Get.find()));
-  String? selectedoption;
 
-  final List<Map<String, dynamic>> options = [
-    {
-      "id": "3",
-      "status": "Completed",
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,87 +173,21 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                 // ]))
                               ],
                             ),
-                            ordercontroller.updateorderstatusloading.value
-                                ? SizedBox(
-                                    height: 3.h,
-                                    width: 6.w,
-                                    child: customcircularprogress(),
-                                  )
-                                : SizedBox(
-                                    height: 5.h,
-                                    width: 35.w,
-                                    child: Center(
-                                        child: DropdownButtonFormField<String>(
-                                      decoration: InputDecoration(
-                                        hintText: "Accepted",
-                                        hintStyle: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: Color(0xff2E3192),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          borderSide: BorderSide(
-                                              color: Color(0xff2E3192)),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          borderSide: BorderSide(
-                                              color: Color(0xff2E3192)),
-                                        ),
-                                        contentPadding:
-                                            EdgeInsets.only(left: 8, right: 2),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                        ),
-                                      ),
-                                      value: selectedoption,
-                                      onChanged: (newValue) {
-                                        selectedoption = newValue!;
-                                        ordercontroller.updateOrderStatus(
-                                            id: ordercontroller
-                                                    .getorderdetailsbyid
-                                                    .value
-                                                    ?.data
-                                                    ?.id ??
-                                                0,
-                                            status: newValue.toString());
-                                      },
-                                      items: options.map((statusoptions) {
-                                        return DropdownMenuItem<String>(
-                                          value: statusoptions["id"],
-                                          child: Text(
-                                            statusoptions["status"],
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              color: Color(0xff2E3192),
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                      icon: CircleAvatar(
-                                        child: Image.asset(
-                                            "assets/images/arrowdropdown.png"),
-                                      ),
-                                    )),
-                                  ),
-                            // CustomElevetedButton(
-                            //     ontap: () {},
-                            //     height: 3.5.h,
-                            //     width: 32.w,
-                            //     fontSize: 14.sp,
-                            //     borderradius: 15,
-                            //     color: const Color(0xff2E3192),
-                            //     buttonName: ordercontroller
-                            //             .getorderdetailsbyid
-                            //             .value
-                            //             ?.data
-                            //             ?.orderProductIds
-                            //             ?.first
-                            //             .status ??
-                            //         "")
+                            CustomElevetedButton(
+                                ontap: () {},
+                                height: 3.5.h,
+                                width: 32.w,
+                                fontSize: 14.sp,
+                                borderradius: 15,
+                                color: const Color(0xff2E3192),
+                                buttonName: ordercontroller
+                                        .getorderdetailsbyid
+                                        .value
+                                        ?.data
+                                        ?.orderProductIds
+                                        ?.first
+                                        .status ??
+                                    "")
                           ],
                         ),
                       ),
@@ -284,7 +212,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                     ?.data
                                     ?.orderProductIds?[index];
                                 return Padding(
-                                  padding:  EdgeInsets.only(bottom: 2.h),
+                                  padding: EdgeInsets.only(bottom: 2.h),
                                   child: SizedBox(
                                     height: 13.h,
                                     width: Get.width,
@@ -301,7 +229,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                   BorderRadius.circular(15.62),
                                               image: DecorationImage(
                                                   image: NetworkImage(detailsdata
-                                                              ?.product?.media ==
+                                                              ?.product
+                                                              ?.media ==
                                                           null
                                                       ? AppConstants.noimage
                                                       : detailsdata
@@ -322,7 +251,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                detailsdata?.product?.title ?? "",
+                                                detailsdata?.product?.title ??
+                                                    "",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 15.sp),
@@ -339,8 +269,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 17.sp,
-                                                    color:
-                                                        const Color(0xff2E3192)),
+                                                    color: const Color(
+                                                        0xff2E3192)),
                                               ),
                                               Row(
                                                 children: [
@@ -352,7 +282,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                         : 'Save \$ ${'${((double.parse(detailsdata?.product?.price ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage ?? ""}% off )',
                                                     style: TextStyle(
                                                         fontSize: 12.sp,
-                                                        color: Color(0xffEF0D0D)),
+                                                        color:
+                                                            Color(0xffEF0D0D)),
                                                   ),
                                                   SizedBox(
                                                     width: 1.w,
@@ -363,7 +294,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         fontSize: 13.sp,
-                                                        color: Color(0xff757474)),
+                                                        color:
+                                                            Color(0xff757474)),
                                                   ),
                                                   Container(
                                                     color:
@@ -371,15 +303,16 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                     child: Center(
                                                       child: Padding(
                                                         padding:
-                                                            const EdgeInsets.all(
-                                                                2),
+                                                            const EdgeInsets
+                                                                .all(2),
                                                         child: Text(
                                                           detailsdata?.quantity
                                                                   .toString() ??
                                                               "",
                                                           style: TextStyle(
                                                               fontWeight:
-                                                                  FontWeight.w600,
+                                                                  FontWeight
+                                                                      .w600,
                                                               fontSize: 13.sp,
                                                               color: const Color(
                                                                   0xffFFFFFF)),
@@ -508,39 +441,45 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                           SizedBox(
                             height: 3.h,
                           ),
-              ordercontroller
+                          ordercontroller
                                       .getorderdetailsbyid.value?.data?.note ==
                                   null || ordercontroller
-                                      .getorderdetailsbyid.value!.data!.note!.isEmpty  ? const SizedBox() :              Text(
-                            'Note',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 16.sp),
-                          ),
+                                      .getorderdetailsbyid.value!.data!.note!.isEmpty
+                              ? const SizedBox()
+                              : Text(
+                                  'Note',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.sp),
+                                ),
                           SizedBox(
                             height: 1.h,
                           ),
-                 ordercontroller
+                           ordercontroller
                                       .getorderdetailsbyid.value?.data?.note ==
                                   null || ordercontroller
-                                      .getorderdetailsbyid.value!.data!.note!.isEmpty  ? const SizedBox() :            Container(
-                            decoration: BoxDecoration(
-                                color: const Color(0xffF5F5F5),
-                                borderRadius: BorderRadius.circular(20.79)),
-                            width: Get.width,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 15),
-                              child: Text(
-                                ordercontroller.getorderdetailsbyid.value?.data
-                                        ?.note ??
-                                    "",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13.sp,
-                                    color: Color(0xff2E2E2E)),
-                              ),
-                            ),
-                          ),
+                                      .getorderdetailsbyid.value!.data!.note!.isEmpty
+                              ? const SizedBox()
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xffF5F5F5),
+                                      borderRadius:
+                                          BorderRadius.circular(20.79)),
+                                  width: Get.width,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 15),
+                                    child: Text(
+                                      ordercontroller.getorderdetailsbyid.value
+                                              ?.data?.note ??
+                                          "",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13.sp,
+                                          color: Color(0xff2E2E2E)),
+                                    ),
+                                  ),
+                                ),
                         ],
                       ),
                     )

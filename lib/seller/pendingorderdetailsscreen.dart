@@ -6,24 +6,29 @@ import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
-class SellerActiveOrderDetails extends StatefulWidget {
-  const SellerActiveOrderDetails({super.key});
+class SellerPendingOrderDetails extends StatefulWidget {
+  const SellerPendingOrderDetails({super.key});
 
   @override
-  State<SellerActiveOrderDetails> createState() =>
-      _SellerActiveOrderDetailsState();
+  State<SellerPendingOrderDetails> createState() =>
+      _SellerPendingOrderDetailsState();
 }
 
-class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
+class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
   final ordercontroller = Get.put(OrderController(orderRepo: Get.find()));
   String? selectedoption;
 
   final List<Map<String, dynamic>> options = [
     {
-      "id": "3",
-      "status": "Completed",
+      "id": "1",
+      "status": "Accept",
+    },
+    {
+      "id": "2",
+      "status": "Reject",
     },
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,7 +196,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                     child: Center(
                                         child: DropdownButtonFormField<String>(
                                       decoration: InputDecoration(
-                                        hintText: "Accepted",
+                                        hintText: "Pending",
                                         hintStyle: TextStyle(
                                           fontSize: 16.sp,
                                           color: Color(0xff2E3192),
@@ -508,39 +513,45 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                           SizedBox(
                             height: 3.h,
                           ),
-              ordercontroller
+                          ordercontroller
                                       .getorderdetailsbyid.value?.data?.note ==
                                   null || ordercontroller
-                                      .getorderdetailsbyid.value!.data!.note!.isEmpty  ? const SizedBox() :              Text(
-                            'Note',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700, fontSize: 16.sp),
-                          ),
+                                      .getorderdetailsbyid.value!.data!.note!.isEmpty
+                              ? const SizedBox()
+                              : Text(
+                                  'Note',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.sp),
+                                ),
                           SizedBox(
                             height: 1.h,
                           ),
-                 ordercontroller
+                          ordercontroller
                                       .getorderdetailsbyid.value?.data?.note ==
                                   null || ordercontroller
-                                      .getorderdetailsbyid.value!.data!.note!.isEmpty  ? const SizedBox() :            Container(
-                            decoration: BoxDecoration(
-                                color: const Color(0xffF5F5F5),
-                                borderRadius: BorderRadius.circular(20.79)),
-                            width: Get.width,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 15),
-                              child: Text(
-                                ordercontroller.getorderdetailsbyid.value?.data
-                                        ?.note ??
-                                    "",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13.sp,
-                                    color: Color(0xff2E2E2E)),
-                              ),
-                            ),
-                          ),
+                                      .getorderdetailsbyid.value!.data!.note!.isEmpty
+                              ? const SizedBox()
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xffF5F5F5),
+                                      borderRadius:
+                                          BorderRadius.circular(20.79)),
+                                  width: Get.width,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 15),
+                                    child: Text(
+                                      ordercontroller.getorderdetailsbyid.value
+                                              ?.data?.note ??
+                                          "",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13.sp,
+                                          color: Color(0xff2E2E2E)),
+                                    ),
+                                  ),
+                                ),
                         ],
                       ),
                     )

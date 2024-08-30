@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
-// import 'package:sms/customcomponents/customappbar.dart';
-// import 'package:sms/customcomponents/customeleveted_button.dart';
 
 class SellerRefundOrderDetails extends StatelessWidget {
   const SellerRefundOrderDetails({super.key});
@@ -110,37 +108,37 @@ class SellerRefundOrderDetails extends StatelessWidget {
                                 fontSize: 16.sp,
                                 color: Color(0xff2E3192)),
                           ),
-                          RichText(
-                              text: TextSpan(children: [
-                            TextSpan(
-                              text: 'Est Delivery: Tue, ',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                  color: Color(0xff757474)),
-                            ),
-                            TextSpan(
-                              text: 'Dec 15',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                  color: Color(0xff000000)),
-                            ),
-                            TextSpan(
-                              text: ' -Wed,',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                  color: Color(0xff757474)),
-                            ),
-                            TextSpan(
-                              text: ' Dec 16',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                  color: Color(0xff000000)),
-                            ),
-                          ]))
+                          // RichText(
+                          //     text: TextSpan(children: [
+                          //   TextSpan(
+                          //     text: 'Est Delivery: Tue, ',
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.w400,
+                          //         fontSize: 14.sp,
+                          //         color: Color(0xff757474)),
+                          //   ),
+                          //   TextSpan(
+                          //     text: 'Dec 15',
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.w400,
+                          //         fontSize: 14.sp,
+                          //         color: Color(0xff000000)),
+                          //   ),
+                          //   TextSpan(
+                          //     text: ' -Wed,',
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.w400,
+                          //         fontSize: 14.sp,
+                          //         color: Color(0xff757474)),
+                          //   ),
+                          //   TextSpan(
+                          //     text: ' Dec 16',
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.w400,
+                          //         fontSize: 14.sp,
+                          //         color: Color(0xff000000)),
+                          //   ),
+                          // ]))
                         ],
                       ),
                       CustomElevetedButton(
@@ -163,122 +161,183 @@ class SellerRefundOrderDetails extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 12.h,
+                    SizedBox(
                       width: Get.width,
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: 12.h,
-                            width: 33.w,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Color(0xff1375EA).withOpacity(0.25)),
-                                borderRadius: BorderRadius.circular(15.62),
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/orderhistoryproductimage1.png"),
-                                    fit: BoxFit.fill)),
-                          ),
-                          SizedBox(
-                            width: 2.w,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                          Row(
+                            children: [
+                              Container(
+                                height: 12.h,
+                                width: 33.w,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xff1375EA)
+                                            .withOpacity(0.25)),
+                                    borderRadius: BorderRadius.circular(15.62),
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/orderhistoryproductimage1.png"),
+                                        fit: BoxFit.fill)),
+                              ),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'H1 Gamepad',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 15.sp),
+                                        ),
+                                        SizedBox(
+                                          width: 7.w,
+                                        ),
+                                        Text(
+                                          'Approval: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 13.sp,
+                                              color: Color(0xff757474)),
+                                        ),
+                                        Text(
+                                          'Pending',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 13.sp,
+                                              color: Color(0xffE2001B)),
+                                        )
+                                      ],
+                                    ),
                                     Text(
-                                      'H1 Gamepad',
+                                      '\$260',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 15.sp),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 17.sp,
+                                          color: Color(0xff2E3192)),
+                                    ),
+                                    Text(
+                                      'Save \$ 8.99 ( 40% off )',
+                                      style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Color(0xffEF0D0D)),
                                     ),
                                     SizedBox(
-                                      width: 7.w,
+                                      height: 1.h,
                                     ),
-                                    Text(
-                                      'Approval: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 13.sp,
-                                          color: Color(0xff757474)),
-                                    ),
-                                    Text(
-                                      'Pending',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 13.sp,
-                                          color: Color(0xffE2001B)),
-                                    )
+                                    Row(children: [
+                                      Text(
+                                        'M (48)',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.sp),
+                                      ),
+                                      SizedBox(
+                                        width: 3.w,
+                                      ),
+                                      Image.asset(
+                                          'assets/images/Ellipse 8.png'),
+                                      SizedBox(
+                                        width: 1.w,
+                                      ),
+                                      Text(
+                                        'Red',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.sp),
+                                      ),
+                                      SizedBox(
+                                        width: 12.w,
+                                      ),
+                                      Text(
+                                        'Quantity :  ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.sp,
+                                            color: Color(0xff757474)),
+                                      ),
+                                      Container(
+                                        height: 2.h,
+                                        width: 5.w,
+                                        color: Color(0xff2E3192),
+                                        child: Center(
+                                          child: Text(
+                                            '1',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 13.sp,
+                                                color: Color(0xffFFFFFF)),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
                                   ],
                                 ),
-                                Text(
-                                  '\$260',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 17.sp,
-                                      color: Color(0xff2E3192)),
-                                ),
-                                Text(
-                                  'Save \$ 8.99 ( 40% off )',
-                                  style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Color(0xffEF0D0D)),
-                                ),
-                                SizedBox(
-                                  height: 1.h,
-                                ),
-                                Row(children: [
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 0.5.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
                                   Text(
-                                    'M (48)',
+                                    'Images',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.sp),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16.sp),
                                   ),
                                   SizedBox(
                                     width: 3.w,
                                   ),
-                                  Image.asset('assets/images/Ellipse 8.png'),
+                                  Image.asset(
+                                    'assets/images/imagesicon.png',
+                                    height: 3.h,
+                                    width: 3.w,
+                                  ),
                                   SizedBox(
                                     width: 1.w,
                                   ),
                                   Text(
-                                    'Red',
+                                    '7 images',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.sp),
-                                  ),
-                                  SizedBox(
-                                    width: 12.w,
-                                  ),
-                                  Text(
-                                    'Quantity :  ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 13.sp,
                                         color: Color(0xff757474)),
                                   ),
-                                  Container(
-                                    height: 2.h,
-                                    width: 5.w,
-                                    color: Color(0xff2E3192),
-                                    child: Center(
-                                      child: Text(
-                                        '1',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 13.sp,
-                                            color: Color(0xffFFFFFF)),
-                                      ),
-                                    ),
-                                  )
-                                ])
-                              ],
-                            ),
-                          )
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 1.h,
+                          ),
+                          Row(
+                            children: [
+                              customreasonimagescontainer(
+                                  image:
+                                      'assets/images/refundreasonimage1.png'),
+                              customreasonimagescontainer(
+                                  image:
+                                      'assets/images/refundreasonimage4.png'),
+                              customreasonimagescontainer(
+                                  image:
+                                      'assets/images/refundreasonimage2.png'),
+                              customreasonimagescontainer(
+                                  image: 'assets/images/refundreasonimage4.png')
+                            ],
+                          ),
+                          const Divider()
                         ],
                       ),
                     ),
@@ -353,95 +412,6 @@ class SellerRefundOrderDetails extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    Text(
-                      'Reason',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 16.sp),
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xffF5F5F5),
-                          borderRadius: BorderRadius.circular(20.79)),
-                      height: 10.h,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 15),
-                        child: Text(
-                          'This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13.sp,
-                              color: Color(0xff2E2E2E)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Images',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400, fontSize: 16.sp),
-                            ),
-                            SizedBox(
-                              width: 3.w,
-                            ),
-                            Image.asset(
-                              'assets/images/imagesicon.png',
-                              height: 3.h,
-                              width: 3.w,
-                            ),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Text(
-                              '7 images',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.sp,
-                                  color: Color(0xff757474)),
-                            ),
-                          ],
-                        ),
-                        Text("View More",
-                            style: TextStyle(
-                                color: const Color(0xff2E3192),
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w700,
-                                decorationColor: const Color(0xff2E3192),
-                                decoration: TextDecoration.underline))
-                      ],
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        customreasonimagescontainer(
-                            image: 'assets/images/refundreasonimage1.png'),
-                        customreasonimagescontainer(
-                            image: 'assets/images/refundreasonimage4.png'),
-                        customreasonimagescontainer(
-                            image: 'assets/images/refundreasonimage2.png'),
-                        customreasonimagescontainer(
-                            image: 'assets/images/refundreasonimage4.png')
-                      ],
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
                   ],
                 ),
               )
@@ -482,15 +452,18 @@ Padding customamountrow({
   );
 }
 
-Container customreasonimagescontainer({required String image}) {
-  return Container(
-    height: 8.h,
-    width: 20.w,
-    decoration: BoxDecoration(
-        border: Border.all(
-          color: Color(0xff2E3192),
-        ),
-        image: DecorationImage(image: AssetImage(image), fit: BoxFit.fill),
-        borderRadius: BorderRadius.circular(3)),
+Padding customreasonimagescontainer({required String image}) {
+  return Padding(
+    padding: EdgeInsets.only(right: 1.w),
+    child: Container(
+      height: 6.h,
+      width: 17.w,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xff2E3192),
+          ),
+          image: DecorationImage(image: AssetImage(image), fit: BoxFit.fill),
+          borderRadius: BorderRadius.circular(3)),
+    ),
   );
 }

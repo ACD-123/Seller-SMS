@@ -8,9 +8,10 @@ import 'package:smsseller/seller/authentication/forgotpassword.dart';
 import 'package:smsseller/seller/authentication/loginscreen.dart';
 import 'package:smsseller/seller/authentication/setprofile.dart';
 import 'package:smsseller/seller/banksetting.dart';
-import 'package:smsseller/seller/editsellershop.dart';
 import 'package:smsseller/seller/inventoryseller.dart';
 import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
+import 'package:smsseller/seller/orderdetailsscreen.dart';
+import 'package:smsseller/seller/pendingorderdetailsscreen.dart';
 import 'package:smsseller/seller/productsdetail_screen.dart';
 import 'package:smsseller/seller/selleractiveorderdetails.dart';
 import 'package:smsseller/seller/sellerbankaccountsetting.dart';
@@ -57,7 +58,7 @@ class RouteGenerator {
       ),
       GetPage(
         name: RouteConstants.banksetting,
-        page: () => BankSetting(),
+        page: () => const BankSetting(),
       ),
       GetPage(
         name: RouteConstants.welcome1,
@@ -65,15 +66,15 @@ class RouteGenerator {
       ),
       GetPage(
         name: RouteConstants.selerwelcome,
-        page: () => SellerWelcomeScreen(),
+        page: () => const SellerWelcomeScreen(),
       ),
       GetPage(
         name: RouteConstants.sellercreateshopscreen,
-        page: () => SellerCreateShopScreen(),
+        page: () => const SellerCreateShopScreen(),
       ),
       GetPage(
         name: RouteConstants.sellersetupshop,
-        page: () => SellerSetupShop(),
+        page: () => const SellerSetupShop(),
       ),
       // GetPage(name: RouteConstants.privacypolicy, page: () => PrivacyPolicy()),
       // GetPage(
@@ -357,11 +358,19 @@ class RouteGenerator {
       // ),
       GetPage(
         name: RouteConstants.sellerupdateshop,
-        page: () => SellerUpdateShopScreen(),
+        page: () => const SellerUpdateShopScreen(),
       ),
        GetPage(
         name: RouteConstants.sellerupdateshopdetails,
-        page: () => SellerUpdateShopDetails(),
+        page: () => const SellerUpdateShopDetails(),
+      ),
+      GetPage(
+        name: RouteConstants.sellerpendingdetailsscreen,
+        page: () => const SellerPendingOrderDetails(),
+      ),
+       GetPage(
+        name: RouteConstants.sellerorderdetailsscreen,
+        page: () => const SellerOrderDetails(),
       ),
     ];
   }

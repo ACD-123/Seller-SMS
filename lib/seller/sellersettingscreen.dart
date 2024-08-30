@@ -1,70 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/customcomponents/customappbar.dart';
+import 'package:smsseller/controller/storecontroller.dart';
 
 import '../customcomponents/customappbar.dart';
 
-class SellerSettingScreen extends StatelessWidget {
+class SellerSettingScreen extends StatefulWidget {
   const SellerSettingScreen({super.key});
 
+  @override
+  State<SellerSettingScreen> createState() => _SellerSettingScreenState();
+}
+
+class _SellerSettingScreenState extends State<SellerSettingScreen> {
+  final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customappbar(title: "Setting"),
       body: Padding(
         padding: const EdgeInsets.all(18),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 32.sp,
-              backgroundImage:
-                  AssetImage("assets/images/sellerprofileimage.png"),
-            ),
-            Text(
-              "Mathew Wade",
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
-                color: Color(0XFF2E3192),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Obx(
+                () => CircleAvatar(
+                  radius: 32.sp,
+                  backgroundImage: NetworkImage(
+                      storecontroller.getsellerprofiledata.value?.data?.media ==
+                                  null ||
+                              storecontroller.getsellerprofiledata.value!.data!
+                                  .media!.isEmpty
+                          ? AppConstants.noimage
+                          : storecontroller.getsellerprofiledata.value?.data
+                                  ?.media?.first.originalUrl ??
+                              AppConstants.noimage),
+                ),
               ),
-            ),
-            Text(
-              "Joined since : 2022",
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400,
-                color: Color(0XFF757474),
-                height: 0.9,
+              Obx(
+                () => Text(
+                  storecontroller.getsellerprofiledata.value?.data?.name ?? "",
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0XFF2E3192),
+                  ),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 4.h,
-            ),
-            customsettingcontainer(
-                title: "Change Password",
+              Obx(
+                () => Text(
+                  "Joined since : ${storecontroller.getsellerprofiledata.value?.data?.joined ?? ""}",
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0XFF757474),
+                    height: 0.9,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 4.h,
+              ),
+              customsettingcontainer(
+                  title: "Change Password",
+                  ontap: () {
+                    Get.toNamed(RouteConstants.sellersetuppassword);
+                  }),
+              customsettingcontainer(
+                title: "FAQs",
                 ontap: () {
-                  Get.toNamed(RouteConstants.sellersetuppassword);
-                }),
-            customsettingcontainer(
-              title: "FAQs",
-              ontap: () {
-                Get.toNamed(RouteConstants.faq);
-              },
-            ),
-            customsettingcontainer(
-                title: "Private Policy",
-                ontap: () {
-                  Get.toNamed(RouteConstants.privacypolicy);
-                }),
-            customsettingcontainer(
-                title: "Chats",
-                ontap: () {
-                  Get.toNamed(RouteConstants.sellerchatlistscreen);
-                })
-          ],
+                  Get.toNamed(RouteConstants.faq);
+                },
+              ),
+              customsettingcontainer(
+                  title: "Private Policy",
+                  ontap: () {
+                    Get.toNamed(RouteConstants.privacypolicy);
+                  }),
+              customsettingcontainer(
+                  title: "Chats",
+                  ontap: () {
+                    Get.toNamed(RouteConstants.sellerchatlistscreen);
+                  })
+            ],
+          ),
         ),
       ),
     );

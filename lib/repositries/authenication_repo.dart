@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/customcomponents/whitecustomdialogpopup.dart';
 import 'package:smsseller/services/apiservices.dart';
 import 'package:smsseller/services/local_storage.dart';
 // import 'package:sms/services/apiservices.dart';
@@ -27,7 +28,6 @@ class AuthRepo extends GetxService {
     required String city,
     required String state,
     required String country,
-
   }) async {
     final mapData = {
       "name": name,
@@ -72,19 +72,19 @@ class AuthRepo extends GetxService {
       "email": email.toString(),
       "otp": otp.toString(),
       "type": type,
-       "is_user": "0"
+      "is_user": "0"
     };
     try {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.verifyotp, data: mapData);
       if (res.statusCode == 200) {
-        if(type == "1"){
+        if (type == "1") {
           showSuccessSnackbar(message: "Email Verified");
-          Get.toNamed(RouteConstants.changepassword,arguments: email);
-        }else{
-          showSuccessDialogAndNavigateToLogin(context, popupmessage,RouteConstants.loginscreen);
+          Get.toNamed(RouteConstants.changepassword, arguments: email);
+        } else {
+          showSuccessDialogAndNavigateToLogin(
+              context, popupmessage, RouteConstants.loginscreen);
         }
-       
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -151,14 +151,16 @@ class AuthRepo extends GetxService {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.login, data: mapData);
       if (res.statusCode == 200) {
-         Get.offAllNamed(RouteConstants.selerwelcome);
+        Get.offAllNamed(RouteConstants.selerwelcome);
         showSuccessSnackbar(message: "Login");
-         final token = jsonDecode(res.body)['data']['token'];
-          final istrustedseller = jsonDecode(res.body)['data']['is_trusted_seller'];
-       istrustedseller == false ?    Get.offAllNamed(RouteConstants.selerwelcome):
-       Get.offAllNamed(RouteConstants.sellerdashboard);
-         LocalStorage().setString("token", token);
-         LocalStorage().setBool("istrustedseller", istrustedseller);
+        final token = jsonDecode(res.body)['data']['token'];
+        final istrustedseller =
+            jsonDecode(res.body)['data']['is_trusted_seller'];
+        istrustedseller == false
+            ? Get.offAllNamed(RouteConstants.selerwelcome)
+            : Get.offAllNamed(RouteConstants.sellerdashboard);
+        LocalStorage().setString("token", token);
+        LocalStorage().setBool("istrustedseller", istrustedseller);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -174,19 +176,21 @@ class AuthRepo extends GetxService {
   Future changepassword({
     required String email,
     required String password,
-     required String newpassword,
-     required BuildContext context,
+    required String newpassword,
+    required BuildContext context,
   }) async {
     final mapData = {
-      "email":email,
-    "password":password,
-    "new_password":newpassword,
-      "is_user": "0"};
+      "email": email,
+      "password": password,
+      "new_password": newpassword,
+      "is_user": "0"
+    };
     try {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.changepassword, data: mapData);
       if (res.statusCode == 200) {
-       showSuccessDialogAndNavigateToLogin(context, 'Password Successfully Setup',RouteConstants.loginscreen);
+        showSuccessDialogAndNavigateToLogin(
+            context, 'Password Successfully Setup', RouteConstants.loginscreen);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -198,7 +202,43 @@ class AuthRepo extends GetxService {
     }
   }
 
+//////////////in app change password
+  Future inAppChangePassword({
+    required String oldpassword,
+    required String password,
+    required String confirmpassword,
+    required BuildContext context,
+  }) async {
+    final mapData = {
+      "password": password,
+      "password_confirmation": confirmpassword,
+      "old_password": oldpassword,
+      "is_user": "0"
+    };
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.inappchangepassword, data: mapData);
+      if (res.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            Future.delayed(Duration(seconds: 2), () {
+              Get.back();
+            });
 
-
-
+            return customsuccessalertpopup(
+              message: "Password Successfully Changed",
+            );
+          },
+        );
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+      showErrrorSnackbar(message: e.toString());
+    }
+  }
 }
