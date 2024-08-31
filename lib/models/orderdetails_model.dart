@@ -192,7 +192,7 @@ class Product {
   String? title;
   dynamic price;
   dynamic discountPrice;
-  String? disPercentage;
+  dynamic disPercentage;
   List<Media>? media;
 
   Product({
@@ -210,10 +210,10 @@ class Product {
         price: json["price"],
         discountPrice: json["discount_price"],
         disPercentage: json["dis_percentage"],
-        media: json["media"] != null
-            ? List<Media>.from(json["media"]
+        media: json["media"] == null || json["media"].isEmpty ? null : 
+             List<Media>.from(json["media"]
                 .map((x) => Media.fromJson(x)))
-            : null
+        
     ,
       );
 
@@ -223,7 +223,10 @@ class Product {
         "price": price,
         "discount_price": discountPrice,
         "dis_percentage": disPercentage,
-        "media":  media != null ? media?.map((x) => x.toJson()).toList() : null,
+        "media":   media == null || media!.isEmpty
+      ? [] : 
+        
+       media?.map((x) => x.toJson()).toList() ,
       };
 }
 

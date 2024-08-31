@@ -48,6 +48,7 @@ class _SellerFeedbackState extends State<SellerFeedback> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller:   scrollcontroller,
         child: Obx(
       () => storecontroller.getsellersideshopfeedbackloading.value
           ? Padding(
@@ -66,6 +67,7 @@ class _SellerFeedbackState extends State<SellerFeedback> {
               : Form(
                   key: formKey,
                   child: Column(
+                    
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
@@ -140,7 +142,7 @@ class _SellerFeedbackState extends State<SellerFeedback> {
                                 child: nodatatext("No Feedbacks"),
                               )
                             : ListView.builder(
-                                controller: scrollcontroller,
+                              physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: storecontroller
                                     .getsellersideshoppfeedback
@@ -549,6 +551,8 @@ class _SellerFeedbackState extends State<SellerFeedback> {
                                 child: customcircularprogress(),
                               )
                             : const SizedBox()
+                            ,
+                            SizedBox(height: 5.h,)
                       ]),
                 ),
     ));

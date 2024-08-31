@@ -312,6 +312,18 @@ class ProductController extends GetxController {
           'name': name,
           'attribute_id': attributeId,
         });
+
+      ////attribute add in dropdow 
+        final categoryname = attribute.key ??'';
+      final currentAttributes =
+          updateproductselectedAttributes.putIfAbsent(categoryname, () => []);
+
+      if (!currentAttributes.contains('${categoryname}_$name')) {
+        updateproductselectedAttributes[categoryname] = [
+          ...currentAttributes,
+          '${categoryname}_$name',
+        ];}
+      print(updateproductselectedAttributes);
       }
     }
   }

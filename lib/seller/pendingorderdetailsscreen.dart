@@ -117,7 +117,7 @@ class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
                                     color: const Color(0xff757474)),
                               ),
                               Text(
-                                '${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneCode ?? ""}-${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneNumber ?? ""}',
+                                '${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneCode.toString() ?? ""}-${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneNumber.toString() ?? ""}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,
@@ -354,7 +354,7 @@ class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
                                                                 ?.discountPrice ==
                                                             null
                                                         ? 'Save \$ 0 ( ${detailsdata?.product?.disPercentage ?? ""}% off )'
-                                                        : 'Save \$ ${'${((double.parse(detailsdata?.product?.price ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage ?? ""}% off )',
+                                                        : 'Save \$ ${'${((double.parse(detailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage.toString() ?? ""}% off )',
                                                     style: TextStyle(
                                                         fontSize: 12.sp,
                                                         color: Color(0xffEF0D0D)),
@@ -423,10 +423,10 @@ class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
                                                                 EdgeInsets.only(
                                                                     right: 1.w),
                                                             child: Text(
-                                                              attributedata
+                                                              "${attributedata
                                                                       ?.attribute
                                                                       ?.name ??
-                                                                  "",
+                                                                  ""}, ",
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -498,7 +498,7 @@ class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
                                             color: Color(0xff2E3192)),
                                       ),
                                       Text(
-                                        '\$${((double.parse(ordercontroller.getorderdetailsbyid.value?.data?.totalPrice ?? "0.00")) + (double.parse(ordercontroller.getorderdetailsbyid.value?.data?.shippingCost ?? "0.00"))).toStringAsFixed(2)}',
+                                        '\$${((double.parse(ordercontroller.getorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 17.sp,

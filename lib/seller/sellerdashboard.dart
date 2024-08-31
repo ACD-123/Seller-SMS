@@ -18,15 +18,18 @@ class SellerDashboardScreen extends StatefulWidget {
 
 class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
-  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
+  final authcontroller =
+      Get.put(AuthenticationController(authRepo: Get.find()));
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     storecontroller.getSellerShopProfileData();
     storecontroller.getSellerProfileData();
-    storecontroller.getSellerTotalSalesStats(storecontroller.todaysalesselectedmonth.value.toString());
-    storecontroller.getSellerItemsSoldStats(storecontroller.itemssoldselectedmonth.value.toString());
+    storecontroller.getSellerTotalSalesStats(
+        storecontroller.todaysalesselectedmonth.value.toString());
+    storecontroller.getSellerItemsSoldStats(
+        storecontroller.itemssoldselectedmonth.value.toString());
   }
 
   @override
@@ -39,98 +42,146 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(
-                  () => GestureDetector(
-                    onTap: () {
-                      Get.toNamed(RouteConstants.sellerprofilescreen);
-                    },
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              CircleAvatar(
-                                radius: 25.sp,
-                                backgroundColor: Colors.white,
-                                backgroundImage: NetworkImage(
-                                  storecontroller
-                                        .getsellerprofiledata
-                                        .value == null || storecontroller
-                                        .getsellerprofiledata
-                                        .value!.data!.media!.isEmpty  ? AppConstants.noimage : 
-                                  storecontroller
-                                        .getsellerprofiledata
-                                        .value
-                                        ?.data
-                                        ?.media?.first.originalUrl ??
-                                    AppConstants.noimage),
-                              ),
-                              Positioned(
-                                right: 0,
-                                top: 48,
-                                child: Container(
-                                  width: 5.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 2.07,
-                                          offset: Offset(0, 2.07),
-                                          color: Color(0xff000000)
-                                              .withOpacity(0.25))
-                                    ],
-                                    color: Color(0xffFFFFFF),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    size: 13.sp,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            width: 1.w,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8, left: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                Obx(() => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(RouteConstants.sellerprofilescreen);
+                          },
+                          child: SizedBox(
+                            child: Row(
                               children: [
-                                Text(
-                                  storecontroller
-                                        .getsellerprofiledata
-                                        .value
-                                        ?.data?.name ??
-                                      "",
-                                  style: TextStyle(
-                                      color: Color(0xff2E3192),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18.sp),
+                                Stack(
+                                  clipBehavior: Clip.none,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 25.sp,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                          storecontroller.getsellerprofiledata
+                                                          .value ==
+                                                      null ||
+                                                  storecontroller
+                                                      .getsellerprofiledata
+                                                      .value!
+                                                      .data!
+                                                      .media!
+                                                      .isEmpty
+                                              ? AppConstants.noimage
+                                              : storecontroller
+                                                      .getsellerprofiledata
+                                                      .value
+                                                      ?.data
+                                                      ?.media
+                                                      ?.first
+                                                      .originalUrl ??
+                                                  AppConstants.noimage),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: 48,
+                                      child: Container(
+                                        width: 5.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 2.07,
+                                                offset: Offset(0, 2.07),
+                                                color: Color(0xff000000)
+                                                    .withOpacity(0.25))
+                                          ],
+                                          color: Color(0xffFFFFFF),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.camera_alt_outlined,
+                                          size: 13.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                   width: 1.w,
                                 ),
-                                Text(
-                                  'Hello ${storecontroller
-                                        .getsellerprofiledata
-                                        .value
-                                        ?.data?.name ?? ""}',
-                                  style: TextStyle(
-                                      color: Color(0xff2E3192),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15.sp),
-                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 8, left: 8),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        storecontroller.getsellerprofiledata
+                                                .value?.data?.name ??
+                                            "",
+                                        style: TextStyle(
+                                            color: Color(0xff2E3192),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18.sp),
+                                      ),
+                                      SizedBox(
+                                        width: 1.w,
+                                      ),
+                                      Text(
+                                        'Hello ${storecontroller.getsellerprofiledata.value?.data?.name ?? ""}',
+                                        style: TextStyle(
+                                            color: Color(0xff2E3192),
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 15.sp),
+                                      ),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                          ),
+                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Get.toNamed(RouteConstants.notificationscreens);
+                        //   },
+                        //   child: Container(
+                        //     height: 6.h,
+                        //     width: 12.w,
+                        //     decoration: BoxDecoration(
+                        //         borderRadius: BorderRadius.circular(12),
+                        //         color: const Color(0xffEEEAEA)),
+                        //     child: Center(
+                        //         child: Stack(
+                        //       clipBehavior: Clip.none,
+                        //       children: [
+                        //   //       String readcounts = message?.readcount != null
+                        //   // ? (message!.readcount > 99
+                        //   //     ? '99+'
+                        //   //     : message.readcount.toString())
+                        //   // : "";
+                        //         Image.asset(
+                        //             'assets/images/homenotificationicon.png',
+                        //             scale: 1.5),
+                        //         Positioned(
+                        //           right: -2.5.w,
+                        //           top: -1.5.h,
+                        //           child: CircleAvatar(
+                        //             backgroundColor: const Color(0xff2E3192),
+                        //             radius: 13.5.sp,
+                        //             child: Text(
+                        //               "99+",
+                        //               style: TextStyle(
+                        //                   color: const Color(0xffFFFFFF),
+                        //                   fontWeight: FontWeight.w400,
+                        //                   fontSize: 13.sp),
+                        //             ),
+                        //           ),
+                        //         )
+                        //       ],
+                        //     )),
+                        //   ),
+                        // ),
+                      ],
+                    )),
                 SizedBox(
                   height: 3.h,
                 ),
@@ -147,85 +198,86 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                       borderRadius: BorderRadius.circular(7.13),
                       color: Color(0xff1375EA)),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 25, top: 17, right: 20, bottom: 17),
-                    child: Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 2.h,
-                          child:  DropdownButton<String>(
-                              value:
-                                  storecontroller.todaysalesselectedmonth.value,
-                              onChanged: (newValue) {
-                                storecontroller.todaysalesselectedmonth.value =
-                                    newValue!;
-                                storecontroller.getSellerTotalSalesStats(newValue);
-                              },
-                              items:
-                                  storecontroller.selectmonthslist.map((months) {
-                                return DropdownMenuItem<String>(
-                                  value: months,
-                                  child: Text(
-                                    months,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color(0xffFFFFFF),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                              underline: SizedBox(),
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_outlined,
-                                color: Color(0xffFFFFFF),
-                                size: 17.sp,
-                              ),
-                              dropdownColor: Color(0xff1375EA),
-                            ),
-                          
-                        ),
-                        SizedBox(
-                          height: 1.5.h,
-                        ),
-                        Text(
-                          'Total Sales',
-                          style: TextStyle(
-                              color: Color(0xffFFFFFF),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      padding: const EdgeInsets.only(
+                          left: 25, top: 17, right: 20, bottom: 17),
+                      child: Obx(
+                        () => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '\$${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
-                                  style: TextStyle(
-                                      color: Color(0xffFFFFFF),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 25.sp),
+                            SizedBox(
+                              height: 2.h,
+                              child: DropdownButton<String>(
+                                value: storecontroller
+                                    .todaysalesselectedmonth.value,
+                                onChanged: (newValue) {
+                                  storecontroller.todaysalesselectedmonth
+                                      .value = newValue!;
+                                  storecontroller
+                                      .getSellerTotalSalesStats(newValue);
+                                },
+                                items: storecontroller.selectmonthslist
+                                    .map((months) {
+                                  return DropdownMenuItem<String>(
+                                    value: months,
+                                    child: Text(
+                                      months,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color(0xffFFFFFF),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                underline: SizedBox(),
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_outlined,
+                                  color: Color(0xffFFFFFF),
+                                  size: 17.sp,
                                 ),
-                                Text(
-                                  '+${storecontroller.getsellertotalsalesstats.value?.data?.percentageGrowth ?? ""}% month over month',
-                                  style: TextStyle(
-                                      color: Color(0xffFFFFFF),
-                                      // fontWeight: FontWeight.w500,
-                                      fontSize: 16.sp),
-                                ),
-                              ],
+                                dropdownColor: Color(0xff1375EA),
+                              ),
                             ),
-                            Image.asset(
-                              'assets/images/sellerdashboardarrowline.png',
-                              height: 6.h,
+                            SizedBox(
+                              height: 1.5.h,
+                            ),
+                            Text(
+                              'Total Sales',
+                              style: TextStyle(
+                                  color: Color(0xffFFFFFF),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.sp),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '\$${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
+                                      style: TextStyle(
+                                          color: Color(0xffFFFFFF),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 25.sp),
+                                    ),
+                                    Text(
+                                      '+${storecontroller.getsellertotalsalesstats.value?.data?.percentageGrowth ?? ""}% month over month',
+                                      style: TextStyle(
+                                          color: Color(0xffFFFFFF),
+                                          // fontWeight: FontWeight.w500,
+                                          fontSize: 16.sp),
+                                    ),
+                                  ],
+                                ),
+                                Image.asset(
+                                  'assets/images/sellerdashboardarrowline.png',
+                                  height: 6.h,
+                                )
+                              ],
                             )
                           ],
-                        )
-                      ],
-                    ),)
-                  ),
+                        ),
+                      )),
                 ),
                 SizedBox(
                   height: 1.h,
@@ -244,85 +296,92 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                       border: Border.all(color: Color(0xffE0E0E0)),
                       color: Color(0xffFFFFFF)),
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 25, top: 17, right: 20, bottom: 15),
-                    child: Obx(() => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 2.h,
-                          child: DropdownButton<String>(
-                              value:
-                                  storecontroller.itemssoldselectedmonth.value,
-                              onChanged: (newValue) {
-                                storecontroller.itemssoldselectedmonth.value =
-                                    newValue!;
-                                    storecontroller.getSellerItemsSoldStats(newValue);
-                              },
-                              items:
-                                  storecontroller.selectmonthslist.map((bank) {
-                                return DropdownMenuItem<String>(
-                                  value: bank,
-                                  child: Text(
-                                    bank,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Color(0xff828282),
+                      padding: const EdgeInsets.only(
+                          left: 25, top: 17, right: 20, bottom: 15),
+                      child: Obx(
+                        () => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 2.h,
+                              child: DropdownButton<String>(
+                                value: storecontroller
+                                    .itemssoldselectedmonth.value,
+                                onChanged: (newValue) {
+                                  storecontroller.itemssoldselectedmonth.value =
+                                      newValue!;
+                                  storecontroller
+                                      .getSellerItemsSoldStats(newValue);
+                                },
+                                items: storecontroller.selectmonthslist
+                                    .map((bank) {
+                                  return DropdownMenuItem<String>(
+                                    value: bank,
+                                    child: Text(
+                                      bank,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color(0xff828282),
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                              underline: SizedBox(),
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_outlined,
-                                color: Color(0xff828282),
-                                size: 17.sp,
+                                  );
+                                }).toList(),
+                                underline: SizedBox(),
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_outlined,
+                                  color: Color(0xff828282),
+                                  size: 17.sp,
+                                ),
                               ),
                             ),
-                          
-                        ),
-                        SizedBox(
-                          height: 1.5.h,
-                        ),
-                        Text(
-                          'Items Sold',
-                          style: TextStyle(
-                              color: Color(0xff000000),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.sp),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                storecontroller.getselleritemssoldstats.value?.data?.totalProductsSoldCurrentMonth.toString() ??   '',
-                                  style: TextStyle(
-                                      color: Color(0xff2E3192),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 25.sp),
-                                ),
-                                Text(
-                                  '+${ storecontroller.getselleritemssoldstats.value?.data?.percentageGrowth.toString() ??   ''}% month over month',
-                                  style: TextStyle(
-                                      color: Color(0xff828282),
-                                      // fontWeight: FontWeight.w500,
-                                      fontSize: 16.sp),
-                                ),
-                              ],
+                            SizedBox(
+                              height: 1.5.h,
                             ),
-                            Image.asset(
-                              'assets/images/sellerdashboardarrowline.png',
-                              height: 6.h,
-                              color: Color(0xff2E3192),
+                            Text(
+                              'Items Sold',
+                              style: TextStyle(
+                                  color: Color(0xff000000),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.sp),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      storecontroller
+                                              .getselleritemssoldstats
+                                              .value
+                                              ?.data
+                                              ?.totalProductsSoldCurrentMonth
+                                              .toString() ??
+                                          '',
+                                      style: TextStyle(
+                                          color: Color(0xff2E3192),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 25.sp),
+                                    ),
+                                    Text(
+                                      '+${storecontroller.getselleritemssoldstats.value?.data?.percentageGrowth.toString() ?? ''}% month over month',
+                                      style: TextStyle(
+                                          color: Color(0xff828282),
+                                          // fontWeight: FontWeight.w500,
+                                          fontSize: 16.sp),
+                                    ),
+                                  ],
+                                ),
+                                Image.asset(
+                                  'assets/images/sellerdashboardarrowline.png',
+                                  height: 6.h,
+                                  color: Color(0xff2E3192),
+                                )
+                              ],
                             )
                           ],
-                        )
-                      ],
-                    ),)
-                  ),
+                        ),
+                      )),
                 ),
                 SizedBox(
                   height: 2.h,
@@ -371,6 +430,15 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                   height: 2.h,
                 ),
                 customdashboardcontainer(
+                    title: 'Discounts & Coupons',
+                    image: 'assets/images/discounts.png',
+                    ontap: () {
+                      Get.toNamed(RouteConstants.discountscouponsscreen);
+                    }),
+                SizedBox(
+                  height: 2.h,
+                ),
+                customdashboardcontainer(
                     title: 'Sales Report',
                     image: 'assets/images/sellerdashboardsalesreporticon.png',
                     ontap: () {
@@ -388,10 +456,10 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                 SizedBox(
                   height: 2.h,
                 ),
-                 custombutton(
+                custombutton(
                     hinttext: "Sign Out",
                     ontap: () {
-                     authcontroller.signout();
+                      authcontroller.signout();
                     }),
               ],
             ),

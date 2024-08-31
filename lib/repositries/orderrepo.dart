@@ -12,6 +12,7 @@ import 'package:smsseller/models/orderdetails_model.dart';
 import 'package:smsseller/models/orderhistorycount_mode.dart';
 import 'package:smsseller/models/pendingorder_model.dart';
 import 'package:smsseller/models/recentorders_model.dart';
+import 'package:smsseller/models/refundorderdetails_model.dart';
 import 'package:smsseller/models/refundorders_model.dart';
 import 'package:smsseller/models/rejectedorders_model.dart';
 import 'package:smsseller/models/salesreportearningrefund_model.dart';
@@ -234,6 +235,23 @@ class OrderRepo extends GetxService {
         return listofrejectedorders;
       } else {
         throw Exception("No data field found in the GetRejectedOrders");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+    ////////get refund orderdetails by id
+  Future<RefundOrderDetailsModel?> getRefundOrderDetailsById(int id) async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getrefundorderdetailsbyid}$id?status=1&order_status=4",
+      );
+      if (res.statusCode == 200) {
+        final listofrefundorderdetails = refundOrderDetailsFromJson(res.body);
+        return listofrefundorderdetails;
+      } else {
+        throw Exception("No data field found in the GetRefundOrderDetailsById");
       }
     } catch (e) {
       throw Exception(e);

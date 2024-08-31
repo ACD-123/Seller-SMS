@@ -45,4 +45,5 @@ class AppConstants {
        static const getsellerchatroomdetails = "chat/getById?room_id=";
        static const sendmessage = "chat/sendMessage";
        static const inappchangepassword = "user/update-password";
+       static const getrefundorderdetailsbyid = "order/getById/";
 }

@@ -69,8 +69,8 @@ class ChatRepo extends GetxService {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.sendmessage, data: mapData);
       if (res.statusCode == 200) {
-        final message = jsonDecode(res.body)['message'];
-        showSuccessSnackbar(message: message);
+        // final message = jsonDecode(res.body)['message'];
+        // showSuccessSnackbar(message: message);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);

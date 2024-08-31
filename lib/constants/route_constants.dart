@@ -85,4 +85,5 @@ static String updatestepper = '/updatestepper';
   static String usercompletedorderdetails = '/usercompletedorderdetails';
   static String sellerupdateshopdetails = '/sellerupdateshopdetails';
   static String sellerupdateshop = '/sellerupdateshop';
+  static String discountscouponsscreen = '/discountscouponsscreen';
 }

@@ -5,6 +5,7 @@ import 'package:smsseller/models/orderdetails_model.dart';
 import 'package:smsseller/models/orderhistorycount_mode.dart';
 import 'package:smsseller/models/pendingorder_model.dart';
 import 'package:smsseller/models/recentorders_model.dart';
+import 'package:smsseller/models/refundorderdetails_model.dart';
 import 'package:smsseller/models/refundorders_model.dart';
 import 'package:smsseller/models/rejectedorders_model.dart';
 import 'package:smsseller/models/salesreportearningrefund_model.dart';
@@ -337,4 +338,20 @@ final RxBool getrejectedordersreloading = false.obs;
     }
   }
 
+  //////////////get refund order details by id
+  final Rx<RefundOrderDetailsModel?> getrefundorderdetailsbyid =
+      Rx<RefundOrderDetailsModel?>(null);
+  final RxBool getrefundorderdetailsbyidloading = false.obs;
+
+  getRefundOrderDetailsById(int id) async {
+    try {
+      getrefundorderdetailsbyidloading(true);
+      await orderRepo.getRefundOrderDetailsById(id).then((value) {
+        getrefundorderdetailsbyid.value = value;
+        getrefundorderdetailsbyidloading(false);
+      });
+    } catch (e) {
+      getrefundorderdetailsbyidloading(false);
+    }
+  }
 }

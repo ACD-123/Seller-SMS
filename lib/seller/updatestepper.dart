@@ -492,8 +492,9 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                       );
 
                                       if (selectedOption.isEmpty) return;
-                                      
-                                      final randomId = productcontroller.generateUniqueRandomString(5);
+
+                                      final randomId = productcontroller
+                                          .generateUniqueRandomString(5);
                                       final entry = {
                                         'id': randomId,
                                         'name': selectedOption,
@@ -506,19 +507,12 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                         (entry) =>
                                             entry['attribute_id'] ==
                                                 attributeId &&
-                                            entry['name'] == selectedOption &&
-                                            entry['id'] == randomId,
+                                            entry['name'] == selectedOption
                                       );
 
-                                      if (existingEntryIndex != -1) {
-                                        productcontroller
-                                                .updateselectedcategoryattributesList[
-                                            existingEntryIndex] = entry;
-                                      } else {
-                                        productcontroller
-                                            .updateselectedcategoryattributesList
-                                            .add(entry);
-                                      }
+                                     if (existingEntryIndex == -1) {
+    productcontroller.updateselectedcategoryattributesList.add(entry);
+  }
 
                                       final currentAttributes =
                                           productcontroller
@@ -532,12 +526,11 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                                 .updateproductselectedAttributes[
                                             categoryname] = [
                                           ...currentAttributes,
-                                          newValue,
+                                          '${categoryAttributeData.name}_$newValue',
                                         ];
                                       }
 
-                                      print(productcontroller
-                                          .updateselectedcategoryattributesList);
+                                     
                                     },
                                     items: categoryAttributeData!.options!
                                         .map<DropdownMenuItem<String>>(
@@ -791,26 +784,24 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     buttonName: 'Update',
                     textColor: Colors.white,
                     ontap: () {
-                  productcontroller.getcategoryattributes.value!.data!
-                            .attributes!.isNotEmpty && productcontroller.updateselectedcategoryattributesList.isEmpty ? 
-                            showErrrorSnackbar(
-                              message: "Please Select Attributes") :
-                      productcontroller.getproductpreviewbyid.value!.data!
-                                  .media!.isEmpty &&
+                      productcontroller.getcategoryattributes.value!.data!
+                                  .attributes!.isNotEmpty &&
                               productcontroller
-                                  .updateproductuploadimages.isEmpty
+                                  .updateselectedcategoryattributesList.isEmpty
                           ? showErrrorSnackbar(
-                              message: "Please Upload Product Images")
-                          : 
-                          
-                          
-                          
-                          productcontroller.updateProduct(
-                              context: context,
-                              id: productcontroller
-                                      .getproductpreviewbyid.value?.data?.id
-                                      .toString() ??
-                                  "");
+                              message: "Please Select Attributes")
+                          : productcontroller.getproductpreviewbyid.value!.data!
+                                      .media!.isEmpty &&
+                                  productcontroller
+                                      .updateproductuploadimages.isEmpty
+                              ? showErrrorSnackbar(
+                                  message: "Please Upload Product Images")
+                              : productcontroller.updateProduct(
+                                  context: context,
+                                  id: productcontroller
+                                          .getproductpreviewbyid.value?.data?.id
+                                          .toString() ??
+                                      "");
                     },
                     fontSize: 10,
                     color: Color(0xff2E3192),

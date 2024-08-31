@@ -474,8 +474,8 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
                                                 AppConstants.noimage,
                                     status: "Refunded",
                                     viewdetailsontap: () {
-                                      ordercontroller.getOrderDetailsbyId(
-                                          refundeddata?.id ?? 0, 4);
+                                      ordercontroller.getRefundOrderDetailsById(
+                                          refundeddata?.id ?? 0);
                                       Get.toNamed(RouteConstants
                                           .sellerrefundorderdetailsscreen);
                                     },

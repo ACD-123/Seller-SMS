@@ -121,8 +121,8 @@ class _ProductPreviewScreenState extends State<ProductPreviewScreen> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                 ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                                // maxLines: 2,
+                                // overflow: TextOverflow.ellipsis,
                               ),
                               Row(
                                 children: [

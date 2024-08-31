@@ -1,425 +1,677 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
-import 'package:smsseller/customcomponents/customeleveted_button.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
-class SellerRefundOrderDetails extends StatelessWidget {
+import '../customcomponents/customeleveted_button.dart';
+
+class SellerRefundOrderDetails extends StatefulWidget {
   const SellerRefundOrderDetails({super.key});
+
+  @override
+  State<SellerRefundOrderDetails> createState() =>
+      _SellerRefundOrderDetailsState();
+}
+
+class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
+  final ordercontroller = Get.put(OrderController(orderRepo: Get.find()));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customappbar(title: 'Order Details'),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                ),
-                child: Text(
-                  'Shipping Details',
-                  style:
-                      TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp),
-                ),
-              ),
-              SizedBox(
-                height: 1.h,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                ),
-                child: Container(
-                  height: 15.h,
-                  width: Get.width,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Color(0xffEFEFEF)),
-                      color: Color(0xffF3F3F3).withOpacity(0.18)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Anderson',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 15.sp,
-                                  color: Color(0xff757474)),
-                            ),
-                            Text(
-                              'ORDER # :q54x514fe',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14.sp,
-                                  color: Color(0xff2E3192)),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          '2438 6th Ave, Ketchikan, Alaska 99901, USA',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                              color: Color(0xff757474)),
-                        ),
-                        Text(
-                          '02184548845',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                              color: Color(0xff757474)),
-                        ),
-                      ],
-                    ),
+        appBar: customappbar(title: 'Order Details'),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: SingleChildScrollView(child: Obx(() {
+              if (ordercontroller.getrefundorderdetailsbyidloading.value) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 35.h),
+                  child: Center(
+                    child: customcircularprogress(),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 2.h,
-              ),
-              Container(
-                height: 8.h,
-                width: Get.width,
-                color: Color(0xffD9D9D9).withOpacity(0.5),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Delivery Status',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16.sp,
-                                color: Color(0xff2E3192)),
-                          ),
-                          // RichText(
-                          //     text: TextSpan(children: [
-                          //   TextSpan(
-                          //     text: 'Est Delivery: Tue, ',
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.w400,
-                          //         fontSize: 14.sp,
-                          //         color: Color(0xff757474)),
-                          //   ),
-                          //   TextSpan(
-                          //     text: 'Dec 15',
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.w400,
-                          //         fontSize: 14.sp,
-                          //         color: Color(0xff000000)),
-                          //   ),
-                          //   TextSpan(
-                          //     text: ' -Wed,',
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.w400,
-                          //         fontSize: 14.sp,
-                          //         color: Color(0xff757474)),
-                          //   ),
-                          //   TextSpan(
-                          //     text: ' Dec 16',
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.w400,
-                          //         fontSize: 14.sp,
-                          //         color: Color(0xff000000)),
-                          //   ),
-                          // ]))
-                        ],
-                      ),
-                      CustomElevetedButton(
-                          ontap: () {},
-                          height: 3.5.h,
-                          width: 32.w,
-                          fontSize: 14.sp,
-                          borderradius: 15,
-                          color: Color(0xff2E3192),
-                          buttonName: 'Delivered')
-                    ],
+                );
+              } else if (ordercontroller.getrefundorderdetailsbyid.value ==
+                      null ||
+                  ordercontroller.getrefundorderdetailsbyid.value?.data ==
+                      null) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 35.h),
+                  child: Center(
+                    child: nodatatext("No Order Details"),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 2.h,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                child: Column(
+                );
+              } else {
+                
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                      ),
+                      child: Text(
+                        'Shipping Details',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 16.sp),
+                      ),
+                    ),
                     SizedBox(
-                      width: Get.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                height: 12.h,
-                                width: 33.w,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Color(0xff1375EA)
-                                            .withOpacity(0.25)),
-                                    borderRadius: BorderRadius.circular(15.62),
-                                    image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/orderhistoryproductimage1.png"),
-                                        fit: BoxFit.fill)),
-                              ),
-                              SizedBox(
-                                width: 2.w,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'H1 Gamepad',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 15.sp),
-                                        ),
-                                        SizedBox(
-                                          width: 7.w,
-                                        ),
-                                        Text(
-                                          'Approval: ',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 13.sp,
-                                              color: Color(0xff757474)),
-                                        ),
-                                        Text(
-                                          'Pending',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 13.sp,
-                                              color: Color(0xffE2001B)),
-                                        )
-                                      ],
-                                    ),
-                                    Text(
-                                      '\$260',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 17.sp,
-                                          color: Color(0xff2E3192)),
-                                    ),
-                                    Text(
-                                      'Save \$ 8.99 ( 40% off )',
-                                      style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: Color(0xffEF0D0D)),
-                                    ),
-                                    SizedBox(
-                                      height: 1.h,
-                                    ),
-                                    Row(children: [
-                                      Text(
-                                        'M (48)',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 13.sp),
-                                      ),
-                                      SizedBox(
-                                        width: 3.w,
-                                      ),
-                                      Image.asset(
-                                          'assets/images/Ellipse 8.png'),
-                                      SizedBox(
-                                        width: 1.w,
-                                      ),
-                                      Text(
-                                        'Red',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 13.sp),
-                                      ),
-                                      SizedBox(
-                                        width: 12.w,
-                                      ),
-                                      Text(
-                                        'Quantity :  ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 13.sp,
-                                            color: Color(0xff757474)),
-                                      ),
-                                      Container(
-                                        height: 2.h,
-                                        width: 5.w,
-                                        color: Color(0xff2E3192),
-                                        child: Center(
-                                          child: Text(
-                                            '1',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 13.sp,
-                                                color: Color(0xffFFFFFF)),
-                                          ),
-                                        ),
-                                      )
-                                    ]),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 0.5.h,
-                          ),
-                          Row(
+                      height: 1.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18,
+                      ),
+                      child: Container(
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Color(0xffEFEFEF)),
+                            color: const Color(0xffF3F3F3).withOpacity(0.18)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Images',
+                                    ordercontroller.getrefundorderdetailsbyid
+                                            .value?.data?.user?.name
+                                            .toString() ??
+                                        "",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 16.sp),
-                                  ),
-                                  SizedBox(
-                                    width: 3.w,
-                                  ),
-                                  Image.asset(
-                                    'assets/images/imagesicon.png',
-                                    height: 3.h,
-                                    width: 3.w,
-                                  ),
-                                  SizedBox(
-                                    width: 1.w,
+                                        fontSize: 15.sp,
+                                        color: const Color(0xff757474)),
                                   ),
                                   Text(
-                                    '7 images',
+                                    'ORDER # ${ordercontroller.getrefundorderdetailsbyid.value?.data?.orderid.toString() ?? ""}',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13.sp,
-                                        color: Color(0xff757474)),
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14.sp,
+                                        color: const Color(0xff2E3192)),
                                   ),
                                 ],
                               ),
+                              Text(
+                                ordercontroller.getrefundorderdetailsbyid.value
+                                        ?.data?.user?.address
+                                        .toString() ??
+                                    "",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.sp,
+                                    color: const Color(0xff757474)),
+                              ),
+                              Text(
+                                '${ordercontroller.getrefundorderdetailsbyid.value?.data?.user?.phoneCode.toString() ?? ""}-${ordercontroller.getrefundorderdetailsbyid.value?.data?.user?.phoneNumber.toString() ?? ""}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.sp,
+                                    color: const Color(0xff757474)),
+                              ),
                             ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Container(
+                      height: 8.h,
+                      width: Get.width,
+                      color: const Color(0xffD9D9D9).withOpacity(0.5),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Delivery Status',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.sp,
+                                      color: const Color(0xff2E3192)),
+                                ),
+                                // RichText(
+                                //     text: TextSpan(children: [
+                                //   TextSpan(
+                                //     text: 'Est Delivery: Tue, ',
+                                //     style: TextStyle(
+                                //         fontWeight: FontWeight.w400,
+                                //         fontSize: 14.sp,
+                                //         color: const Color(0xff757474)),
+                                //   ),
+                                //   TextSpan(
+                                //     text: 'Dec 15',
+                                //     style: TextStyle(
+                                //         fontWeight: FontWeight.w400,
+                                //         fontSize: 14.sp,
+                                //         color: const Color(0xff000000)),
+                                //   ),
+                                //   TextSpan(
+                                //     text: ' -Wed,',
+                                //     style: TextStyle(
+                                //         fontWeight: FontWeight.w400,
+                                //         fontSize: 14.sp,
+                                //         color: const Color(0xff757474)),
+                                //   ),
+                                //   TextSpan(
+                                //     text: ' Dec 16',
+                                //     style: TextStyle(
+                                //         fontWeight: FontWeight.w400,
+                                //         fontSize: 14.sp,
+                                //         color: const Color(0xff000000)),
+                                //   ),
+                                // ]))
+                              ],
+                            ),
+                            CustomElevetedButton(
+                                ontap: () {},
+                                height: 3.5.h,
+                                width: 32.w,
+                                fontSize: 14.sp,
+                                borderradius: 15,
+                                color: const Color(0xff2E3192),
+                                buttonName: ordercontroller
+                                        .getrefundorderdetailsbyid
+                                        .value
+                                        ?.data
+                                        ?.orderProductIds
+                                        ?.first
+                                        .status ??
+                                    "")
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: ordercontroller
+                                  .getrefundorderdetailsbyid
+                                  .value
+                                  ?.data
+                                  ?.orderProductIds
+                                  ?.length,
+                              itemBuilder: (context, index) {
+                                final refunddetailsdata = ordercontroller
+                                    .getrefundorderdetailsbyid
+                                    .value
+                                    ?.data
+                                    ?.orderProductIds?[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 2.h),
+                                  child: SizedBox(
+                                    width: Get.width,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Container(
+                                              height: 12.h,
+                                              width: 33.w,
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Color(0xff1375EA)
+                                                          .withOpacity(0.25)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15.62),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(refunddetailsdata
+                                                                      ?.product
+                                                                      ?.media ==
+                                                                  null ||
+                                                              refunddetailsdata!
+                                                                  .product!
+                                                                  .media!
+                                                                  .isEmpty
+                                                          ? AppConstants.noimage
+                                                          : refunddetailsdata
+                                                                  .product
+                                                                  ?.media
+                                                                  ?.first
+                                                                  .originalUrl ??
+                                                              AppConstants
+                                                                  .noimage),
+                                                      fit: BoxFit.fill)),
+                                            ),
+                                            SizedBox(
+                                              width: 2.w,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(5),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(width: 20.w,child: Text(
+                                                        refunddetailsdata
+                                                                ?.product?.title
+                                                                .toString() ??
+                                                            "",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 15.sp),
+                                                      ),),
+                                                      SizedBox(
+                                                        width: 5.w,
+                                                      ),
+                                                      Text(
+                                                        'Approval: ',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 13.sp,
+                                                            color: const Color(
+                                                                0xff757474)),
+                                                      ),
+                                                      Text(
+                                                        refunddetailsdata
+                                                                ?.refund?.status
+                                                                .toString() ??
+                                                            "",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 13.sp,
+                                                            color: const Color(
+                                                                0xffE2001B)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    refunddetailsdata?.product
+                                                                    ?.discountPrice ==
+                                                                null ||
+                                                            refunddetailsdata
+                                                                    ?.product
+                                                                    ?.discountPrice ==
+                                                                "0"
+                                                        ? 'XOF ${refunddetailsdata?.product?.price ?? ""}'
+                                                        : 'XOF ${refunddetailsdata?.product?.discountPrice ?? ""}',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 17.sp,
+                                                        color: const Color(
+                                                            0xff2E3192)),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        refunddetailsdata
+                                                                    ?.product
+                                                                    ?.discountPrice ==
+                                                                null
+                                                            ? 'Save XOF 0 ( ${(refunddetailsdata?.product?.disPercentage ?? "").toStringAsFixed(2)}% off )'
+                                                            : 'Save XOF ${'${((double.parse(refunddetailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(refunddetailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${refunddetailsdata?.product?.disPercentage.toString() ?? ""}% off )',
+                                                        style: TextStyle(
+                                                            fontSize: 12.sp,
+                                                            color: Color(
+                                                                0xffEF0D0D)),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 1.w,
+                                                      ),
+                                                      Text(
+                                                        'Quantity: ',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 13.sp,
+                                                            color: Color(
+                                                                0xff757474)),
+                                                      ),
+                                                      Container(
+                                                        color: const Color(
+                                                            0xff2E3192),
+                                                        child: Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(2),
+                                                            child: Text(
+                                                              refunddetailsdata
+                                                                      ?.quantity
+                                                                      .toString() ??
+                                                                  "",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize:
+                                                                      13.sp,
+                                                                  color: const Color(
+                                                                      0xffFFFFFF)),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1.h,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 2.h,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Row(children: [
+                                                        ListView.builder(
+                                                            physics:
+                                                                const NeverScrollableScrollPhysics(),
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            shrinkWrap: true,
+                                                            itemCount:
+                                                                refunddetailsdata
+                                                                    ?.orderAttribute
+                                                                    ?.length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              final attributedata =
+                                                                  refunddetailsdata
+                                                                          ?.orderAttribute?[
+                                                                      index];
+                                                              return Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        right: 1
+                                                                            .w),
+                                                                child: Text(
+                                                                 "${ attributedata
+                                                                          ?.attribute
+                                                                          ?.name ??
+                                                                      ""}, ",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      fontSize:
+                                                                          13.sp),
+                                                                ),
+                                                              );
+                                                            }),
+                                                      ]),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 0.5.h,
+                                        ),
+                            refunddetailsdata?.refund == null
+                                            ? const SizedBox() :             Row(
+                                          children: [
+                                            Text(
+                                              'Images',
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.w400,
+                                                  fontSize: 16.sp),
+                                            ),
+                                            SizedBox(
+                                              width: 3.w,
+                                            ),
+                                            Image.asset(
+                                              'assets/images/imagesicon.png',
+                                              height: 3.h,
+                                              width: 3.w,
+                                            ),
+                                            SizedBox(
+                                              width: 1.w,
+                                            ),
+                                            Text(
+                                              '${refunddetailsdata?.refund?.media?.length.toString() ?? 0} images',
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.w600,
+                                                  fontSize: 13.sp,
+                                                  color: Color(0xff757474)),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+                                        refunddetailsdata?.refund == null ||
+                                                refunddetailsdata
+                                                        ?.refund?.media ==
+                                                    null ||
+                                                refunddetailsdata!
+                                                    .refund!.media!.isEmpty
+                                            ? const SizedBox()
+                                            : SizedBox(
+                                                height: 6.h,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Row(
+                                                    children: [
+                                                      ListView.builder(
+                                                        physics: const NeverScrollableScrollPhysics(),
+                                                          shrinkWrap: true,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemCount:
+                                                              refunddetailsdata
+                                                                      .refund
+                                                                      ?.media
+                                                                      ?.length ??
+                                                                  0,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            final refundimages =
+                                                                refunddetailsdata
+                                                                        .refund
+                                                                        ?.media?[
+                                                                    index];
+                                                            return customreasonimagescontainer(
+                                                                image: refundimages
+                                                                        ?.originalUrl ??
+                                                                    AppConstants
+                                                                        .noimage);
+                                                          })
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+                                        refunddetailsdata?.refund == null
+                                            ? const SizedBox()
+                                            : Text(
+                                                'Reason',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 16.sp),
+                                              ),
+                                        SizedBox(
+                                          height: 0.5.h,
+                                        ),
+                                        refunddetailsdata?.refund == null
+                                            ? const SizedBox()
+                                            : Container(
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xffF5F5F5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.79)),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 15),
+                                                  child: Text(
+                                                    refunddetailsdata
+                                                            ?.refund?.reason
+                                                            .toString() ??
+                                                        "",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 13.sp,
+                                                        color:
+                                                            Color(0xff2E2E2E)),
+                                                  ),
+                                                ),
+                                              ),
+                                        const Divider(),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text(
+                            'Order Summary',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 16.sp),
                           ),
                           SizedBox(
                             height: 1.h,
                           ),
-                          Row(
-                            children: [
-                              customreasonimagescontainer(
-                                  image:
-                                      'assets/images/refundreasonimage1.png'),
-                              customreasonimagescontainer(
-                                  image:
-                                      'assets/images/refundreasonimage4.png'),
-                              customreasonimagescontainer(
-                                  image:
-                                      'assets/images/refundreasonimage2.png'),
-                              customreasonimagescontainer(
-                                  image: 'assets/images/refundreasonimage4.png')
-                            ],
+                          Container(
+                            decoration: BoxDecoration(
+                                color:
+                                    const Color(0xff1375EA).withOpacity(0.25),
+                                borderRadius: BorderRadius.circular(20)),
+                            height: 19.h,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  customamountrow(
+                                      title:
+                                          'Subtotal (${ordercontroller.getrefundorderdetailsbyid.value?.data?.orderProductIds?.length} items)',
+                                      amount:
+                                          'XOF ${ordercontroller.getrefundorderdetailsbyid.value?.data?.subtotalPrice.toString() ?? ""}'),
+                                  customamountrow(
+                                      title: 'Shipping',
+                                      amount:
+                                          'XOF ${ordercontroller.getrefundorderdetailsbyid.value?.data?.shippingCost.toString() ?? ""}'),
+                                  customamountrow(
+                                      title: 'Discount',
+                                      amount:
+                                          'XOF ${ordercontroller.getrefundorderdetailsbyid.value?.data?.discount.toString() ?? ""}'),
+                                  const Divider(
+                                    color: Color(0xffAAA4A4),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Order Total',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 17.sp,
+                                            color: Color(0xff2E3192)),
+                                      ),
+                                      Text(
+                                        'XOF ${((double.parse(ordercontroller.getrefundorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getrefundorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 17.sp,
+                                            color: const Color(0xff2E3192)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          const Divider()
+                          SizedBox(
+                            height: 3.h,
+                          ),
+                          ordercontroller.getrefundorderdetailsbyid.value?.data
+                                          ?.note ==
+                                      null ||
+                                  ordercontroller.getrefundorderdetailsbyid
+                                      .value!.data!.note!.isEmpty
+                              ? const SizedBox()
+                              : Text(
+                                  'Note',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.sp),
+                                ),
+                          SizedBox(
+                            height: 1.h,
+                          ),
+                          ordercontroller.getrefundorderdetailsbyid.value?.data
+                                          ?.note ==
+                                      null ||
+                                  ordercontroller.getrefundorderdetailsbyid
+                                      .value!.data!.note!.isEmpty
+                              ? const SizedBox()
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xffF5F5F5),
+                                      borderRadius:
+                                          BorderRadius.circular(20.79)),
+                                  width: Get.width,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 15),
+                                    child: Text(
+                                      ordercontroller.getrefundorderdetailsbyid
+                                              .value?.data?.note
+                                              .toString() ??
+                                          "",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13.sp,
+                                          color: Color(0xff2E2E2E)),
+                                    ),
+                                  ),
+                                ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 4.h,
-                    ),
-                    Text(
-                      'Order Summary',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, fontSize: 16.sp),
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xffF1EAEA),
-                          borderRadius: BorderRadius.circular(20)),
-                      height: 19.h,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            customamountrow(
-                                title: 'Subtotal (2 items)', amount: '\$98.88'),
-                            customamountrow(
-                                title: 'Shipping', amount: '\$96.00'),
-                            customamountrow(
-                                title: 'Discount', amount: '\$-5.00'),
-                            Divider(
-                              color: Color(0xffAAA4A4),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Order Total',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 17.sp,
-                                      color: Color(0xff2E3192)),
-                                ),
-                                Text(
-                                  '\$ 198.00',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 17.sp,
-                                      color: Color(0xff2E3192)),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.error_outline_outlined,
-                            color: Color(0xff989595)),
-                        Text(
-                          'Amount will be transferred after admin approval and amount will \n  be deducted from your earnings',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13.sp,
-                              color: Color(0xff878787)),
-                        ),
-                      ],
-                    ),
+                    )
                   ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                );
+              }
+            }))));
   }
 }
 
@@ -460,9 +712,9 @@ Padding customreasonimagescontainer({required String image}) {
       width: 17.w,
       decoration: BoxDecoration(
           border: Border.all(
-            color: Color(0xff2E3192),
+            color: const Color(0xff2E3192),
           ),
-          image: DecorationImage(image: AssetImage(image), fit: BoxFit.fill),
+          image: DecorationImage(image: NetworkImage(image), fit: BoxFit.fill),
           borderRadius: BorderRadius.circular(3)),
     ),
   );

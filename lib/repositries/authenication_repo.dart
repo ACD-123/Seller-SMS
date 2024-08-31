@@ -222,7 +222,7 @@ class AuthRepo extends GetxService {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            Future.delayed(Duration(seconds: 2), () {
+            Future.delayed(Duration(seconds: 1), () {
               Get.back();
             });
 

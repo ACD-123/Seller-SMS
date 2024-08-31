@@ -279,7 +279,7 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                                                 ?.discountPrice ==
                                                             null
                                                         ? 'Save \$ 0 ( ${detailsdata?.product?.disPercentage ?? ""}% off )'
-                                                        : 'Save \$ ${'${((double.parse(detailsdata?.product?.price ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage ?? ""}% off )',
+                                                        : 'Save \$ ${'${((double.parse(detailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage.toString() ?? ""}% off )',
                                                     style: TextStyle(
                                                         fontSize: 12.sp,
                                                         color:
@@ -351,10 +351,10 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                                                 EdgeInsets.only(
                                                                     right: 1.w),
                                                             child: Text(
-                                                              attributedata
+                                                             "${attributedata
                                                                       ?.attribute
                                                                       ?.name ??
-                                                                  "",
+                                                                  ""}, ",
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -426,7 +426,7 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                             color: Color(0xff2E3192)),
                                       ),
                                       Text(
-                                        '\$${((double.parse(ordercontroller.getorderdetailsbyid.value?.data?.totalPrice ?? "0.00")) + (double.parse(ordercontroller.getorderdetailsbyid.value?.data?.shippingCost ?? "0.00"))).toStringAsFixed(2)}',
+                                        '\$${((double.parse(ordercontroller.getorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 17.sp,
@@ -441,10 +441,11 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                           SizedBox(
                             height: 3.h,
                           ),
-                          ordercontroller
-                                      .getorderdetailsbyid.value?.data?.note ==
-                                  null || ordercontroller
-                                      .getorderdetailsbyid.value!.data!.note!.isEmpty
+                          ordercontroller.getorderdetailsbyid.value?.data
+                                          ?.note ==
+                                      null ||
+                                  ordercontroller.getorderdetailsbyid.value!
+                                      .data!.note!.isEmpty
                               ? const SizedBox()
                               : Text(
                                   'Note',
@@ -455,10 +456,11 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                           SizedBox(
                             height: 1.h,
                           ),
-                           ordercontroller
-                                      .getorderdetailsbyid.value?.data?.note ==
-                                  null || ordercontroller
-                                      .getorderdetailsbyid.value!.data!.note!.isEmpty
+                          ordercontroller.getorderdetailsbyid.value?.data
+                                          ?.note ==
+                                      null ||
+                                  ordercontroller.getorderdetailsbyid.value!
+                                      .data!.note!.isEmpty
                               ? const SizedBox()
                               : Container(
                                   decoration: BoxDecoration(

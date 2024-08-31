@@ -62,6 +62,7 @@ class Order {
   String? orderid;
   String? orderStatus;
    String? note;
+   User? user;
   List<OrderProductId>? orderProductIds;
 
   Order({
@@ -69,14 +70,16 @@ class Order {
     this.orderid,
     this.orderStatus,
     this.note,
+    this.user,
     this.orderProductIds,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
-        id: json["id"] as int?,
-        orderid: json["orderid"] as String?,
-        orderStatus: json["order_status"] as String?,
-        note: json["note"] as String?,
+        id: json["id"] ,
+        orderid: json["orderid"] ,
+        orderStatus: json["order_status"] ,
+        note: json["note"] ,
+        user: json["user"] != null ? User.fromJson(json["user"]) : null,
         orderProductIds: json["order_product_ids"] != null
             ? List<OrderProductId>.from(
                 json["order_product_ids"].map((x) => OrderProductId.fromJson(x)))
@@ -88,6 +91,7 @@ class Order {
         "orderid": orderid,
         "order_status": orderStatus,
         "note": note,
+        "user": user?.toJson(),
         "order_product_ids": orderProductIds != null
             ? List<dynamic>.from(orderProductIds!.map((x) => x.toJson()))
             : null,
@@ -104,7 +108,7 @@ class OrderProductId {
   });
 
   factory OrderProductId.fromJson(Map<String, dynamic> json) => OrderProductId(
-        id: json["id"] as int?,
+        id: json["id"] ,
         product: json["product"] != null ? Product.fromJson(json["product"]) : null,
       );
 
@@ -124,7 +128,7 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json["id"] as int?,
+        id: json["id"] ,
         media: json["media"] != null
             ? List<Media>.from(json["media"].map((x) => Media.fromJson(x)))
             : null,
@@ -148,14 +152,40 @@ class Media {
   });
 
   factory Media.fromJson(Map<String, dynamic> json) => Media(
-        id: json["id"] as int?,
-        originalUrl: json["original_url"] as String?,
+        id: json["id"],
+        originalUrl: json["original_url"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "original_url": originalUrl,
       };
+}
+class User {
+    int? id;
+    List<Media>? media;
+
+    User({
+        this.id,
+        this.media,
+    });
+
+    factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["id"],
+        media: json["media"] == null || json["media"].isEmpty ? null : 
+        
+        
+        
+        List<Media>.from(json["media"].map((x) => Media.fromJson(x))) ,
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "media": media == null || media!.isEmpty
+      ? [] : 
+        
+        List<dynamic>.from(media!.map((x) => x.toJson())) ,
+    };
 }
 
 class Pagination {

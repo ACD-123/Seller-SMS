@@ -552,22 +552,21 @@ Future<void> refreshdata()async{
                                           "Order Id: ${recentordersdata?.orderid ?? ""}",
                                       productname: recentordersdata?.note ?? "",
                                       productimage: recentordersdata
-                                                  ?.orderProductIds
-                                                  ?.first
-                                                  .product
+                                                  ?.user
                                                   ?.media ==
                                               null
                                           ? AppConstants.noimage
                                           : recentordersdata
-                                                  ?.orderProductIds
-                                                  ?.first
-                                                  .product
+                                                  ?.user
                                                   ?.media
                                                   ?.first
                                                   .originalUrl ??
                                               AppConstants.noimage,
                                       status: recentordersdata?.orderStatus ?? "",
                                       viewdetailsontap: () {
+                                  recentordersdata?.orderStatus == "Refunded" ? 
+                                         ordercontroller.getRefundOrderDetailsById(
+                                          recentordersdata?.id ?? 0) : 
                                         ordercontroller.getOrderDetailsbyId(
                                             recentordersdata?.id ?? 0,
                                             recentordersdata?.orderStatus ==
@@ -584,10 +583,7 @@ Future<void> refreshdata()async{
                                                                     ?.orderStatus ==
                                                                 "Completed"
                                                             ? 3
-                                                            : recentordersdata
-                                                                        ?.orderStatus ==
-                                                                    "Refunded"
-                                                                ? 4
+                                                            
                                                                 : 0);
                                         recentordersdata?.orderStatus == "Pending"
                                             ? Get.toNamed(RouteConstants
@@ -615,7 +611,7 @@ Future<void> refreshdata()async{
                                       )
                                     : const SizedBox()
                                     ,
-                                    SizedBox(height: 1.h,)
+                                    SizedBox(height: 4.h,)
             ],
           ),
          ) 
@@ -702,7 +698,7 @@ SizedBox customproductcontainer({
                     SizedBox(
                       height: 0.7.h,
                     ),
-                    SizedBox(
+            productname.isEmpty ? const SizedBox() :        SizedBox(
                       height: 4.2.h,
                       width: 48.w,
                       child: Text(

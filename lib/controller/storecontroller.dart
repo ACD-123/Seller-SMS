@@ -858,4 +858,11 @@ class StoreController extends GetxController {
       updatesellershoploading.value = false;
     }
   }
+
+
+///////////discount coupons
+RxInt discountcouponboxcolor = 1.obs;
+updatediscountcouponboxcolor(int index){
+  discountcouponboxcolor.value = index;
+}
 }

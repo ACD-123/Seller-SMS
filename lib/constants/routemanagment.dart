@@ -8,10 +8,14 @@ import 'package:smsseller/seller/authentication/forgotpassword.dart';
 import 'package:smsseller/seller/authentication/loginscreen.dart';
 import 'package:smsseller/seller/authentication/setprofile.dart';
 import 'package:smsseller/seller/banksetting.dart';
+import 'package:smsseller/seller/coupons/DiscountsCouponsscreen.dart';
+import 'package:smsseller/seller/faq.dart';
 import 'package:smsseller/seller/inventoryseller.dart';
+import 'package:smsseller/seller/notifications/notifications.dart';
 import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
 import 'package:smsseller/seller/orderdetailsscreen.dart';
 import 'package:smsseller/seller/pendingorderdetailsscreen.dart';
+import 'package:smsseller/seller/privacypolicy.dart';
 import 'package:smsseller/seller/productsdetail_screen.dart';
 import 'package:smsseller/seller/selleractiveorderdetails.dart';
 import 'package:smsseller/seller/sellerbankaccountsetting.dart';
@@ -76,15 +80,15 @@ class RouteGenerator {
         name: RouteConstants.sellersetupshop,
         page: () => const SellerSetupShop(),
       ),
-      // GetPage(name: RouteConstants.privacypolicy, page: () => PrivacyPolicy()),
+      GetPage(name: RouteConstants.privacypolicy, page: () => PrivacyPolicy()),
       // GetPage(
       //   name: RouteConstants.welcome1,
       //   page: () => WelcomeScreen1(),
       // ),
-      // GetPage(
-      //   name: RouteConstants.faq,
-      //   page: () => Faq(),
-      // ),
+      GetPage(
+        name: RouteConstants.faq,
+        page: () => const Faq(),
+      ),
       GetPage(
         name: RouteConstants.loginscreen,
         page: () => const LoginScreen(),
@@ -222,10 +226,10 @@ class RouteGenerator {
       //   name: RouteConstants.myprofilecontactus,
       //   page: () => const MyProfileContactus(),
       // ),
-      // GetPage(
-      //   name: RouteConstants.notificationscreens,
-      //   page: () => const NotificationsScreen(),
-      // ),
+      GetPage(
+        name: RouteConstants.notificationscreens,
+        page: () => const NotificationsScreen(),
+      ),
       // GetPage(
       //   name: RouteConstants.settingscreen,
       //   page: () => const SettingScreen(),
@@ -371,6 +375,10 @@ class RouteGenerator {
        GetPage(
         name: RouteConstants.sellerorderdetailsscreen,
         page: () => const SellerOrderDetails(),
+      ),
+      GetPage(
+        name: RouteConstants.discountscouponsscreen,
+        page: () => const DiscountsCouponsScreen(),
       ),
     ];
   }
