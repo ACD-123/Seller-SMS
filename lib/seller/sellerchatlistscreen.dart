@@ -83,6 +83,11 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                   itemBuilder: (context, index) {
                     final chatslistdata =
                         chatcontroller.getsellerchatlist.value?.data?[index];
+                     String readcounts = chatslistdata?.readCount != null
+                              ? (chatslistdata!.readCount > 99
+                                  ? '99+'
+                                  : chatslistdata.readCount.toString())
+                              : "";
                     return Dismissible(
                       key: UniqueKey(),
                       background: Container(
@@ -150,11 +155,32 @@ AppConstants.noimage : chatslistdata?.senderProfileImage ?? AppConstants.noimage
                                           ),
                                           maxLines: 2,
                                     ),
-                                    trailing: Text(
-                                       chatslistdata?.date ?? "",
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          color: Color(0xffC8BCBC)),
+                                    trailing: Column(
+                                      children: [
+                                        Text(
+                                           chatslistdata?.date ?? "",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Color(0xffC8BCBC)),
+                                        ),
+                                         readcounts == '0' ||
+                                                      readcounts.isEmpty
+                                                  ? const SizedBox()
+                                                  : CircleAvatar(
+                                                      radius: 14.sp,
+                                                      backgroundColor:
+                                                          Color(0xFF2E3192),
+                                                      child: Text(
+                                                        readcounts,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14.sp,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                      ],
                                     ),
                                   ),
                                   Divider(

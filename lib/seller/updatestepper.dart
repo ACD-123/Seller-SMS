@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/border/gf_border.dart';
@@ -503,16 +501,16 @@ class _UpdateStepperState extends State<UpdateStepper> {
 
                                       final existingEntryIndex = productcontroller
                                           .updateselectedcategoryattributesList
-                                          .indexWhere(
-                                        (entry) =>
-                                            entry['attribute_id'] ==
-                                                attributeId &&
-                                            entry['name'] == selectedOption
-                                      );
+                                          .indexWhere((entry) =>
+                                              entry['attribute_id'] ==
+                                                  attributeId &&
+                                              entry['name'] == selectedOption);
 
-                                     if (existingEntryIndex == -1) {
-    productcontroller.updateselectedcategoryattributesList.add(entry);
-  }
+                                      if (existingEntryIndex == -1) {
+                                        productcontroller
+                                            .updateselectedcategoryattributesList
+                                            .add(entry);
+                                      }
 
                                       final currentAttributes =
                                           productcontroller
@@ -529,8 +527,6 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                           '${categoryAttributeData.name}_$newValue',
                                         ];
                                       }
-
-                                     
                                     },
                                     items: categoryAttributeData!.options!
                                         .map<DropdownMenuItem<String>>(

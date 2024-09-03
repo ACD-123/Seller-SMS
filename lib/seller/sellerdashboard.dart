@@ -4,6 +4,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
+import 'package:smsseller/controller/chatcontroller.dart';
 // import 'package:sms/constants/route_constants.dart';
 // import 'package:sms/controller/storecontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
@@ -20,10 +21,12 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
   final authcontroller =
       Get.put(AuthenticationController(authRepo: Get.find()));
+  final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    chatcontroller.getNotificationsCount();
     storecontroller.getSellerShopProfileData();
     storecontroller.getSellerProfileData();
     storecontroller.getSellerTotalSalesStats(
@@ -42,7 +45,16 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() => Row(
+                Obx(() { 
+                         String notificationcounts = 
+                         
+                         chatcontroller.getnotificationscount.value?.data != null ||
+                         chatcontroller.getnotificationscount.value?.data?.total != null
+                          ? (chatcontroller.getnotificationscount.value?.data?.total > 99
+                              ? '99+'
+                              : chatcontroller.getnotificationscount.value?.data?.total.toString() ?? "0")
+                          : "0";
+                  return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
@@ -139,49 +151,51 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                             ),
                           ),
                         ),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     Get.toNamed(RouteConstants.notificationscreens);
-                        //   },
-                        //   child: Container(
-                        //     height: 6.h,
-                        //     width: 12.w,
-                        //     decoration: BoxDecoration(
-                        //         borderRadius: BorderRadius.circular(12),
-                        //         color: const Color(0xffEEEAEA)),
-                        //     child: Center(
-                        //         child: Stack(
-                        //       clipBehavior: Clip.none,
-                        //       children: [
-                        //   //       String readcounts = message?.readcount != null
-                        //   // ? (message!.readcount > 99
-                        //   //     ? '99+'
-                        //   //     : message.readcount.toString())
-                        //   // : "";
-                        //         Image.asset(
-                        //             'assets/images/homenotificationicon.png',
-                        //             scale: 1.5),
-                        //         Positioned(
-                        //           right: -2.5.w,
-                        //           top: -1.5.h,
-                        //           child: CircleAvatar(
-                        //             backgroundColor: const Color(0xff2E3192),
-                        //             radius: 13.5.sp,
-                        //             child: Text(
-                        //               "99+",
-                        //               style: TextStyle(
-                        //                   color: const Color(0xffFFFFFF),
-                        //                   fontWeight: FontWeight.w400,
-                        //                   fontSize: 13.sp),
-                        //             ),
-                        //           ),
-                        //         )
-                        //       ],
-                        //     )),
-                        //   ),
-                        // ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(RouteConstants.notificationscreens);
+                          },
+                          child: Container(
+                            height: 6.h,
+                            width: 12.w,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: const Color(0xffEEEAEA)),
+                            child: Center(
+                                child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                       
+                                Image.asset(
+                                    'assets/images/homenotificationicon.png',
+                                    scale: 1.5),
+                                Positioned(
+                                  right: -2.5.w,
+                                  top: -1.5.h,
+                                  child: 
+                                  notificationcounts.isEmpty || notificationcounts == "0" ? 
+                                 const  SizedBox()
+                                  :
+                                  
+                                  
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xff2E3192),
+                                    radius: 13.5.sp,
+                                    child:  Text(
+                                      notificationcounts,
+                                      style: TextStyle(
+                                          color: const Color(0xffFFFFFF),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13.sp),
+                                    ),)
+                                  ),
+                                
+                              ],
+                            )),
+                          ),
+                        ),
                       ],
-                    )),
+                    );}),
                 SizedBox(
                   height: 3.h,
                 ),
@@ -261,7 +275,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                                           fontSize: 25.sp),
                                     ),
                                     Text(
-                                      '+${storecontroller.getsellertotalsalesstats.value?.data?.percentageGrowth ?? ""}% month over month',
+                                      '${storecontroller.getsellertotalsalesstats.value?.data?.percentageGrowth.toStringAsFixed(2) ?? ""}% month over month',
                                       style: TextStyle(
                                           color: Color(0xffFFFFFF),
                                           // fontWeight: FontWeight.w500,
@@ -364,7 +378,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                                           fontSize: 25.sp),
                                     ),
                                     Text(
-                                      '+${storecontroller.getselleritemssoldstats.value?.data?.percentageGrowth.toString() ?? ''}% month over month',
+                                      '${storecontroller.getselleritemssoldstats.value?.data?.percentageGrowth.toStringAsFixed(2) ?? ''}% month over month',
                                       style: TextStyle(
                                           color: Color(0xff828282),
                                           // fontWeight: FontWeight.w500,
@@ -402,11 +416,17 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
                 SizedBox(
                   height: 2.h,
                 ),
+                // customdashboardcontainer(
+                //     title: 'Bank Details',
+                //     image: 'assets/images/sellerdashboardbankdetailsicon.png',
+                //     ontap: () {
+                //       Get.toNamed(RouteConstants.banksetting);
+                //     }),
                 customdashboardcontainer(
-                    title: 'Bank Details',
-                    image: 'assets/images/sellerdashboardbankdetailsicon.png',
+                    title: 'Chats',
+                    image: 'assets/images/messages.png',
                     ontap: () {
-                      Get.toNamed(RouteConstants.banksetting);
+                      Get.toNamed(RouteConstants.sellerchatlistscreen);
                     }),
                 SizedBox(
                   height: 2.h,

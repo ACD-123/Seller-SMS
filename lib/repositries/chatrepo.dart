@@ -5,6 +5,9 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/models/getnotificationscount.dart';
+import 'package:smsseller/models/getnotificationsettingmodel.dart';
+import 'package:smsseller/models/notifications_model.dart';
 import 'package:smsseller/models/sellerchatlistmodel.dart';
 import 'package:smsseller/models/sellerchatroomdetails_model.dart';
 import 'package:smsseller/services/apiservices.dart';
@@ -81,4 +84,84 @@ class ChatRepo extends GetxService {
       showErrrorSnackbar(message: e.toString());
     }
   }
+
+  ///////get notifications api
+  Future<NotificationsModel?> getNotifications(String type,int page) async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getnotifications}$type&page=$page",
+      );
+      if (res.statusCode == 200) {
+        final listofnotifications = notificationsModelFromJson(res.body);
+        return listofnotifications;
+      } else {
+        throw Exception("No data field found in the GetNotifications");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+   ///////get notifications count api
+  Future<NotificationsCountModel?> getNotificationsCount() async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: AppConstants.getnotificationscount,
+      );
+      if (res.statusCode == 200) {
+        final listofnotifications = notificationsCountModelFromJson(res.body);
+        return listofnotifications;
+      } else {
+        throw Exception("No data field found in the GetNotificationsCount");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+   ///////get notifications setting api
+  Future<GetNotificationSettingModel?> getNotificationsSetting() async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: AppConstants.getnotificationssetting,
+      );
+      if (res.statusCode == 200) {
+        final listofnotificationsetting = getNotificationSettingModelFromJson(res.body);
+        return listofnotificationsetting;
+      } else {
+        throw Exception("No data field found in the GetNotificationsSetting");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+///////update notification setting api
+  // Future updateNotificationSetting({
+  //   required String roomid,
+  //   required String uid,
+  //   required String fromid,
+  //   required String message,
+  // }) async {
+  //   final mapData = {
+      
+  //   };
+  //   print(mapData);
+  //   try {
+  //     final res = await apiClient.postToServer(
+  //         endPoint: AppConstants.sendmessage, data: mapData);
+  //     if (res.statusCode == 200) {
+  //       // final message = jsonDecode(res.body)['message'];
+  //       // showSuccessSnackbar(message: message);
+  //     } else {
+  //       final message = jsonDecode(res.body)['message'];
+  //       showErrrorSnackbar(message: message);
+  //     }
+  //   } on SocketException {
+  //     return showErrrorSnackbar(message: 'No Internet Connection');
+  //   } catch (e) {
+  //     showErrrorSnackbar(message: e.toString());
+  //   }
+  // }
+
 }

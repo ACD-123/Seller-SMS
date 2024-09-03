@@ -1,8 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/controller/chatcontroller.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
-class AllNotifications extends StatelessWidget {
+class AllNotifications extends StatefulWidget {
   const AllNotifications({super.key});
+
+  @override
+  State<AllNotifications> createState() => _AllNotificationsState();
+}
+
+class _AllNotificationsState extends State<AllNotifications> {
+  final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
+  ScrollController scrollcontroller = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    chatcontroller.notificationspage.value = 1;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      chatcontroller.getNotifications("all");
+    });
+    scrollcontroller.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    scrollcontroller.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (scrollcontroller.offset >= scrollcontroller.position.maxScrollExtent &&
+        !scrollcontroller.position.outOfRange) {
+      chatcontroller.getNotifications("all");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,118 +44,101 @@ class AllNotifications extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: notificationdatalist.length,
-                  itemBuilder: (context, index) {
-                    final notificationsdata = notificationdatalist[index];
-                    return Column(
-                      children: [
-                        ListTile(
-                            leading: CircleAvatar(
-                                radius: 19.sp,
-                                backgroundImage: AssetImage(
-                                    notificationsdata["profileimage"])),
-                            title: Text(
-                              notificationsdata["title"],
-                              style: TextStyle(
-                                  fontSize: 12.sp, color: Color(0xff777777)),
-                            ),
-                            subtitle: Text(
-                              notificationsdata["subtitle"],
-                              style: TextStyle(
-                                  fontSize: 12.sp, color: Color(0xff777777)),
-                            ),
-                            trailing: Text(
-                              notificationsdata["time"],
-                              style: TextStyle(
-                                  fontSize: 13.sp,
-                                  color: Color(0xff000000).withOpacity(0.3)),
-                            )),
-                        const Divider()
-                      ],
-                    );
-                  })
-            ],
-          ),
-        ),
+            controller: scrollcontroller,
+            child: Obx(
+              () => chatcontroller.getnotificationsloading.value
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30.h),
+                      child: Center(
+                        child: customcircularprogress(),
+                      ),
+                    )
+                  : chatcontroller.getnotifications.value == null ||
+                          chatcontroller.getnotifications.value!.data!
+                              .notifications!.isEmpty
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 30.h),
+                          child: Center(
+                            child: nodatatext("No All Notifications"),
+                          ),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            
+                            ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: chatcontroller.getnotifications.value
+                                    ?.data?.notifications?.length,
+                                itemBuilder: (context, index) {
+                                  final chatssnotificationsdata = chatcontroller
+                                      .getnotifications
+                                      .value
+                                      ?.data
+                                      ?.notifications?[index];
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                          leading: CircleAvatar(
+                                              radius: 19.sp,
+                                              backgroundImage: NetworkImage(
+                                                  chatssnotificationsdata
+                                                                  ?.sender
+                                                                  ?.media ==
+                                                              null ||
+                                                          chatssnotificationsdata!
+                                                              .sender!
+                                                              .media!
+                                                              .isEmpty
+                                                      ? AppConstants.noimage
+                                                      : chatssnotificationsdata
+                                                              .sender
+                                                              ?.media
+                                                              ?.first
+                                                              .originalUrl ??
+                                                          AppConstants
+                                                              .noimage)),
+                                          title: Text(
+                                            chatssnotificationsdata?.title
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Color(0xff777777)),
+                                          ),
+                                          subtitle: Text(
+                                           chatssnotificationsdata?.message
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Color(0xff777777),
+                                                
+                                                ),
+                                          ),
+                                          trailing: Text(
+                                            chatssnotificationsdata?.date
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 13.sp,
+                                                color: Color(0xff000000)
+                                                    .withOpacity(0.3)),
+                                          )),
+                                      const Divider()
+                                    ],
+                                  );
+                                }),
+                            chatcontroller.getnotificationsreloading.value
+                                ? Center(
+                                    child: customcircularprogress(),
+                                  )
+                                : const SizedBox()
+                          ],
+                        ),
+            )),
       ),
     );
   }
-}
-
-//////notification data list
-List<Map<String, dynamic>> notificationdatalist = [
-  {
-    "profileimage": "assets/images/notificationsuserprofileimage1.png",
-    "title": "Congrats! You Have Won the Bid",
-    "subtitle": "Check the product and buy it before the time goes out",
-    "time": "9:35 am",
-  },
-  {
-    "profileimage": "assets/images/notificationsuserprofileimage2.png",
-    "title": "Congrats! You Have Won the Bid",
-    "subtitle": "Check the product and buy it before the time goes out",
-    "time": "9:35 am",
-  },
-];
-///////notification image containers
-Container imagecardnotificaions(
-    {required String icon,
-    required String title,
-    required String time,
-    required String backgorundimage}) {
-  return Container(
-    height: 20.h,
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Image.asset(
-                    icon,
-                    height: 5.h,
-                    width: 5.w,
-                  ),
-                  SizedBox(
-                    width: 2.w,
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xff777777)),
-                  ),
-                ],
-              ),
-              Text(
-                time,
-                style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xff000000).withOpacity(0.3)),
-              ),
-            ],
-          ),
-          ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.asset(
-                backgorundimage,
-                height: 15.h,
-                fit: BoxFit.fill,
-              ))
-        ],
-      ),
-    ),
-  );
 }

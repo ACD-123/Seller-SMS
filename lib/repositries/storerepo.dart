@@ -7,6 +7,8 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
+import 'package:smsseller/models/faqmodel.dart';
+import 'package:smsseller/models/privacypolicy_model.dart';
 import 'package:smsseller/models/selleritemssoldstats_model.dart';
 import 'package:smsseller/models/sellerprofiledata_model.dart';
 import 'package:smsseller/models/sellershopabout_model.dart';
@@ -376,4 +378,39 @@ class StoreRepo extends GetxService {
     }
   }
 
+  ////////get seller faq api
+  Future<FaqModel?> getSellerFaq() async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint:AppConstants.getfaq,
+      );
+      if (res.statusCode == 200) {
+        final listoffaq =
+            faqModelFromJson(res.body);
+        return listoffaq;
+      } else {
+        throw Exception("No data field found in the GetSellerFaq");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+    ////////get seller privacy policy api
+  Future<PrivayPolicyModel?> getSellerPrivacyPolicy() async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint:AppConstants.getprivacypolicy,
+      );
+      if (res.statusCode == 200) {
+        final listofprivacypolicy=
+            privayPolicyModelFromJson(res.body);
+        return listofprivacypolicy;
+      } else {
+        throw Exception("No data field found in the GetSellerPrivacyPolicy");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

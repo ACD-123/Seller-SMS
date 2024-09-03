@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 
 import '../customcomponents/customappbar.dart';
@@ -16,6 +17,7 @@ class SellerSettingScreen extends StatefulWidget {
 
 class _SellerSettingScreenState extends State<SellerSettingScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+    final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,9 +82,11 @@ class _SellerSettingScreenState extends State<SellerSettingScreen> {
                     Get.toNamed(RouteConstants.privacypolicy);
                   }),
               customsettingcontainer(
-                  title: "Chats",
+                  title: "Notifications Setting",
                   ontap: () {
-                    Get.toNamed(RouteConstants.sellerchatlistscreen);
+                    
+    chatcontroller.getNotificationsSetting();
+                    Get.toNamed(RouteConstants.notificationsetting);
                   })
             ],
           ),

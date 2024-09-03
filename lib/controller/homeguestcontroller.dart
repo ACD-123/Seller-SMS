@@ -418,43 +418,6 @@ class HomeGuestController extends GetxController {
     choosepaymentmethod.value = index;
   }
 
-  ////////////notifications setting switch buttons logic
-/////////// notificationsettingswitchmessagereceived  buttons logic
-  RxBool notificationsettingswitchmessagereceived = false.obs;
-  void updatenotificationsettingswitchmessagereceivedbutton(bool? newValue) {
-    notificationsettingswitchmessagereceived.value = newValue!;
-  }
-
-/////////// notificationsettingswitchAllorders  buttons logic
-  RxBool notificationsettingswitchAllorders = false.obs;
-  void updatenotificationsettingswitchAllorders(bool? newValue) {
-    notificationsettingswitchAllorders.value = newValue!;
-  }
-
-  /////////// notificationsettingswitcPromotional  buttons logic
-  RxBool notificationsettingswitcPromotional = false.obs;
-  void updatenotificationsettingswitcPromotional(bool? newValue) {
-    notificationsettingswitcPromotional.value = newValue!;
-  }
-
-  /////////// notificationsettingswitchPopup  buttons logic
-  RxBool notificationsettingswitchPopup = false.obs;
-  void updatenotificationsettingswitchPopup(bool? newValue) {
-    notificationsettingswitchPopup.value = newValue!;
-  }
-
-  /////////// notificationsettingswitchChats  buttons logic
-  RxBool notificationsettingswitchChats = false.obs;
-  void updatenotificationsettingswitchChats(bool? newValue) {
-    notificationsettingswitchChats.value = newValue!;
-  }
-
-  /////////////SETTING CONTACT US favourite icon logic
-  RxBool settingcontactusfavouriteicon = false.obs;
-  void updatesettingcontactusfavouriteicon() {
-    settingcontactusfavouriteicon.value = !settingcontactusfavouriteicon.value;
-  }
-
   ////////////////chats list remove logic
   ////chatslist
   RxList<ChatsList> chatslist = [

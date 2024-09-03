@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/seller/notifications/allnotifications.dart';
+import 'package:smsseller/seller/notifications/chatsnotifications.dart';
 import 'package:smsseller/seller/notifications/ordersnotifications.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -11,12 +14,29 @@ class NotificationsScreen extends StatefulWidget {
   State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> with SingleTickerProviderStateMixin{
-    late TabController _tabController;
-   @override
+class _NotificationsScreenState extends State<NotificationsScreen>
+    with SingleTickerProviderStateMixin {
+  final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
+  late TabController _tabController;
+  @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        switch (_tabController.index) {
+          case 0:
+            chatcontroller.getNotifications("all");
+            break;
+          case 1:
+            chatcontroller.getNotifications("selling");
+            break;
+          case 2:
+            chatcontroller.getNotifications("chats");
+            break;
+        }
+      }
+    });
   }
 
   @override
@@ -24,11 +44,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: customappbar(title: "Notifications"),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             TabBar(
@@ -36,15 +57,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> with SingleTi
               tabs: const [
                 Tab(text: "All"),
                 Tab(text: "Orders"),
+                Tab(text: "Chats"),
               ],
             ),
             SizedBox(
-              height: 60.h,
+              height: 80.h,
               child: TabBarView(
                 controller: _tabController,
                 children: const [
                   AllNotifications(),
-                          OrdersNotifications(),
+                  OrdersNotifications(),
+                  ChatsNotifications()
                 ],
               ),
             ),

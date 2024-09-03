@@ -12,6 +12,7 @@ import 'package:smsseller/seller/coupons/DiscountsCouponsscreen.dart';
 import 'package:smsseller/seller/faq.dart';
 import 'package:smsseller/seller/inventoryseller.dart';
 import 'package:smsseller/seller/notifications/notifications.dart';
+import 'package:smsseller/seller/notificationsetting_screen.dart';
 import 'package:smsseller/seller/onboarding/welcome_screen1.dart';
 import 'package:smsseller/seller/orderdetailsscreen.dart';
 import 'package:smsseller/seller/pendingorderdetailsscreen.dart';
@@ -173,6 +174,10 @@ class RouteGenerator {
       GetPage(
         name: RouteConstants.productpreviewscreen,
         page: () => const ProductPreviewScreen(),
+      ),
+       GetPage(
+        name: RouteConstants.notificationsetting,
+        page: () => const NotificationsSettingScreen(),
       ),
       // GetPage(
       //   name: RouteConstants.searchscreen,

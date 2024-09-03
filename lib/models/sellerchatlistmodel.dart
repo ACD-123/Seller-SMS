@@ -51,7 +51,7 @@ class Datum {
   String? date;
   DateTime? dateNew;
   String? message;
-  int? readCount;
+  dynamic readCount;
   int? seenCount;
 
   Datum({

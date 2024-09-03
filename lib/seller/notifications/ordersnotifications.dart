@@ -1,108 +1,143 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/controller/chatcontroller.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 
-class OrdersNotifications extends StatelessWidget {
+class OrdersNotifications extends StatefulWidget {
   const OrdersNotifications({super.key});
+
+  @override
+  State<OrdersNotifications> createState() => _OrdersNotificationsState();
+}
+
+class _OrdersNotificationsState extends State<OrdersNotifications> {
+  final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
+  ScrollController scrollcontroller = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    chatcontroller.notificationspage.value = 1;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      chatcontroller.getNotifications("selling");
+    });
+
+    scrollcontroller.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    scrollcontroller.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (scrollcontroller.offset >= scrollcontroller.position.maxScrollExtent &&
+        !scrollcontroller.position.outOfRange) {
+      chatcontroller.getNotifications("selling");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18,horizontal: 18),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-         
-                SizedBox(height: 0.5.h,),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 4,
-                  itemBuilder: (context,index){
-            
-                    final ordersnotificationsdata = ordersnotificationdatalist[index];
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 19.sp,
-                            backgroundImage: AssetImage(ordersnotificationsdata["profileimage"])),
-                        title: Text(
-                          ordersnotificationsdata["title"],
-                          style: TextStyle(fontSize: 12.sp,color: Color(0xff777777)),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+        child: SingleChildScrollView(
+            controller: scrollcontroller,
+            child: Obx(
+              () => chatcontroller.getnotificationsloading.value
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30.h),
+                      child: Center(
+                        child: customcircularprogress(),
+                      ),
+                    )
+                  : chatcontroller.getnotifications.value == null ||
+                          chatcontroller.getnotifications.value!.data!
+                              .notifications!.isEmpty
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 30.h),
+                          child: Center(
+                            child: nodatatext("No Orders Notifications"),
+                          ),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          
+                            ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: chatcontroller.getnotifications.value
+                                    ?.data?.notifications?.length,
+                                itemBuilder: (context, index) {
+                                  final chatssnotificationsdata = chatcontroller
+                                      .getnotifications
+                                      .value
+                                      ?.data
+                                      ?.notifications?[index];
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                          leading: CircleAvatar(
+                                              radius: 19.sp,
+                                              backgroundImage: NetworkImage(
+                                                  chatssnotificationsdata
+                                                                  ?.sender
+                                                                  ?.media ==
+                                                              null ||
+                                                          chatssnotificationsdata!
+                                                              .sender!
+                                                              .media!
+                                                              .isEmpty
+                                                      ? AppConstants.noimage
+                                                      : chatssnotificationsdata
+                                                              .sender
+                                                              ?.media
+                                                              ?.first
+                                                              .originalUrl ??
+                                                          AppConstants
+                                                              .noimage)),
+                                          title: Text(
+                                            chatssnotificationsdata?.title
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Color(0xff777777)),
+                                          ),
+                                          subtitle: Text(
+                                            chatssnotificationsdata?.message
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: Color(0xff777777)),
+                                          ),
+                                          trailing: Text(
+                                            chatssnotificationsdata?.date
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                                fontSize: 13.sp,
+                                                color: Color(0xff000000)
+                                                    .withOpacity(0.3)),
+                                          )),
+                                      const Divider()
+                                    ],
+                                  );
+                                }),
+                            chatcontroller.getnotificationsreloading.value
+                                ? Center(
+                                    child: customcircularprogress(),
+                                  )
+                                : const SizedBox()
+                          ],
                         ),
-                        subtitle: Text(
-                          ordersnotificationsdata["subtitle"],
-                          style: TextStyle(fontSize: 12.sp,color: Color(0xff777777)),
-                        ),
-                        trailing: Text(ordersnotificationsdata["time"],style: TextStyle(fontSize: 13.sp,color: Color(0xff000000).withOpacity(0.3)),)),
-                    
-                    Divider()
-                    ],
-                  );
-                }),
-               
-              
-                
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 2,
-                  itemBuilder: (context,index){
-            
-                    final ordersnotificationsdata = ordersnotificationdatalist[index];
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 19.sp,
-                            backgroundImage: AssetImage(ordersnotificationsdata["profileimage"])),
-                        title: Text(
-                          ordersnotificationsdata["title"],
-                          style: TextStyle(fontSize: 12.sp,color: Color(0xff777777)),
-                        ),
-                        subtitle: Text(
-                          ordersnotificationsdata["subtitle"],
-                          style: TextStyle(fontSize: 12.sp,color: Color(0xff777777)),
-                        ),
-                        trailing: Text(ordersnotificationsdata["time"],style: TextStyle(fontSize: 13.sp,color: Color(0xff000000).withOpacity(0.3)),)),
-                    
-                    Divider()
-                    ],
-                  );
-                })
-        ],
-                ),
+            )),
       ),
     );
   }
 }
-
-
-
-//////orders notification data list 
-List<Map<String,dynamic>> ordersnotificationdatalist = [
-  {
-    "profileimage" : "assets/images/notificationsuserprofileimage1.png",
-    "title" : "Congrats! You Have Won the Bid",
-    "subtitle" : "Check the product and buy it before the time goes out",
-    "time" : "9:35 am",
-  },
-   {
-    "profileimage" : "assets/images/notificationsuserprofileimage2.png",
-    "title" : "Congrats! You Have Won the Bid",
-    "subtitle" : "Check the product and buy it before the time goes out",
-    "time" : "9:35 am",
-  }, {
-    "profileimage" : "assets/images/notificationsuserprofileimage1.png",
-    "title" : "Congrats! You Have Won the Bid",
-    "subtitle" : "Check the product and buy it before the time goes out",
-    "time" : "9:35 am",
-  },
-   {
-    "profileimage" : "assets/images/notificationsuserprofileimage2.png",
-    "title" : "Congrats! You Have Won the Bid",
-    "subtitle" : "Check the product and buy it before the time goes out",
-    "time" : "9:35 am",
-  }, 
-];

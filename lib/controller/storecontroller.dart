@@ -7,6 +7,8 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/pickimages.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
+import 'package:smsseller/models/faqmodel.dart';
+import 'package:smsseller/models/privacypolicy_model.dart';
 import 'package:smsseller/models/selectcategory_model.dart';
 import 'package:smsseller/models/selleritemssoldstats_model.dart';
 import 'package:smsseller/models/sellerprofiledata_model.dart';
@@ -865,4 +867,36 @@ RxInt discountcouponboxcolor = 1.obs;
 updatediscountcouponboxcolor(int index){
   discountcouponboxcolor.value = index;
 }
+
+
+///////////////get faq
+  final Rx<FaqModel?> getsellerfaq =
+      Rx<FaqModel?>(null);
+  final RxBool getsellerfaqloading = false.obs;
+  getFaq() async {
+    try {
+      getsellerfaqloading(true);
+      await storeRepo.getSellerFaq().then((value) {
+        getsellerfaq.value = value;
+        getsellerfaqloading(false);
+      });
+    } catch (e) {
+      getsellerfaqloading(false);
+    }
+  }
+///////////////get privacy policy api
+  final Rx<PrivayPolicyModel?> getsellerprivacypolicy =
+      Rx<PrivayPolicyModel?>(null);
+  final RxBool getsellerprivacypolicyloading = false.obs;
+  getSellerPrivacyPolicy() async {
+    try {
+      getsellerprivacypolicyloading(true);
+      await storeRepo.getSellerPrivacyPolicy().then((value) {
+        getsellerprivacypolicy.value = value;
+        getsellerprivacypolicyloading(false);
+      });
+    } catch (e) {
+      getsellerprivacypolicyloading(false);
+    }
+  }
 }

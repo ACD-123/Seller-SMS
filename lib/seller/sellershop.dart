@@ -65,7 +65,7 @@ class _SellerShopState extends State<SellerShop> {
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisSpacing: 15,
-                                  childAspectRatio: 0.68,
+                                  childAspectRatio: 0.65,
                                   mainAxisSpacing: 20,
                                   crossAxisCount: 3),
                           itemBuilder: (context, index) {

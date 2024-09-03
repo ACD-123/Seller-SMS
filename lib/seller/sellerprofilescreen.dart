@@ -62,32 +62,32 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                     key: formKey,
                     child: Column(
                       children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Container(
-                              height: 17.h,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    "assets/images/myprofilebackgroundimage.png",
+                        GestureDetector(
+                          onTap: () {
+                            storecontroller
+                                .uploadsellershopprofileImage(context);
+                          },
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: 17.h,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      "assets/images/myprofilebackgroundimage.png",
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                  fit: BoxFit.cover,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(50)),
                                 ),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(50)),
                               ),
-                            ),
-                            Positioned(
-                              top: 6.h,
-                              left: 35.w,
-                              right: 35.w,
-                              child: GestureDetector(
-                                onTap: () {
-                                  storecontroller
-                                      .uploadsellershopprofileImage(context);
-                                },
+                              Positioned(
+                                top: 6.h,
+                                left: 35.w,
+                                right: 35.w,
                                 child: Center(
                                   child: Stack(
                                     alignment: Alignment.center,
@@ -150,8 +150,8 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 5.h,
@@ -163,7 +163,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
-                            color: Color(0XFF2E3192),
+                            color: const Color(0XFF2E3192),
                           ),
                         ),
                         Text(
@@ -236,7 +236,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                 onChanged: (phone) {
                                   storecontroller.updatesellerprofilephonecode
                                       .value = phone.countryCode;
-                                  
+
                                   storecontroller
                                       .updatesellerprofilephonecountrycode
                                       .value = phone.countryISOCode;
