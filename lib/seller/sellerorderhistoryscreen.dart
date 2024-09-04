@@ -51,8 +51,10 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
     ordercontroller.refundedorderspage.value = 1;
     ordercontroller.rejectedorderspage.value = 1;
     ordercontroller.issellerselectedOrdercount.value = 1;
-    ordercontroller.getOrderHistoryCount();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+ ordercontroller.getOrderHistoryCount();
     ordercontroller.getPendingOrders();
+    });
     scrollcontroller.addListener(scrollListener);
   }
 

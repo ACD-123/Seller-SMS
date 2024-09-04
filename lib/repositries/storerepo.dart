@@ -8,6 +8,8 @@ import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
 import 'package:smsseller/models/faqmodel.dart';
+import 'package:smsseller/models/getcoupon_model.dart';
+import 'package:smsseller/models/getcouponbyid_model.dart';
 import 'package:smsseller/models/privacypolicy_model.dart';
 import 'package:smsseller/models/selleritemssoldstats_model.dart';
 import 'package:smsseller/models/sellerprofiledata_model.dart';
@@ -111,7 +113,8 @@ class StoreRepo extends GetxService {
         endPoint: AppConstants.getsellershopprofiledata,
       );
       if (res.statusCode == 200) {
-        final String sellerguid = jsonDecode(res.body)['data']['sellerData']['guid'];
+        final String sellerguid =
+            jsonDecode(res.body)['data']['sellerData']['guid'];
         LocalStorage().setString("sellerguid", sellerguid);
         final listofsellershopprofiledata =
             sellerShopProfileDataFromJson(res.body);
@@ -365,8 +368,8 @@ class StoreRepo extends GetxService {
             "banners[]": bannersimages,
           });
       if (res.statusCode == 200) {
-        showSuccessDialogAndNavigateToLogin(
-            context, "Shop Successfully Updated", RouteConstants.sellerdashboard);
+        showSuccessDialogAndNavigateToLogin(context,
+            "Shop Successfully Updated", RouteConstants.sellerdashboard);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -382,11 +385,10 @@ class StoreRepo extends GetxService {
   Future<FaqModel?> getSellerFaq() async {
     try {
       final res = await apiClient.getFromServer(
-        endPoint:AppConstants.getfaq,
+        endPoint: AppConstants.getfaq,
       );
       if (res.statusCode == 200) {
-        final listoffaq =
-            faqModelFromJson(res.body);
+        final listoffaq = faqModelFromJson(res.body);
         return listoffaq;
       } else {
         throw Exception("No data field found in the GetSellerFaq");
@@ -396,21 +398,171 @@ class StoreRepo extends GetxService {
     }
   }
 
-    ////////get seller privacy policy api
+  ////////get seller privacy policy api
   Future<PrivayPolicyModel?> getSellerPrivacyPolicy() async {
     try {
       final res = await apiClient.getFromServer(
-        endPoint:AppConstants.getprivacypolicy,
+        endPoint: AppConstants.getprivacypolicy,
       );
       if (res.statusCode == 200) {
-        final listofprivacypolicy=
-            privayPolicyModelFromJson(res.body);
+        final listofprivacypolicy = privayPolicyModelFromJson(res.body);
         return listofprivacypolicy;
       } else {
         throw Exception("No data field found in the GetSellerPrivacyPolicy");
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+///////create coupon api
+  Future<void> creatCoupon({
+    required String title,
+    required String code,
+    required String startdate,
+    required String enddate,
+    required String discount,
+    required String minorder,
+  }) async {
+    final userData = {
+      "title": title.toString(),
+      "code": code.toString(),
+      "start_date": startdate.toString(),
+      "end_date": enddate.toString(),
+      "discount": discount,
+      "min_order": minorder
+    };
+    try {
+      final response = await apiClient.postToServer(
+        endPoint: AppConstants.createcoupon,
+        data: userData,
+      );
+
+      if (response.statusCode == 200) {
+        Get.back();
+        final message = jsonDecode(response.body)['message'];
+        showSuccessSnackbar(message: message);
+      } else if (response.statusCode == 422) {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      } else {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } catch (e) {
+      showErrrorSnackbar(
+        message: 'An unexpected error occurred. Please try again later.',
+      );
+    }
+  }
+
+////////get coupon api
+  Future<GetCouponModel?> getCoupon() async {
+    try {
+      DateTime now = DateTime.now();
+      int year = now.year;
+      int month = now.month;
+      int day = now.day;
+      String currentDate = '$year-$month-$day';
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getcoupon}$currentDate",
+      );
+      if (res.statusCode == 200) {
+        final listofcoupons = getCouponModelFromJson(res.body);
+        return listofcoupons;
+      } else {
+        throw Exception("No data field found in the GetCouponsList");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+////////get coupon by id api
+  Future<GetCouponByIdModel?> getCouponById(String id) async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getcouponbyid}$id",
+      );
+      if (res.statusCode == 200) {
+        final listofcouponsbyid = getCouponByIdModelFromJson(res.body);
+        return listofcouponsbyid;
+      } else {
+        throw Exception("No data field found in the GetCouponsByID");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+///////update coupon api
+  Future<void> updateCoupon({
+    required String id,
+    required String title,
+    required String code,
+    required String startdate,
+    required String enddate,
+    required String discount,
+    required String minorder,
+  }) async {
+    final userData = {
+      "title": title.toString(),
+      "code": code.toString(),
+      "start_date": startdate.toString(),
+      "end_date": enddate.toString(),
+      "discount": discount,
+      "min_order": minorder
+    };
+    try {
+      final response = await apiClient.postToServer(
+        endPoint: "${AppConstants.updatecoupon}$id",
+        data: userData,
+      );
+
+      if (response.statusCode == 200) {
+         Get.back();
+        final message = jsonDecode(response.body)['message'];
+        showSuccessSnackbar(message: message);
+        
+      } else if (response.statusCode == 422) {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      } else {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } catch (e) {
+      showErrrorSnackbar(
+        message: 'An unexpected error occurred. Please try again later.',
+      );
+    }
+  }
+
+//////////delete coupon
+  Future<void> deleteCoupon({
+    required String id
+  }) async {
+    try {
+      final response = await apiClient.postToServer(
+        endPoint: "${AppConstants.deletecoupon}$id",
+data: null
+      );
+
+      if (response.statusCode == 200) {
+           Get.back();
+        final message = jsonDecode(response.body)['message'];
+        showSuccessSnackbar(message: message);
+      } else if (response.statusCode == 422) {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      } else {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } catch (e) {
+      showErrrorSnackbar(
+        message: 'An unexpected error occurred. Please try again later.',
+      );
     }
   }
 }

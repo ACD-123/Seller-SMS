@@ -9,6 +9,8 @@ import 'package:smsseller/seller/authentication/loginscreen.dart';
 import 'package:smsseller/seller/authentication/setprofile.dart';
 import 'package:smsseller/seller/banksetting.dart';
 import 'package:smsseller/seller/coupons/DiscountsCouponsscreen.dart';
+import 'package:smsseller/seller/coupons/addnewcouponscreen.dart';
+import 'package:smsseller/seller/coupons/updatecoupon_screen.dart';
 import 'package:smsseller/seller/faq.dart';
 import 'package:smsseller/seller/inventoryseller.dart';
 import 'package:smsseller/seller/notifications/notifications.dart';
@@ -90,6 +92,10 @@ class RouteGenerator {
         name: RouteConstants.faq,
         page: () => const Faq(),
       ),
+       GetPage(
+        name: RouteConstants.addnewcouponscreen,
+        page: () => const AddNewCouponScreen(),
+      ),
       GetPage(
         name: RouteConstants.loginscreen,
         page: () => const LoginScreen(),
@@ -110,6 +116,10 @@ class RouteGenerator {
       GetPage(
         name: RouteConstants.signup,
         page: () => Signup(),
+      ),
+      GetPage(
+        name: RouteConstants.updatecouponscreen,
+        page: () => const UpdateCouponScreen(),
       ),
       // GetPage(
       //   name: RouteConstants.checkout,

@@ -17,7 +17,7 @@ class SellerSettingScreen extends StatefulWidget {
 
 class _SellerSettingScreenState extends State<SellerSettingScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
-    final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
+  final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,16 +76,15 @@ class _SellerSettingScreenState extends State<SellerSettingScreen> {
                   Get.toNamed(RouteConstants.faq);
                 },
               ),
-              customsettingcontainer(
-                  title: "Private Policy",
-                  ontap: () {
-                    Get.toNamed(RouteConstants.privacypolicy);
-                  }),
+              // customsettingcontainer(
+              //     title: "Privacy Policy",
+              //     ontap: () {
+              //       Get.toNamed(RouteConstants.privacypolicy);
+              //     }),
               customsettingcontainer(
                   title: "Notifications Setting",
-                  ontap: () {
-                    
-    chatcontroller.getNotificationsSetting();
+                  ontap: () async{
+                 await    chatcontroller.getNotificationsSetting();
                     Get.toNamed(RouteConstants.notificationsetting);
                   })
             ],

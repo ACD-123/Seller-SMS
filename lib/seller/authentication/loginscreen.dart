@@ -245,13 +245,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         '  Sign Up',
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
                           color: Color(0xff2E3192),
                         ),
                       ),
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 1.h,
+                ),
+                InkWell(
+                      onTap: () {
+                       Get.toNamed(RouteConstants.privacypolicy);
+                      },
+                      child:  Text(
+                        'Privacy Policy',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Color(0xff474747),
+                        ),
+                      ),
+                    ),
               ]),
             ),
           ),

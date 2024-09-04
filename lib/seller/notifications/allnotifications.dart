@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -65,7 +66,6 @@ class _AllNotificationsState extends State<AllNotifications> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            
                             ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -79,53 +79,68 @@ class _AllNotificationsState extends State<AllNotifications> {
                                       ?.notifications?[index];
                                   return Column(
                                     children: [
-                                      ListTile(
-                                          leading: CircleAvatar(
-                                              radius: 19.sp,
-                                              backgroundImage: NetworkImage(
-                                                  chatssnotificationsdata
-                                                                  ?.sender
-                                                                  ?.media ==
-                                                              null ||
-                                                          chatssnotificationsdata!
-                                                              .sender!
-                                                              .media!
-                                                              .isEmpty
-                                                      ? AppConstants.noimage
-                                                      : chatssnotificationsdata
-                                                              .sender
-                                                              ?.media
-                                                              ?.first
-                                                              .originalUrl ??
-                                                          AppConstants
-                                                              .noimage)),
-                                          title: Text(
-                                            chatssnotificationsdata?.title
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                                fontSize: 12.sp,
-                                                color: Color(0xff777777)),
-                                          ),
-                                          subtitle: Text(
-                                           chatssnotificationsdata?.message
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (chatssnotificationsdata?.type ==
+                                              "selling") {
+                                            Get.toNamed(RouteConstants
+                                                .sellerorderhistoryscreen);
+                                          } else if (chatssnotificationsdata
+                                                  ?.type ==
+                                              "chats") {
+                                            Get.toNamed(RouteConstants
+                                                .sellerchatlistscreen);
+                                          } else {
+                                            null;
+                                          }
+                                        },
+                                        child: ListTile(
+                                            leading: CircleAvatar(
+                                                radius: 19.sp,
+                                                backgroundImage: NetworkImage(
+                                                    chatssnotificationsdata
+                                                                    ?.sender
+                                                                    ?.media ==
+                                                                null ||
+                                                            chatssnotificationsdata!
+                                                                .sender!
+                                                                .media!
+                                                                .isEmpty
+                                                        ? AppConstants.noimage
+                                                        : chatssnotificationsdata
+                                                                .sender
+                                                                ?.media
+                                                                ?.first
+                                                                .originalUrl ??
+                                                            AppConstants
+                                                                .noimage)),
+                                            title: Text(
+                                              chatssnotificationsdata?.title
+                                                      .toString() ??
+                                                  "",
+                                              style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Color(0xff777777)),
+                                            ),
+                                            subtitle: Text(
+                                              chatssnotificationsdata?.message
+                                                      .toString() ??
+                                                  "",
+                                              style: TextStyle(
                                                 fontSize: 12.sp,
                                                 color: Color(0xff777777),
-                                                
-                                                ),
-                                          ),
-                                          trailing: Text(
-                                            chatssnotificationsdata?.date
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                                fontSize: 13.sp,
-                                                color: Color(0xff000000)
-                                                    .withOpacity(0.3)),
-                                          )),
+                                              ),
+                                            ),
+                                            trailing: Text(
+                                              chatssnotificationsdata?.date
+                                                      .toString() ??
+                                                  "",
+                                              style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  color: Color(0xff000000)
+                                                      .withOpacity(0.3)),
+                                            )),
+                                      ),
                                       const Divider()
                                     ],
                                   );

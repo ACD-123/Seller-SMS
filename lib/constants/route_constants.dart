@@ -50,7 +50,7 @@ class RouteConstants {
   static String helpsupportscreen2 = '/helpsupportscreen2';
   static String chatslistscreen = '/chatslistscreen';
   static String chatscreen = '/chatscreen';
-static String updatestepper = '/updatestepper';
+  static String updatestepper = '/updatestepper';
   static String addnewcardpaymentmethod = '/addnewcardpaymentmethod';
   static String homeuserscreen = '/homeuserscreen';
   static String almosttherescreen = '/almosttherescreen';
@@ -66,10 +66,8 @@ static String updatestepper = '/updatestepper';
       '/sellercompletedorderdetailsscreen';
   static String sellerrefundorderdetailsscreen =
       '/sellerrefundorderdetailsscreen';
-  static String sellerpendingdetailsscreen =
-      '/sellerpendingdetailsscreen';
-  static String sellerorderdetailsscreen =
-      '/sellerorderdetailsscreen';
+  static String sellerpendingdetailsscreen = '/sellerpendingdetailsscreen';
+  static String sellerorderdetailsscreen = '/sellerorderdetailsscreen';
   static String sellerprofilescreen = '/sellerprofilescreen';
   static String sellersettingscreen = '/sellersettingscreen';
   static String sellersetuppassword = '/sellersetuppassword';
@@ -86,4 +84,6 @@ static String updatestepper = '/updatestepper';
   static String sellerupdateshopdetails = '/sellerupdateshopdetails';
   static String sellerupdateshop = '/sellerupdateshop';
   static String discountscouponsscreen = '/discountscouponsscreen';
+  static String addnewcouponscreen = '/addnewcouponscreen';
+   static String updatecouponscreen = '/updatecouponscreen';
 }

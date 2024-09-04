@@ -588,6 +588,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
+                      productcontroller.createselectedcategoryattributesList.clear();
                       productcontroller.createproductcategory.value = value!;
                       var selectedCategory = productcontroller
                           .getsellercategorieslist.value?.data

@@ -18,9 +18,12 @@ class _SellerFeedbackState extends State<SellerFeedback> {
   ScrollController scrollcontroller = ScrollController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   void fetchFeedbackAndInitialize() async {
-    await storecontroller.getSellerShopFeedback();
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
+await storecontroller.getSellerShopFeedback();
+ storecontroller.reasonfeedbackcontroller();
+    });
     // storecontroller.iseditreplylist();
-    storecontroller.reasonfeedbackcontroller();
+   
   }
 
   @override
@@ -28,6 +31,7 @@ class _SellerFeedbackState extends State<SellerFeedback> {
     // TODO: implement initState
     super.initState();
     storecontroller.sellershopfeedbackspage.value = 1;
+    
     fetchFeedbackAndInitialize();
     scrollcontroller.addListener(() {
       if (scrollcontroller.offset >=

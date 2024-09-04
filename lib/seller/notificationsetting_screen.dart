@@ -20,10 +20,12 @@ class _NotificationsSettingScreenState
   void initState() {
     // TODO: implement initState
     super.initState();
-    chatcontroller.getnotificationssetting.value?.data?.importantNotification ==
-            0
-        ? chatcontroller.notificationsettingswitchall.value = false
-        : chatcontroller.notificationsettingswitchall.value = true;
+    final allEnabled = [chatcontroller.getnotificationssetting.value?.data?.importantNotification,
+                      chatcontroller.getnotificationssetting.value?.data?.sellingNotification,
+                      chatcontroller.getnotificationssetting.value?.data?.chatsNotification]
+                      .every((value) => value == 1);
+
+  chatcontroller.notificationsettingswitchall.value = allEnabled;
     chatcontroller.getnotificationssetting.value?.data?.sellingNotification == 0
         ? chatcontroller.notificationsettingswitchAllorders.value = false
         : chatcontroller.notificationsettingswitchAllorders.value = true;
@@ -58,6 +60,10 @@ class _NotificationsSettingScreenState
                               value: chatcontroller
                                   .notificationsettingswitchall.value,
                               onchanged: (value) {
+                                chatcontroller.updateNotificationSetting(
+                                    important: value == false ? 0 : 1,
+                                    chats: value == false ? 0 : 1,
+                                    selling: value == false ? 0 : 1);
                                 chatcontroller
                                     .updatenotificationsettingswitchall(value);
                               }),
@@ -71,6 +77,18 @@ class _NotificationsSettingScreenState
                               value: chatcontroller
                                   .notificationsettingswitchAllorders.value,
                               onchanged: (value) {
+                                chatcontroller.updateNotificationSetting(
+                                    important: chatcontroller
+                                        .getnotificationssetting
+                                        .value
+                                        ?.data
+                                        ?.importantNotification,
+                                    chats: chatcontroller
+                                        .getnotificationssetting
+                                        .value
+                                        ?.data
+                                        ?.chatsNotification,
+                                    selling: value == false ? 0 : 1);
                                 chatcontroller
                                     .updatenotificationsettingswitchAllorders(
                                         value);
@@ -85,6 +103,18 @@ class _NotificationsSettingScreenState
                               value: chatcontroller
                                   .notificationsettingswitchChats.value,
                               onchanged: (value) {
+                                chatcontroller.updateNotificationSetting(
+                                    important: chatcontroller
+                                        .getnotificationssetting
+                                        .value
+                                        ?.data
+                                        ?.importantNotification,
+                                    chats: value == false ? 0 : 1,
+                                    selling: chatcontroller
+                                        .getnotificationssetting
+                                        .value
+                                        ?.data
+                                        ?.sellingNotification);
                                 chatcontroller
                                     .updatenotificationsettingswitchChats(
                                         value);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -80,51 +81,56 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
                                       ?.notifications?[index];
                                   return Column(
                                     children: [
-                                      ListTile(
-                                          leading: CircleAvatar(
-                                              radius: 19.sp,
-                                              backgroundImage: NetworkImage(
-                                                  chatssnotificationsdata
-                                                                  ?.sender
-                                                                  ?.media ==
-                                                              null ||
-                                                          chatssnotificationsdata!
-                                                              .sender!
-                                                              .media!
-                                                              .isEmpty
-                                                      ? AppConstants.noimage
-                                                      : chatssnotificationsdata
-                                                              .sender
-                                                              ?.media
-                                                              ?.first
-                                                              .originalUrl ??
-                                                          AppConstants
-                                                              .noimage)),
-                                          title: Text(
-                                            chatssnotificationsdata?.title
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                                fontSize: 12.sp,
-                                                color: Color(0xff777777)),
-                                          ),
-                                          subtitle: Text(
-                                            chatssnotificationsdata?.message
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                                fontSize: 12.sp,
-                                                color: Color(0xff777777)),
-                                          ),
-                                          trailing: Text(
-                                            chatssnotificationsdata?.date
-                                                    .toString() ??
-                                                "",
-                                            style: TextStyle(
-                                                fontSize: 13.sp,
-                                                color: Color(0xff000000)
-                                                    .withOpacity(0.3)),
-                                          )),
+                                      GestureDetector(
+                                        onTap: (){
+                                          Get.toNamed(RouteConstants.sellerorderhistoryscreen);
+                                        },
+                                        child: ListTile(
+                                            leading: CircleAvatar(
+                                                radius: 19.sp,
+                                                backgroundImage: NetworkImage(
+                                                    chatssnotificationsdata
+                                                                    ?.sender
+                                                                    ?.media ==
+                                                                null ||
+                                                            chatssnotificationsdata!
+                                                                .sender!
+                                                                .media!
+                                                                .isEmpty
+                                                        ? AppConstants.noimage
+                                                        : chatssnotificationsdata
+                                                                .sender
+                                                                ?.media
+                                                                ?.first
+                                                                .originalUrl ??
+                                                            AppConstants
+                                                                .noimage)),
+                                            title: Text(
+                                              chatssnotificationsdata?.title
+                                                      .toString() ??
+                                                  "",
+                                              style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Color(0xff777777)),
+                                            ),
+                                            subtitle: Text(
+                                              chatssnotificationsdata?.message
+                                                      .toString() ??
+                                                  "",
+                                              style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Color(0xff777777)),
+                                            ),
+                                            trailing: Text(
+                                              chatssnotificationsdata?.date
+                                                      .toString() ??
+                                                  "",
+                                              style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  color: Color(0xff000000)
+                                                      .withOpacity(0.3)),
+                                            )),
+                                      ),
                                       const Divider()
                                     ],
                                   );

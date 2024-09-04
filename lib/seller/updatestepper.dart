@@ -344,9 +344,9 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     return null;
                   },
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(12),
+                    contentPadding: const EdgeInsets.all(12),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffDBDBDB)),
+                      borderSide: const BorderSide(color: Color(0xffDBDBDB)),
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     fillColor: Colors.white,
@@ -364,6 +364,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     );
                   }).toList(),
                   onChanged: (value) {
+                    productcontroller.updateselectedcategoryattributesList.clear();
                     productcontroller.updateproductcategorydropdown(value!);
                   },
                 ),

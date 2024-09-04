@@ -8,6 +8,8 @@ import 'package:smsseller/controller/ordercontroller.dart';
 import 'package:smsseller/customcomponents/pickimages.dart';
 import 'package:smsseller/models/categoriessearchbykey_model.dart';
 import 'package:smsseller/models/faqmodel.dart';
+import 'package:smsseller/models/getcoupon_model.dart';
+import 'package:smsseller/models/getcouponbyid_model.dart';
 import 'package:smsseller/models/privacypolicy_model.dart';
 import 'package:smsseller/models/selectcategory_model.dart';
 import 'package:smsseller/models/selleritemssoldstats_model.dart';
@@ -728,7 +730,6 @@ class StoreController extends GetxController {
     if (index >= 0 && index < updateshopselectedCategories.length) {
       updateshopselectedCategories.removeAt(index);
       updateshopselectedCategoriesIds.removeAt(index);
-     
     }
   }
 
@@ -750,7 +751,6 @@ class StoreController extends GetxController {
       value?.data?.sellerData?.banners?.removeAt(index);
     });
     updateshopremovedbannersimage.add(id);
-   
   }
 
   getsellershopcategoriesandstore() {
@@ -801,27 +801,21 @@ class StoreController extends GetxController {
           name: updateshopnamecontroller.value.text.isEmpty
               ? getsellershopprofiledata.value?.data?.sellerData?.shopName ?? ''
               : updateshopnamecontroller.value.text.toString(),
-          address: address.isEmpty ? 
-          getsellershopprofiledata.value?.data?.sellerData?.address ?? ''
-          :
-          address
-          ,
-          city:  city.isEmpty ? 
-          getsellershopprofiledata.value?.data?.sellerData?.city ?? ''
-          :
-          city,
-          state:  state.isEmpty ? 
-          getsellershopprofiledata.value?.data?.sellerData?.state ?? ''
-          :
-          state,
-          country: country.isEmpty ? 
-          getsellershopprofiledata.value?.data?.sellerData?.country ?? ''
-          :
-          country,
-          zipcode:  zipcode.isEmpty ? 
-          getsellershopprofiledata.value?.data?.sellerData?.zipCode ?? ''
-          :
-          zipcode,
+          address: address.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.address ?? ''
+              : address,
+          city: city.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.city ?? ''
+              : city,
+          state: state.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.state ?? ''
+              : state,
+          country: country.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.country ?? ''
+              : country,
+          zipcode: zipcode.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.zipCode ?? ''
+              : zipcode,
           phonecode: updateshopphonecode.value.isEmpty
               ? getsellershopprofiledata.value?.data?.sellerData?.phoneCode ??
                   ''
@@ -845,9 +839,7 @@ class StoreController extends GetxController {
                       ''
                   : updateshopregistrationnumcontroller.value.text.toString(),
           description: updateaboutshopcontroller.value.text.isEmpty
-              ? getsellershopprofiledata
-                      .value?.data?.sellerData?.shopDescription ??
-                  ''
+              ? getsellershopprofiledata.value?.data?.sellerData?.shopDescription ?? ''
               : updateaboutshopcontroller.value.text.toString(),
           categories: updateshopselectedCategoriesIds,
           mainimage: updatesellershopmainimage.value,
@@ -861,17 +853,14 @@ class StoreController extends GetxController {
     }
   }
 
-
 ///////////discount coupons
-RxInt discountcouponboxcolor = 1.obs;
-updatediscountcouponboxcolor(int index){
-  discountcouponboxcolor.value = index;
-}
-
+  RxInt discountcouponboxcolor = 1.obs;
+  updatediscountcouponboxcolor(int index) {
+    discountcouponboxcolor.value = index;
+  }
 
 ///////////////get faq
-  final Rx<FaqModel?> getsellerfaq =
-      Rx<FaqModel?>(null);
+  final Rx<FaqModel?> getsellerfaq = Rx<FaqModel?>(null);
   final RxBool getsellerfaqloading = false.obs;
   getFaq() async {
     try {
@@ -884,6 +873,7 @@ updatediscountcouponboxcolor(int index){
       getsellerfaqloading(false);
     }
   }
+
 ///////////////get privacy policy api
   final Rx<PrivayPolicyModel?> getsellerprivacypolicy =
       Rx<PrivayPolicyModel?>(null);
@@ -897,6 +887,131 @@ updatediscountcouponboxcolor(int index){
       });
     } catch (e) {
       getsellerprivacypolicyloading(false);
+    }
+  }
+
+///////////select coupon date
+  Future<String?> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      return "${picked.year}-${picked.month}-${picked.day}";
+    }
+    return null;
+  }
+
+///////create coupon api
+  final selectstartdate = TextEditingController().obs;
+  final selectenddate = TextEditingController().obs;
+  final createcouponname = TextEditingController().obs;
+  final createcouponcode = TextEditingController().obs;
+  final createminorder = TextEditingController().obs;
+  final creatediscount = TextEditingController().obs;
+
+  RxBool createcouponloading = false.obs;
+  Future<void> createCoupon() async {
+    try {
+      createcouponloading.value = true;
+      await storeRepo
+          .creatCoupon(
+              title: createcouponname.value.text.toString(),
+              code: createcouponcode.value.text.toString(),
+              startdate: selectstartdate.value.text.toString(),
+              enddate: selectenddate.value.text.toString(),
+              discount: creatediscount.value.text.toString(),
+              minorder: createminorder.value.text.toString())
+          .then((value) => getCoupon());
+
+      createcouponloading.value = false;
+    } finally {
+      createcouponloading.value = false;
+    }
+  }
+
+///////////////get coupons api
+  final Rx<GetCouponModel?> getcoupons = Rx<GetCouponModel?>(null);
+  final RxBool getcouponsloading = false.obs;
+  getCoupon() async {
+    try {
+      getcouponsloading(true);
+      await storeRepo.getCoupon().then((value) {
+        getcoupons.value = value;
+        getcouponsloading(false);
+      });
+    } catch (e) {
+      getcouponsloading(false);
+    }
+  }
+
+///////////////get coupons by id api
+  final Rx<GetCouponByIdModel?> getcouponsbyid = Rx<GetCouponByIdModel?>(null);
+  final RxBool getcouponsbyidloading = false.obs;
+  getCouponById(String id) async {
+    try {
+      getcouponsbyidloading(true);
+      await storeRepo.getCouponById(id).then((value) {
+        getcouponsbyid.value = value;
+        getcouponsbyidloading(false);
+      });
+    } catch (e) {
+      getcouponsbyidloading(false);
+    }
+  }
+
+///////update coupon api
+  final updatecouponstartdate = TextEditingController().obs;
+  final updatecouponenddate = TextEditingController().obs;
+  final updatecouponname = TextEditingController().obs;
+  final updatecouponcode = TextEditingController().obs;
+  final updatecouponminorder = TextEditingController().obs;
+  final updatecoupondiscount = TextEditingController().obs;
+  RxBool updatecouponloading = false.obs;
+  Future<void> updateCoupon() async {
+    try {
+      updatecouponloading.value = true;
+      await storeRepo
+          .updateCoupon(
+              id: getcouponsbyid.value?.data?.id.toString() ?? "",
+              title: updatecouponname.value.text.isEmpty
+                  ? getcouponsbyid.value?.data?.title.toString() ?? ""
+                  : updatecouponname.value.text.toString(),
+              code: updatecouponcode.value.text.isEmpty
+                  ? getcouponsbyid.value?.data?.code.toString() ?? ""
+                  : updatecouponcode.value.text.toString(),
+              startdate: updatecouponstartdate.value.text.isEmpty
+                  ? getcouponsbyid.value?.data?.startDate.toString() ?? ""
+                  : updatecouponstartdate.value.text.toString(),
+              enddate: updatecouponenddate.value.text.isEmpty
+                  ? getcouponsbyid.value?.data?.endDate.toString() ?? ""
+                  : updatecouponenddate.value.text.toString(),
+              discount: updatecoupondiscount.value.text.isEmpty
+                  ? getcouponsbyid.value?.data?.discount.toString() ?? ""
+                  : updatecoupondiscount.value.text.toString(),
+              minorder: updatecouponminorder.value.text.isEmpty
+                  ? getcouponsbyid.value?.data?.minOrder.toString() ?? ""
+                  : updatecouponminorder.value.text.toString())
+          .then((value) => getCoupon());
+
+      updatecouponloading.value = false;
+    } finally {
+      updatecouponloading.value = false;
+    }
+  }
+
+/////delete coupon api
+  RxBool deletecouponloading = false.obs;
+  Future<void> deleteCoupon(String id) async {
+    try {
+      deletecouponloading.value = true;
+      await storeRepo.deleteCoupon(id: id);
+
+      deletecouponloading.value = false;
+    } finally {
+      deletecouponloading.value = false;
     }
   }
 }

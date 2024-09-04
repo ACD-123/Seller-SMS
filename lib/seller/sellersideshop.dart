@@ -23,7 +23,9 @@ class _SellerShopState extends State<SellerSideShop>
     // TODO: implement initState
     super.initState();
      _tabController = TabController(length: 3, vsync: this);
-    storecontroller.getSellerShopAbout();
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      storecontroller.getSellerShopAbout();
+     });
   }
  @override
   void dispose() {

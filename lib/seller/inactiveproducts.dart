@@ -20,8 +20,11 @@ class _InActiveProductsState extends State<InActiveProducts> {
   inactiveapidata()async{
     productcontroller.inactivedeleteproductswitchbutton.clear();
     productcontroller.deletedproductpage.value = 1;
-   await productcontroller.getDeletedProducts();
-  productcontroller.getinactivedeleteproductswitchboolvalue();
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
+ await productcontroller.getDeletedProducts();
+   productcontroller.getinactivedeleteproductswitchboolvalue();
+    });
+
   }
   @override
   void initState() {

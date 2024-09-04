@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -17,11 +16,10 @@ class ChatRepo extends GetxService {
   HttpApiClient apiClient;
   ChatRepo({required this.apiClient});
 
-
-////////get seller chat list api 
+////////get seller chat list api
   Future<SellerChatListModel?> getSellerChatList() async {
     try {
-      final String sellerguid = LocalStorage().getString("sellerguid"); 
+      final String sellerguid = LocalStorage().getString("sellerguid");
       final res = await apiClient.getFromServer(
         endPoint: "${AppConstants.getsellerchatlist}$sellerguid&status=0",
       );
@@ -35,15 +33,19 @@ class ChatRepo extends GetxService {
       throw Exception(e);
     }
   }
-////////get seller chat room details api 
-  Future<SellerChatRoomDetailsModel?> getSellerChatRoomDetails(int roomid) async {
+
+////////get seller chat room details api
+  Future<SellerChatRoomDetailsModel?> getSellerChatRoomDetails(
+      int roomid) async {
     try {
-      final String sellerguid = LocalStorage().getString("sellerguid"); 
+      final String sellerguid = LocalStorage().getString("sellerguid");
       final res = await apiClient.getFromServer(
-        endPoint: "${AppConstants.getsellerchatroomdetails}$roomid&id=$sellerguid",
+        endPoint:
+            "${AppConstants.getsellerchatroomdetails}$roomid&id=$sellerguid",
       );
       if (res.statusCode == 200) {
-        final listofsellerchatroomdetails = sellerChatRoomDetailsModelFromJson(res.body);
+        final listofsellerchatroomdetails =
+            sellerChatRoomDetailsModelFromJson(res.body);
         return listofsellerchatroomdetails;
       } else {
         throw Exception("No data field found in the GetSellerChatRoomDetails");
@@ -52,6 +54,7 @@ class ChatRepo extends GetxService {
       throw Exception(e);
     }
   }
+
 ///////send message api
   Future sendMessage({
     required String roomid,
@@ -60,7 +63,7 @@ class ChatRepo extends GetxService {
     required String message,
   }) async {
     final mapData = {
-       "room_id": roomid,
+      "room_id": roomid,
       "uid": uid,
       "from_id": fromid,
       "message_type": "0",
@@ -86,7 +89,7 @@ class ChatRepo extends GetxService {
   }
 
   ///////get notifications api
-  Future<NotificationsModel?> getNotifications(String type,int page) async {
+  Future<NotificationsModel?> getNotifications(String type, int page) async {
     try {
       final res = await apiClient.getFromServer(
         endPoint: "${AppConstants.getnotifications}$type&page=$page",
@@ -102,7 +105,7 @@ class ChatRepo extends GetxService {
     }
   }
 
-   ///////get notifications count api
+  ///////get notifications count api
   Future<NotificationsCountModel?> getNotificationsCount() async {
     try {
       final res = await apiClient.getFromServer(
@@ -119,14 +122,15 @@ class ChatRepo extends GetxService {
     }
   }
 
-   ///////get notifications setting api
+  ///////get notifications setting api
   Future<GetNotificationSettingModel?> getNotificationsSetting() async {
     try {
       final res = await apiClient.getFromServer(
         endPoint: AppConstants.getnotificationssetting,
       );
       if (res.statusCode == 200) {
-        final listofnotificationsetting = getNotificationSettingModelFromJson(res.body);
+        final listofnotificationsetting =
+            getNotificationSettingModelFromJson(res.body);
         return listofnotificationsetting;
       } else {
         throw Exception("No data field found in the GetNotificationsSetting");
@@ -137,31 +141,36 @@ class ChatRepo extends GetxService {
   }
 
 ///////update notification setting api
-  // Future updateNotificationSetting({
-  //   required String roomid,
-  //   required String uid,
-  //   required String fromid,
-  //   required String message,
-  // }) async {
-  //   final mapData = {
-      
-  //   };
-  //   print(mapData);
-  //   try {
-  //     final res = await apiClient.postToServer(
-  //         endPoint: AppConstants.sendmessage, data: mapData);
-  //     if (res.statusCode == 200) {
-  //       // final message = jsonDecode(res.body)['message'];
-  //       // showSuccessSnackbar(message: message);
-  //     } else {
-  //       final message = jsonDecode(res.body)['message'];
-  //       showErrrorSnackbar(message: message);
-  //     }
-  //   } on SocketException {
-  //     return showErrrorSnackbar(message: 'No Internet Connection');
-  //   } catch (e) {
-  //     showErrrorSnackbar(message: e.toString());
-  //   }
-  // }
+  Future<void> updateNotificationSetting({
+    required int important,
+    required int chats,
+    required int selling,
+  }) async {
+    final userData = {
+      "important_notification": important.toString(),
+      "chats_notification": chats.toString(),
+      "selling_notification": selling.toString(),
+      "buying_notification": "0",
+    };
+    try {
+      final response = await apiClient.postToServer(
+        endPoint: AppConstants.updatenotificationssetting,
+        data: userData,
+      );
 
+      if (response.statusCode == 200) {
+        Get.back();
+      } else if (response.statusCode == 422) {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      } else {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } catch (e) {
+      showErrrorSnackbar(
+        message: 'An unexpected error occurred. Please try again later.',
+      );
+    }
+  }
 }

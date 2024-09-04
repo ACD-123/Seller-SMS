@@ -51,4 +51,10 @@ class AppConstants {
   static const getnotificationssetting = "user/getNotificationSetting";
   static const getfaq = "faqs/";
   static const getprivacypolicy = "privacy_policy/";
+  static const updatenotificationssetting = "user/updateNotificationSetting";
+  static const createcoupon = "coupon/store";
+  static const getcoupon = "coupon?user_date=";
+   static const getcouponbyid = "coupon/getById/";
+    static const updatecoupon = "coupon/update/";
+    static const deletecoupon = "coupon/deleteCoupon/";
 }

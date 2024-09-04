@@ -25,7 +25,9 @@ class _SellerShopState extends State<SellerShop> {
   void initState() {
     super.initState();
      storecontroller.sellershopproductspage.value = 1;
-    storecontroller.getSellerShopProducts();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+     storecontroller.getSellerShopProducts();
+     });
     scrollcontroller.addListener(() {
       if (scrollcontroller.offset >=
               scrollcontroller.position.maxScrollExtent &&

@@ -12,7 +12,7 @@ class ChatController extends GetxController {
 
   ChatController({required this.chatRepo});
 
-//////////////get sellerchat list api 
+//////////////get sellerchat list api
   final Rx<SellerChatListModel?> getsellerchatlist =
       Rx<SellerChatListModel?>(null);
   final RxBool getsellerchatlistloading = false.obs;
@@ -28,14 +28,17 @@ class ChatController extends GetxController {
       getsellerchatlistloading(false);
     }
   }
-//////////////get sellerchat room details  api 
+
+//////////////get sellerchat room details  api
   final Rx<SellerChatRoomDetailsModel?> getsellerchatroomdetails =
       Rx<SellerChatRoomDetailsModel?>(null);
   final RxBool getsellerchatroomdetailsloading = false.obs;
- int? _lastRoomId; 
+  int? _lastRoomId;
   getsellerChatRoomDetails(int roomid) async {
     try {
-   _lastRoomId == roomid ?   getsellerchatroomdetailsloading(false) :  getsellerchatroomdetailsloading(true);
+      _lastRoomId == roomid
+          ? getsellerchatroomdetailsloading(false)
+          : getsellerchatroomdetailsloading(true);
       await chatRepo.getSellerChatRoomDetails(roomid).then((value) {
         _lastRoomId = roomid;
         getsellerchatroomdetails.value = value;
@@ -46,24 +49,21 @@ class ChatController extends GetxController {
     }
   }
 
-/////////send message api 
-RxBool sendmessageloading = false.obs;
-final sendmessagecontroller = TextEditingController().obs;
-  Future<void> sendMessage({
-    required int roomid,
-    required String uid,
+/////////send message api
+  RxBool sendmessageloading = false.obs;
+  final sendmessagecontroller = TextEditingController().obs;
+  Future<void> sendMessage(
+      {required int roomid,
+      required String uid,
       required String fromid,
-    required String message
-  }) async {
+      required String message}) async {
     try {
       sendmessageloading.value = true;
       await chatRepo.sendMessage(
-        roomid: roomid.toString(), 
-        uid: uid.toString(), 
-        fromid: fromid.toString(), 
-        message: message.toString())
-      ;  
-      
+          roomid: roomid.toString(),
+          uid: uid.toString(),
+          fromid: fromid.toString(),
+          message: message.toString());
 
       sendmessageloading.value = false;
     } finally {
@@ -71,7 +71,7 @@ final sendmessagecontroller = TextEditingController().obs;
     }
   }
 
- //////////////get notifications api
+  //////////////get notifications api
   final Rx<NotificationsModel?> getnotifications =
       Rx<NotificationsModel?>(null);
   final RxBool getnotificationsloading = false.obs;
@@ -113,7 +113,7 @@ final sendmessagecontroller = TextEditingController().obs;
   final RxBool getnotificationscountloading = false.obs;
   getNotificationsCount() async {
     try {
-     getnotificationscountloading(true);
+      getnotificationscountloading(true);
       await chatRepo.getNotificationsCount().then((value) {
         getnotificationscount.value = value;
         getnotificationscountloading(false);
@@ -122,7 +122,6 @@ final sendmessagecontroller = TextEditingController().obs;
       getnotificationscountloading(false);
     }
   }
-
 
 /////////// notificationsetting all  buttons logic
   RxBool notificationsettingswitchall = false.obs;
@@ -136,7 +135,6 @@ final sendmessagecontroller = TextEditingController().obs;
     notificationsettingswitchAllorders.value = newValue!;
   }
 
- 
   /////////// notificationsettingswitchChats  buttons logic
   RxBool notificationsettingswitchChats = false.obs;
   void updatenotificationsettingswitchChats(bool? newValue) {
@@ -148,13 +146,14 @@ final sendmessagecontroller = TextEditingController().obs;
   void updatesettingcontactusfavouriteicon() {
     settingcontactusfavouriteicon.value = !settingcontactusfavouriteicon.value;
   }
+
 //////////////get notifications setting api
   final Rx<GetNotificationSettingModel?> getnotificationssetting =
       Rx<GetNotificationSettingModel?>(null);
   final RxBool getnotificationssettingloading = false.obs;
   getNotificationsSetting() async {
     try {
-     getnotificationssettingloading(true);
+      getnotificationssettingloading(true);
       await chatRepo.getNotificationsSetting().then((value) {
         getnotificationssetting.value = value;
         getnotificationssettingloading(false);
@@ -164,25 +163,25 @@ final sendmessagecontroller = TextEditingController().obs;
     }
   }
 
-
 /////////update notification setting api
-// RxBool updatenotificationsettingloading = false.obs;
-//   Future<void> updateNotificationSetting({
-//     required int type,
-//   }) async {
-//     try {
-//       updatenotificationsettingloading.value = true;
-//       await chatRepo.sendMessage(
-//         roomid: roomid.toString(), 
-//         uid: uid.toString(), 
-//         fromid: fromid.toString(), 
-//         message: message.toString())
-//       ;  
-      
+  RxBool updatenotificationsettingloading = false.obs;
+  Future<void> updateNotificationSetting({
+    required int important,
+    required int chats,
+    required int selling,
+  }) async {
+    try {
+      updatenotificationsettingloading.value = true;
+      await chatRepo.updateNotificationSetting(
+          important: important, chats: chats, selling: selling);
 
-//       updatenotificationsettingloading.value = false;
-//     } finally {
-//       updatenotificationsettingloading.value = false;
-//     }
-//   }
+      updatenotificationsettingloading.value = false;
+    } finally {
+      updatenotificationsettingloading.value = false;
+    }
+  }
+
+
+
+
 }

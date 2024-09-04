@@ -20,8 +20,10 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
   outofstockapidata()async{
     productcontroller.outofstockdeleteproductswitchbutton.clear();
     productcontroller.inactiveproductpage.value = 1;
-    await productcontroller.getInActiveProducts();
-    productcontroller.getoutofstockdeleteproductswitchboolvalue();
+      WidgetsBinding.instance.addPostFrameCallback((_) async{
+ await productcontroller.getInActiveProducts();
+ productcontroller.getoutofstockdeleteproductswitchboolvalue();
+    });
   }
   @override
   void initState() {
