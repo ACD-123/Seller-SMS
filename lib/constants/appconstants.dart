@@ -3,6 +3,7 @@ class AppConstants {
       "https://static.vecteezy.com/system/resources/thumbnails/022/014/063/small_2x/missing-picture-page-for-website-design-or-mobile-app-design-no-image-available-icon-vector.jpg";
   static const baseApiURL = 'https://smsbackend.testingwebsitelink.com/api/';
   static const placesbaseapiurl = 'AIzaSyDg6Ci3L6yS5YvtKAkWQjnodGUtlNYHw9Y';
+  static const socketbaseurl = "wss://smsbackend.testingwebsitelink.com:6001/app/cdbc9f9c829f8381a3f5";
   static const signup = "auth/register";
   static const login = "auth/login";
   static const changepassword = "auth/reset-password";
@@ -57,4 +58,6 @@ class AppConstants {
    static const getcouponbyid = "coupon/getById/";
     static const updatecoupon = "coupon/update/";
     static const deletecoupon = "coupon/deleteCoupon/";
+    static const getsellersearchchatlist = "chat/getChatListBUidSearch?id=";
+    static const getchatscount = "chat/seller-count/";
 }

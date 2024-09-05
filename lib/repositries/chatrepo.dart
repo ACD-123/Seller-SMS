@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/models/chatcount_model.dart';
 import 'package:smsseller/models/getnotificationscount.dart';
 import 'package:smsseller/models/getnotificationsettingmodel.dart';
 import 'package:smsseller/models/notifications_model.dart';
+import 'package:smsseller/models/searchchatlist_model.dart';
 import 'package:smsseller/models/sellerchatlistmodel.dart';
 import 'package:smsseller/models/sellerchatroomdetails_model.dart';
 import 'package:smsseller/services/apiservices.dart';
@@ -171,6 +173,42 @@ class ChatRepo extends GetxService {
       showErrrorSnackbar(
         message: 'An unexpected error occurred. Please try again later.',
       );
+    }
+  }
+
+////////get seller search chat list api
+  Future<SellerSearchChatListModel?> getSellerSearchChatList(String key) async {
+    try {
+      final String sellerguid = LocalStorage().getString("sellerguid");
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getsellersearchchatlist}$sellerguid&status=0&search_key=$key",
+      );
+      if (res.statusCode == 200) {
+        final listofsellersearchchatlist = sellersearchChatListModelFromJson(res.body);
+        return listofsellersearchchatlist;
+      } else {
+        throw Exception("No data field found in the GetSellerSearchChatList");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+///////get chats count api
+  Future<GetChatCountModel?> getChatsCount() async {
+    try {
+       final String sellerguid = LocalStorage().getString("sellerguid");
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getchatscount}$sellerguid",
+      );
+      if (res.statusCode == 200) {
+        final listofchatscount = getChatCountModelFromJson(res.body);
+        return listofchatscount;
+      } else {
+        throw Exception("No data field found in the GetChatsCount");
+      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }

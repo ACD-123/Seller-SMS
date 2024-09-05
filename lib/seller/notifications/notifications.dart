@@ -21,7 +21,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
         switch (_tabController.index) {
@@ -31,12 +31,13 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           case 1:
             chatcontroller.getNotifications("selling");
             break;
-          case 2:
-            chatcontroller.getNotifications("chats");
-            break;
+          // case 2:
+          //   chatcontroller.getNotifications("chats");
+          //   break;
         }
       }
     });
+    chatcontroller.getNotificationsCount();
   }
 
   @override
@@ -57,7 +58,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               tabs: const [
                 Tab(text: "All"),
                 Tab(text: "Orders"),
-                Tab(text: "Chats"),
+                // Tab(text: "Chats"),
               ],
             ),
             SizedBox(
@@ -67,7 +68,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                 children: const [
                   AllNotifications(),
                   OrdersNotifications(),
-                  ChatsNotifications()
+                  // ChatsNotifications()
                 ],
               ),
             ),

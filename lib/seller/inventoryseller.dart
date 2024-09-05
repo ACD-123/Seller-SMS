@@ -28,6 +28,7 @@ class _InventorySellerState extends State<InventorySeller>
   @override
   void initState() {
     super.initState();
+storecontroller.getSellerShopProfileData();
     productcontroller.getsellerCategoriesList();
     productcontroller.getBrandsList();
     _tabController = TabController(length: 3, vsync: this);
@@ -104,7 +105,7 @@ class _InventorySellerState extends State<InventorySeller>
               : storecontroller.getsellershopprofiledata.value == null
                   ? Padding(
                       padding: EdgeInsets.symmetric(horizontal: 1.h),
-                      child: const Center(child: Text("No Shop Data")),
+                      child:  Center(child: nodatatext("No Shop Data")),
                     )
                   : Card(
                       elevation: 1,
@@ -254,12 +255,11 @@ class _InventorySellerState extends State<InventorySeller>
                                   'Products',
                                   style: TextStyle(fontSize: 16),
                                 ),
-                                Text(
-                                  storecontroller
+                                storecontroller
                                               .getsellershopprofiledata.value ==
                                           null
-                                      ? "No Products"
-                                      : storecontroller
+                                      ? nodatatext("No Products") :
+                                Text(storecontroller
                                               .getsellershopprofiledata
                                               .value
                                               ?.data

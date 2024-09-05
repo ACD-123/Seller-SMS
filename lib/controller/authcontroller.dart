@@ -309,6 +309,7 @@ signout(){
    LocalStorage().remove("istrustedseller");
    LocalStorage().remove("token");
    LocalStorage().remove("sellerguid"); 
+  LocalStorage().remove("user_id");
    Get.offAllNamed(RouteConstants.loginscreen);
 }
 }

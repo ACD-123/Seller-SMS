@@ -115,7 +115,10 @@ class StoreRepo extends GetxService {
       if (res.statusCode == 200) {
         final String sellerguid =
             jsonDecode(res.body)['data']['sellerData']['guid'];
+        final String selleruserid = jsonDecode(res.body)['data']['user']['seller']['user_id'].toString();
+
         LocalStorage().setString("sellerguid", sellerguid);
+         LocalStorage().setString("user_id", selleruserid);
         final listofsellershopprofiledata =
             sellerShopProfileDataFromJson(res.body);
         return listofsellershopprofiledata;

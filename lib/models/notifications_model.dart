@@ -29,7 +29,7 @@ class NotificationsModel {
 }
 
 class Data {
-  List<Notification>? notifications;
+  List<ANotification>? notifications;
   int? count;
   Pagination? pagination;
 
@@ -40,7 +40,7 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    notifications: json["notifications"] != null ? List<Notification>.from(json["notifications"].map((x) => Notification.fromJson(x))) : null,
+    notifications: json["notifications"] != null ? List<ANotification>.from(json["notifications"].map((x) => ANotification.fromJson(x))) : null,
     count: json["count"],
     pagination: json["pagination"] != null ? Pagination.fromJson(json["pagination"]) : null,
   );
@@ -52,7 +52,7 @@ class Data {
   };
 }
 
-class Notification {
+class ANotification {
   int? id;
   int? userId;
   int? senderId;
@@ -64,7 +64,7 @@ class Notification {
   dynamic isSeen;
   Sender? sender;
 
-  Notification({
+  ANotification({
     this.id,
     this.userId,
     this.senderId,
@@ -77,7 +77,7 @@ class Notification {
      this.date,
   });
 
-  factory Notification.fromJson(Map<String, dynamic> json) => Notification(
+  factory ANotification.fromJson(Map<String, dynamic> json) => ANotification(
     id: json["id"],
     userId: json["user_id"],
     senderId: json["sender_id"],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
+import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
@@ -17,6 +18,8 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
   final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
   final ScrollController _scrollcontroller = ScrollController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  final int roomid = Get.arguments as int;
+  late WebSocketService _webSocketService;
   String? sellerid;
   @override
   void initState() {
@@ -24,11 +27,35 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
     chatcontroller.sendmessagecontroller.value.clear();
     final guid = LocalStorage().getString('sellerguid');
     sellerid = guid;
+    _webSocketService = WebSocketService(AppConstants.socketbaseurl);
+    _webSocketService.connect(
+      channel: 'chat-channel-$guid',
+      onMessage: (message) {
+        chatcontroller.getsellerChatRoomDetails(roomid);
+        print('New message: $message');
+      },
+      onError: (error) {
+        print('WebSocket Error: $error');
+      },
+      onDone: () {
+        print('WebSocket connection closed');
+      },
+    );
+    chatcontroller.sendmessagecontroller.value.addListener(() {
+      if (chatcontroller.sendmessagecontroller.value.text.isNotEmpty) {
+        chatcontroller.isSendmessgeButtonEnabled.value = true;
+      } else {
+        chatcontroller.isSendmessgeButtonEnabled.value = false;
+      }
+    });
+    chatcontroller.getsellerChatList();
+    chatcontroller.getChatsCount();
   }
 
   @override
   void dispose() {
     _scrollcontroller.dispose();
+    _webSocketService.closeConnection();
     super.dispose();
   }
 
@@ -56,13 +83,13 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                               fontSize: 16.sp),
                         ),
             ),
-            Text(
-              "Last Seen 20 mins ago",
-              style: TextStyle(
-                  color: const Color(0xffC6C6C6),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13.sp),
-            ),
+            // Text(
+            //   "Last Seen 20 mins ago",
+            //   style: TextStyle(
+            //       color: const Color(0xffC6C6C6),
+            //       fontWeight: FontWeight.w400,
+            //       fontSize: 13.sp),
+            // ),
           ],
         ),
         leading: GestureDetector(
@@ -140,41 +167,48 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                     controller: chatcontroller.sendmessagecontroller.value,
                     style: TextStyle(fontSize: 14.sp),
                     decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                        onTap: () {
-                          if (formkey.currentState!.validate()) {
-                            chatcontroller
-                                .sendMessage(
-                                    roomid: chatcontroller
-                                            .getsellerchatroomdetails
-                                            .value
-                                            ?.data
-                                            ?.first
-                                            ?.roomId ??
-                                        0,
-                                    uid: chatcontroller.getsellerchatroomdetails
-                                            .value?.data?.first?.testuser?.id
-                                            .toString() ??
-                                        "",
-                                    fromid: sellerid ?? "",
-                                    message: chatcontroller
-                                        .sendmessagecontroller.value.text
-                                        .toString())
-                                .then((value) {
-                              chatcontroller.getsellerChatRoomDetails(
-                                  chatcontroller.getsellerchatroomdetails.value
-                                          ?.data?.first?.roomId ??
-                                      0);
-                              chatcontroller.sendmessagecontroller.value
-                                  .clear();
-                            });
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/images/chatmessagefieldicon.png',
-                          scale: 1.6,
-                        ),
-                      ),
+                      suffixIcon: chatcontroller.isSendmessgeButtonEnabled.value
+                          ? InkWell(
+                              onTap: () {
+                                if (formkey.currentState!.validate()) {
+                                  chatcontroller
+                                      .sendMessage(
+                                          roomid: chatcontroller
+                                                  .getsellerchatroomdetails
+                                                  .value
+                                                  ?.data
+                                                  ?.first
+                                                  ?.roomId ??
+                                              0,
+                                          uid: chatcontroller
+                                                  .getsellerchatroomdetails
+                                                  .value
+                                                  ?.data
+                                                  ?.first
+                                                  ?.testuser
+                                                  ?.id
+                                                  .toString() ??
+                                              "",
+                                          fromid: sellerid ?? "",
+                                          message: chatcontroller
+                                              .sendmessagecontroller.value.text
+                                              .toString())
+                                      .then((value) {
+                                    chatcontroller.getsellerChatRoomDetails(
+                                        chatcontroller.getsellerchatroomdetails
+                                                .value?.data?.first?.roomId ??
+                                            0);
+                                    chatcontroller.sendmessagecontroller.value
+                                        .clear();
+                                  });
+                                }
+                              },
+                              child: Image.asset(
+                                'assets/images/chatmessagefieldicon.png',
+                                scale: 1.6,
+                              ),
+                            )
+                          : null,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xff2E3192),
@@ -206,12 +240,6 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                       hintStyle:
                           TextStyle(fontSize: 14.sp, color: Color(0xff929292)),
                     ),
-                    validator: (message) {
-                      if (message == null || message.isEmpty) {
-                        return 'Please enter message';
-                      }
-                      return null;
-                    },
                   ),
                 ),
               ],

@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/models/notifications_model.dart';
+import 'package:smsseller/services/local_storage.dart';
 
 class OrdersNotifications extends StatefulWidget {
   const OrdersNotifications({super.key});
@@ -16,19 +21,45 @@ class OrdersNotifications extends StatefulWidget {
 class _OrdersNotificationsState extends State<OrdersNotifications> {
   final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
   ScrollController scrollcontroller = ScrollController();
+  late WebSocketService _webSocketService;
   @override
   void initState() {
     super.initState();
     chatcontroller.notificationspage.value = 1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       chatcontroller.getNotifications("selling");
+      chatcontroller.getNotificationsCount();
     });
 
     scrollcontroller.addListener(_scrollListener);
+    ///////////////socket
+    socket();
+  }
+
+  void socket() {
+    final userid = LocalStorage().getString('user_id');
+    _webSocketService = WebSocketService(AppConstants.socketbaseurl);
+    _webSocketService.connect(
+      channel: 'notification-channel-$userid',
+      onMessage: (message) {
+       chatcontroller. addSocketNotification(message);
+        // chatcontroller.notificationspage.value = 1;
+        // chatcontroller.getNotifications("selling");
+        // chatcontroller.getNotificationsCount();
+      
+      },
+      onError: (error) {
+        print('WebSocket Error: $error');
+      },
+      onDone: () {
+        print('WebSocket connection closed');
+      },
+    );
   }
 
   @override
   void dispose() {
+    _webSocketService.closeConnection();
     scrollcontroller.dispose();
     super.dispose();
   }
@@ -39,6 +70,7 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
       chatcontroller.getNotifications("selling");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +99,6 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          
                             ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -82,8 +113,9 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
                                   return Column(
                                     children: [
                                       GestureDetector(
-                                        onTap: (){
-                                          Get.toNamed(RouteConstants.sellerorderhistoryscreen);
+                                        onTap: () {
+                                          Get.toNamed(RouteConstants
+                                              .sellerorderhistoryscreen);
                                         },
                                         child: ListTile(
                                             leading: CircleAvatar(

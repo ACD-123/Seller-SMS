@@ -18,7 +18,18 @@ class SellerRefundOrderDetails extends StatefulWidget {
 
 class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
   final ordercontroller = Get.put(OrderController(orderRepo: Get.find()));
+  String? selectedoption;
 
+  final List<Map<String, dynamic>> options = [
+    {
+      "id": "1",
+      "status": "Accept",
+    },
+    {
+      "id": "2",
+      "status": "Reject",
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +55,6 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                   ),
                 );
               } else {
-                
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -270,40 +280,131 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      SizedBox(width: 20.w,child: Text(
-                                                        refunddetailsdata
-                                                                ?.product?.title
-                                                                .toString() ??
-                                                            "",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 15.sp),
-                                                      ),),
+                                                      SizedBox(
+                                                        width: 20.w,
+                                                        child: Text(
+                                                       refunddetailsdata
+                                                                  ?.product
+                                                                  ?.title
+                                                                  .toString() ??
+                                                              "",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              fontSize: 15.sp),
+                                                        ),
+                                                      ),
                                                       SizedBox(
                                                         width: 5.w,
                                                       ),
-                                                      Text(
-                                                        'Approval: ',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: 13.sp,
-                                                            color: const Color(
-                                                                0xff757474)),
+                                                      SizedBox(
+                                                        height: 2.8.h,
+                                                        width: 25.w,
+                                                        child: Center(
+                                                            child:
+                                                                DropdownButtonFormField<
+                                                                    String>(
+                                                          decoration:
+                                                              InputDecoration(
+                                                            hintText: "Pending",
+                                                            hintStyle:
+                                                                TextStyle(
+                                                              fontSize: 16.sp,
+                                                              color: Color(
+                                                                  0xff2E3192),
+                                                            ),
+                                                            enabledBorder:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          14),
+                                                              borderSide: BorderSide(
+                                                                  color: Color(
+                                                                      0xff2E3192)),
+                                                            ),
+                                                            focusedBorder:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          14),
+                                                              borderSide: BorderSide(
+                                                                  color: Color(
+                                                                      0xff2E3192)),
+                                                            ),
+                                                            contentPadding:
+                                                                EdgeInsets.only(
+                                                                    left: 8,
+                                                                    right: 2),
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          14),
+                                                            ),
+                                                          ),
+                                                          value: selectedoption,
+                                                          onChanged:
+                                                              (newValue) {
+                                                            selectedoption =
+                                                                newValue!;
+                                                            // ordercontroller.updateOrderStatus(
+                                                            //     id: ordercontroller
+                                                            //             .getorderdetailsbyid
+                                                            //             .value
+                                                            //             ?.data
+                                                            //             ?.id ??
+                                                            //         0,
+                                                            //     status: newValue.toString());
+                                                          },
+                                                          items: options.map(
+                                                              (statusoptions) {
+                                                            return DropdownMenuItem<
+                                                                String>(
+                                                              value:
+                                                                  statusoptions[
+                                                                      "id"],
+                                                              child: Text(
+                                                                statusoptions[
+                                                                    "status"],
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      16.sp,
+                                                                  color: Color(
+                                                                      0xff2E3192),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                        )),
                                                       ),
-                                                      Text(
-                                                        refunddetailsdata
-                                                                ?.refund?.status
-                                                                .toString() ??
-                                                            "",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: 13.sp,
-                                                            color: const Color(
-                                                                0xffE2001B)),
-                                                      )
+                                                      // Row(children: [
+                                                      //   Text(
+                                                      //   'Approval: ',
+                                                      //   style: TextStyle(
+                                                      //       fontWeight:
+                                                      //           FontWeight.w700,
+                                                      //       fontSize: 13.sp,
+                                                      //       color: const Color(
+                                                      //           0xff757474)),
+                                                      // ),
+                                                      // Text(
+                                                      //   refunddetailsdata
+                                                      //           ?.refund?.status
+                                                      //           .toString() ??
+                                                      //       "",
+                                                      //   style: TextStyle(
+                                                      //       fontWeight:
+                                                      //           FontWeight.w700,
+                                                      //       fontSize: 13.sp,
+                                                      //       color: const Color(
+                                                      //           0xffE2001B)),
+                                                      // )
+                                                      // ],)
                                                     ],
                                                   ),
                                                   Text(
@@ -409,10 +510,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                                         right: 1
                                                                             .w),
                                                                 child: Text(
-                                                                 "${ attributedata
-                                                                          ?.attribute
-                                                                          ?.name ??
-                                                                      ""}, ",
+                                                                  "${attributedata?.attribute?.name ?? ""}, ",
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -433,37 +531,39 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                         SizedBox(
                                           height: 0.5.h,
                                         ),
-                            refunddetailsdata?.refund == null
-                                            ? const SizedBox() :             Row(
-                                          children: [
-                                            Text(
-                                              'Images',
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w400,
-                                                  fontSize: 16.sp),
-                                            ),
-                                            SizedBox(
-                                              width: 3.w,
-                                            ),
-                                            Image.asset(
-                                              'assets/images/imagesicon.png',
-                                              height: 3.h,
-                                              width: 3.w,
-                                            ),
-                                            SizedBox(
-                                              width: 1.w,
-                                            ),
-                                            Text(
-                                              '${refunddetailsdata?.refund?.media?.length.toString() ?? 0} images',
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w600,
-                                                  fontSize: 13.sp,
-                                                  color: Color(0xff757474)),
-                                            ),
-                                          ],
-                                        ),
+                                        refunddetailsdata?.refund == null
+                                            ? const SizedBox()
+                                            : Row(
+                                                children: [
+                                                  Text(
+                                                    'Images',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 16.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 3.w,
+                                                  ),
+                                                  Image.asset(
+                                                    'assets/images/imagesicon.png',
+                                                    height: 3.h,
+                                                    width: 3.w,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text(
+                                                    '${refunddetailsdata?.refund?.media?.length.toString() ?? 0} images',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 13.sp,
+                                                        color:
+                                                            Color(0xff757474)),
+                                                  ),
+                                                ],
+                                              ),
                                         SizedBox(
                                           height: 1.h,
                                         ),
@@ -482,7 +582,8 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                   child: Row(
                                                     children: [
                                                       ListView.builder(
-                                                        physics: const NeverScrollableScrollPhysics(),
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
                                                           shrinkWrap: true,
                                                           scrollDirection:
                                                               Axis.horizontal,

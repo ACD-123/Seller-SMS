@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/services/local_storage.dart';
 
 class AllNotifications extends StatefulWidget {
   const AllNotifications({super.key});
@@ -16,6 +18,7 @@ class AllNotifications extends StatefulWidget {
 class _AllNotificationsState extends State<AllNotifications> {
   final chatcontroller = Get.put(ChatController(chatRepo: Get.find()));
   ScrollController scrollcontroller = ScrollController();
+  late WebSocketService _webSocketService;
   @override
   void initState() {
     super.initState();
@@ -24,10 +27,32 @@ class _AllNotificationsState extends State<AllNotifications> {
       chatcontroller.getNotifications("all");
     });
     scrollcontroller.addListener(_scrollListener);
+    socket();
   }
 
+///////socket
+void socket() {
+  final userid = LocalStorage().getString('user_id');
+  _webSocketService = WebSocketService(AppConstants.socketbaseurl);
+  _webSocketService.connect(
+    channel: 'notification-channel-$userid',
+    onMessage: (message) {
+      // print("New Message: $message");
+      // chatcontroller.notificationspage.value = 1;
+      //  chatcontroller.getNotifications("all");
+      chatcontroller. addSocketNotification(message);
+    },
+    onError: (error) {
+      print('WebSocket Error: $error');
+    },
+    onDone: () {
+      print('WebSocket connection closed');
+    },
+  );
+}
   @override
   void dispose() {
+    _webSocketService.closeConnection();
     scrollcontroller.dispose();
     super.dispose();
   }
