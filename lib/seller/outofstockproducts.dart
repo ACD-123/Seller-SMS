@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
 class OutofStockProducts extends StatefulWidget {
@@ -73,7 +74,7 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisSpacing: 2.w,
-                                    childAspectRatio: 3.3.sp,
+                                    childAspectRatio: 3.2.sp,
                                     mainAxisSpacing: 2.h,
                                     crossAxisCount: 3),
                             itemBuilder: (context, index) {
@@ -171,8 +172,8 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
                                           Text(
                                               inactiveproducts?.discountPrice ==
                                                       "0"
-                                                  ? "\$${inactiveproducts?.price.toString() ?? ""}"
-                                                  : "\$${inactiveproducts?.discountPrice.toString() ?? ""}",
+                                                  ? "${currencytext()}${inactiveproducts?.price.toString() ?? ""}"
+                                                  : "${currencytext()}${inactiveproducts?.discountPrice.toString() ?? ""}",
                                               style: TextStyle(
                                                   fontSize: 14.sp,
                                                   color: Color(0xff2E3192),
@@ -183,7 +184,7 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
                                           Text(
                                             inactiveproducts?.discountPrice !=
                                                     "0"
-                                                ? "\$${inactiveproducts?.price.toString() ?? ""}"
+                                                ? "${currencytext()}${inactiveproducts?.price.toString() ?? ""}"
                                                 : "",
                                             style: TextStyle(
                                                 fontSize: 12.sp,

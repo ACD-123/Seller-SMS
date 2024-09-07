@@ -354,4 +354,19 @@ final RxBool getrejectedordersreloading = false.obs;
       getrefundorderdetailsbyidloading(false);
     }
   }
+
+  ////////update refund order status 
+  RxBool updaterefundorderstatusloading = false.obs;
+  Future<void> updateRefundOrderStatus({required String id, required String status}) async {
+    try {
+      updaterefundorderstatusloading.value = true;
+      await orderRepo.updateRefundOrderStatus(
+          id: id.toString(), status: status.toString());
+
+      updaterefundorderstatusloading.value = false;
+    } finally {
+      updaterefundorderstatusloading.value = false;
+    }
+  }
+
 }

@@ -22,6 +22,7 @@ class _AllNotificationsState extends State<AllNotifications> {
   @override
   void initState() {
     super.initState();
+    chatcontroller.setnotificationsCurrentPage("all");
     chatcontroller.notificationspage.value = 1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       chatcontroller.getNotifications("all");

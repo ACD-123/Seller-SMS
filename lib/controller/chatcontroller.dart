@@ -16,7 +16,6 @@ class ChatController extends GetxController {
 
   ChatController({required this.chatRepo});
 
-
 //////////////get sellerchat list api
   final Rx<SellerChatListModel?> getsellerchatlist =
       Rx<SellerChatListModel?>(null);
@@ -24,9 +23,9 @@ class ChatController extends GetxController {
 
   getsellerChatList() async {
     try {
-       if (getsellerchatlist.value == null) {
-      getsellerchatlistloading(true);
-    }
+      if (getsellerchatlist.value == null) {
+        getsellerchatlistloading(true);
+      }
       await chatRepo.getSellerChatList().then((value) {
         getsellerchatlist.value = value;
         getsellerchatlistloading(false);
@@ -57,7 +56,7 @@ class ChatController extends GetxController {
   }
 
 /////////send message api
-RxBool isSendmessgeButtonEnabled = false.obs;
+  RxBool isSendmessgeButtonEnabled = false.obs;
   RxBool sendmessageloading = false.obs;
   final sendmessagecontroller = TextEditingController().obs;
   Future<void> sendMessage(
@@ -189,9 +188,8 @@ RxBool isSendmessgeButtonEnabled = false.obs;
     }
   }
 
-
 //////////////get search sellerchat list by key api
- final searchchatlistcontroller = TextEditingController().obs;
+  final searchchatlistcontroller = TextEditingController().obs;
   final Rx<SellerSearchChatListModel?> searchsellerchatlist =
       Rx<SellerSearchChatListModel?>(null);
   final RxBool searchsellerchatlisttloading = false.obs;
@@ -209,8 +207,7 @@ RxBool isSendmessgeButtonEnabled = false.obs;
   }
 
 //////////////get chats count api
-  final Rx<GetChatCountModel?> getchatscount =
-      Rx<GetChatCountModel?>(null);
+  final Rx<GetChatCountModel?> getchatscount = Rx<GetChatCountModel?>(null);
   final RxBool getchatscountloading = false.obs;
   getChatsCount() async {
     try {
@@ -224,67 +221,78 @@ RxBool isSendmessgeButtonEnabled = false.obs;
     }
   }
 
-
-
 /////////socket testing
-void addSocketNotification(String socketResponse) {
-  try {
-    
-    Map<String, dynamic> decodedResponse = json.decode(socketResponse);
-    String event = decodedResponse['event'];
-    String data = decodedResponse['data'] ?? '';
-    if (event == 'pusher:connection_established') {
-      Map<String, dynamic> connectionData = json.decode(data);
-      String socketId = connectionData['socket_id'] ?? '';
-      print("Socket ID: $socketId");
-    } else if (event == 'notification-channel') {
-      if (data.isNotEmpty) {
-        Map<String, dynamic> decodedData = json.decode(data);
-        Map<String, dynamic> notificationData = decodedData['message'];
-        int notificationId = int.tryParse(notificationData['id']?.toString() ?? '0') ?? 0;
-        int userId = int.tryParse(notificationData['user_id']?.toString() ?? '0') ?? 0;
-        int senderId = int.tryParse(notificationData['sender_id']?.toString() ?? '0') ?? 0;
-        Sender? sender;
-        if (notificationData['sender'] != null) {
-          try {
-            sender = Sender.fromJson(notificationData['sender']);
-          } catch (e) {
-            print("Error parsing sender data: $e");
-          }
-        }
-
-        ANotification newNotification = ANotification(
-          id: notificationId,
-          userId: userId,
-          senderId: senderId,
-          title: notificationData['title'] ?? '',
-          message: notificationData['message'] ?? '',
-          type: notificationData['type'] ?? '',
-          isRead: notificationData['is_read'] ?? 0,
-          isSeen: notificationData['is_seen'] ?? 0,
-          sender: sender,
-          date: notificationData['date'] ?? '',
-        );
-        var notifications = getnotifications.value?.data?.notifications;
-        if (notifications != null) {
-          notifications.insert(0, newNotification);
-          getnotifications.update((val) {});
-        } else {
-          print("Notifications list is null");
-        }
-        print("Socket Testing Notification: $newNotification");
-      } else {
-        print("No data found for notification-channel event");
-      }
-    } else {
-      print("Unhandled event type: $event");
-    }
-  } catch (e) {
-    print("Error parsing socket data: $e");
+  var currentPage = 'all'.obs;
+  void setnotificationsCurrentPage(String page) {
+    currentPage.value = page;
   }
-}
 
+  String getnotificationCurrentPage() {
+    return currentPage.value;
+  }
 
+  void addSocketNotification(String socketResponse) {
+    try {
+      Map<String, dynamic> decodedResponse = json.decode(socketResponse);
+      String event = decodedResponse['event'];
+      String data = decodedResponse['data'] ?? '';
+      if (event == 'pusher:connection_established') {
+        Map<String, dynamic> connectionData = json.decode(data);
+        String socketId = connectionData['socket_id'] ?? '';
+        print("Socket ID: $socketId");
+      } else if (event == 'notification-channel') {
+        if (data.isNotEmpty) {
+          Map<String, dynamic> decodedData = json.decode(data);
+          Map<String, dynamic> notificationData = decodedData['message'];
+          int notificationId =
+              int.tryParse(notificationData['id']?.toString() ?? '0') ?? 0;
+          int userId =
+              int.tryParse(notificationData['user_id']?.toString() ?? '0') ?? 0;
+          int senderId =
+              int.tryParse(notificationData['sender_id']?.toString() ?? '0') ??
+                  0;
+          Sender? sender;
+          if (notificationData['sender'] != null) {
+            try {
+              sender = Sender.fromJson(notificationData['sender']);
+            } catch (e) {
+              print("Error parsing sender data: $e");
+            }
+          }
 
-
+          ANotification newNotification = ANotification(
+            id: notificationId,
+            userId: userId,
+            senderId: senderId,
+            title: notificationData['title'] ?? '',
+            message: notificationData['message'] ?? '',
+            type: notificationData['type'] ?? '',
+            isRead: notificationData['is_read'] ?? 0,
+            isSeen: notificationData['is_seen'] ?? 0,
+            sender: sender,
+            date: notificationData['date'] ?? '',
+          );
+          var currentPage = getnotificationCurrentPage();
+          var notifications = getnotifications.value?.data?.notifications;
+          if (notifications != null) {
+            if (currentPage == 'selling' && newNotification.type == 'selling') {
+              notifications.insert(0, newNotification);
+              getnotifications.update((val) {});
+            } else if (currentPage == 'all' && newNotification.type == 'all') {
+              notifications.insert(0, newNotification);
+            }
+          } else {
+            print("Notifications list is null");
+          }
+          print("Socket Testing Notification: $newNotification");
+        } else {
+          print("No data found for notification-channel event");
+        }
+      } else {
+        print("Unhandled event type: $event");
+      }
+    } catch (e) {
+      print("Error parsing socket data: $e");
+    }
+  }
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -334,8 +335,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                         detailsdata?.product
                                                                 ?.discountPrice ==
                                                             "0"
-                                                    ? '\$${detailsdata?.product?.price ?? ""}'
-                                                    : '\$${detailsdata?.product?.discountPrice ?? ""}',
+                                                    ? '${currencytext()}${detailsdata?.product?.price ?? ""}'
+                                                    : '${currencytext()}${detailsdata?.product?.discountPrice ?? ""}',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 17.sp,
@@ -348,8 +349,8 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                     detailsdata?.product
                                                                 ?.discountPrice ==
                                                             null
-                                                        ? 'Save \$ 0 ( ${detailsdata?.product?.disPercentage ?? ""}% off )'
-                                                        : 'Save \$ ${'${((double.parse(detailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage.toString() ?? ""}% off )',
+                                                        ? 'Save ${currencytext()} 0 ( ${detailsdata?.product?.disPercentage ?? ""}% off )'
+                                                        : 'Save ${currencytext()} ${'${((double.parse(detailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(detailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${detailsdata?.product?.disPercentage.toString() ?? ""}% off )',
                                                     style: TextStyle(
                                                         fontSize: 12.sp,
                                                         color: Color(0xffEF0D0D)),
@@ -469,15 +470,15 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                       title:
                                           'Subtotal (${ordercontroller.getorderdetailsbyid.value?.data?.orderProductIds?.length} items)',
                                       amount:
-                                          '\$${ordercontroller.getorderdetailsbyid.value?.data?.subtotalPrice ?? ""}'),
+                                          '${currencytext()}${ordercontroller.getorderdetailsbyid.value?.data?.subtotalPrice ?? ""}'),
                                   customamountrow(
                                       title: 'Shipping',
                                       amount:
-                                          '\$${ordercontroller.getorderdetailsbyid.value?.data?.shippingCost ?? ""}'),
+                                          '${currencytext()}${ordercontroller.getorderdetailsbyid.value?.data?.shippingCost ?? ""}'),
                                   customamountrow(
                                       title: 'Discount',
                                       amount:
-                                          '\$${ordercontroller.getorderdetailsbyid.value?.data?.discount ?? ""}'),
+                                          '${currencytext()}${ordercontroller.getorderdetailsbyid.value?.data?.discount ?? ""}'),
                                   const Divider(
                                     color: Color(0xffAAA4A4),
                                   ),
@@ -493,7 +494,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                             color: Color(0xff2E3192)),
                                       ),
                                       Text(
-                                        '\$${((double.parse(ordercontroller.getorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
+                                        '${currencytext()}${((double.parse(ordercontroller.getorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 17.sp,

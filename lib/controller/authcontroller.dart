@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
@@ -134,7 +135,7 @@ class AuthenticationController extends GetxController {
     try {
       signuploading.value = true;
       await authRepo.signup(
-        phonecountrycode: signupphonecountrycode.toString(),
+          phonecountrycode: signupphonecountrycode.toString(),
           name: name.toString(),
           email: email.toString(),
           password: password.toString(),
@@ -290,26 +291,85 @@ class AuthenticationController extends GetxController {
   final inappcurrentpasswordcontroller = TextEditingController().obs;
   final inappnewpasswordcontroller = TextEditingController().obs;
   final inappconfirmnewpasswordcontroller = TextEditingController().obs;
-  Future<void> inAppChangePassword(  BuildContext context,) async {
+  Future<void> inAppChangePassword(
+    BuildContext context,
+  ) async {
     try {
       inappchangepasswordloading.value = true;
       await authRepo.inAppChangePassword(
-        context: context,
-        oldpassword: inappcurrentpasswordcontroller.value.text.toString(), 
-        password: inappnewpasswordcontroller.value.text.toString(), 
-        confirmpassword: inappconfirmnewpasswordcontroller.value.text.toString());
+          context: context,
+          oldpassword: inappcurrentpasswordcontroller.value.text.toString(),
+          password: inappnewpasswordcontroller.value.text.toString(),
+          confirmpassword:
+              inappconfirmnewpasswordcontroller.value.text.toString());
 
       inappchangepasswordloading.value = false;
     } finally {
       inappchangepasswordloading.value = false;
     }
   }
+
+//////////////google signin
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
+  Future<void> handlegoogleSignIn() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final String accessToken = googleSignInAuthentication.accessToken!;
+        final String fullname = googleSignInAccount.displayName ?? 'Unknown';
+        final String email = googleSignInAccount.email ?? 'Unknown';
+        socialLogin(email: email, name: fullname, accesstoken: accessToken);
+        print('Access Token: $accessToken');
+        print('Email: $email');
+        print('Full Name: $fullname');
+      } else {
+        print('Google Sign in canceled');
+      }
+    } catch (error) {
+      print('Error Google signing in: $error');
+    }
+  }
+
+////googlesignout
+  Future<void> googlesSignOut() async {
+    try {
+      await _googleSignIn.signOut();
+      print('Google Signed out successfully');
+    } catch (error) {
+      print('Error signing out: $error');
+    }
+  }
+
+///////////re-sent otp
+  var socialloginloading = false.obs;
+  Future<void> socialLogin({
+    required String email,
+    required String name,
+    required String accesstoken,
+  }) async {
+    try {
+      socialloginloading.value = true;
+      await authRepo.socialLogin(
+          email: email, name: name, accesstoken: accesstoken);
+
+      socialloginloading.value = false;
+    } finally {
+      socialloginloading.value = false;
+    }
+  }
+
 ////////signout
-signout(){
-   LocalStorage().remove("istrustedseller");
-   LocalStorage().remove("token");
-   LocalStorage().remove("sellerguid"); 
-  LocalStorage().remove("user_id");
-   Get.offAllNamed(RouteConstants.loginscreen);
-}
+  signout() {
+    LocalStorage().remove("istrustedseller");
+    LocalStorage().remove("token");
+    LocalStorage().remove("sellerguid");
+    LocalStorage().remove("user_id");
+    googlesSignOut();
+    Get.offAllNamed(RouteConstants.loginscreen);
+  }
 }

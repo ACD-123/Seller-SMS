@@ -6,6 +6,7 @@ import 'package:getwidget/components/border/gf_border.dart';
 import 'package:getwidget/types/gf_border_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -975,7 +976,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
             controller: productcontroller.createproductsetpricecontroller.value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: '\$65.00',
+              hintText: '${currencytext()}65.00',
 
               contentPadding: EdgeInsets.all(15),
               border: OutlineInputBorder(
@@ -1006,7 +1007,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
                 productcontroller.createproductsalepricecontroller.value,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              hintText: '\$50.00',
+              hintText: '${currencytext()}50.00',
               // errorBorder: Border.all(),
               contentPadding: EdgeInsets.all(15),
               border: OutlineInputBorder(

@@ -395,11 +395,11 @@ apisdata()async{
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '\$${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
+                                        'CFA${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
                                         style: TextStyle(
                                             color: Color(0xffFFFFFF),
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 25.sp),
+                                            fontSize: 21.sp),
                                       ),
                                       Text(
                                         '${storecontroller.getsellertotalsalesstats.value?.data?.percentageGrowth.toStringAsFixed(2) ?? ""}% month over month',
@@ -585,6 +585,15 @@ apisdata()async{
                       image: 'assets/images/discounts.png',
                       ontap: () {
                         Get.toNamed(RouteConstants.discountscouponsscreen);
+                      }),
+                  SizedBox(
+                    height: 2.h,
+                  ),
+                  customdashboardcontainer(
+                      title: 'Wallet',
+                      image: 'assets/images/wallet.png',
+                      ontap: () {
+                        Get.toNamed(RouteConstants.walletscreen);
                       }),
                   SizedBox(
                     height: 2.h,

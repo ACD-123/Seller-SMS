@@ -6,6 +6,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
 class SellerShop extends StatefulWidget {
@@ -165,8 +166,8 @@ class _SellerShopState extends State<SellerShop> {
                                       children: [
                                         Text(
                                           sellershopdata?.discountPrice == "0"
-                                              ? "\$${sellershopdata?.price.toString() ?? ""}"
-                                              : "\$${sellershopdata?.discountPrice.toString() ?? ""}",
+                                              ? "${currencytext()}${sellershopdata?.price.toString() ?? ""}"
+                                              : "${currencytext()}${sellershopdata?.discountPrice.toString() ?? ""}",
                                           style: TextStyle(
                                               fontSize: 14.sp,
                                               color: const Color(0xff2E3192),
@@ -177,7 +178,7 @@ class _SellerShopState extends State<SellerShop> {
                                         ),
                                         Text(
                                             sellershopdata?.discountPrice != "0"
-                                                ? "\$${sellershopdata?.price.toString() ?? ""}"
+                                                ? "${currencytext()}${sellershopdata?.price.toString() ?? ""}"
                                                 : "",
                                             style: TextStyle(
                                                 fontSize: 12.sp,

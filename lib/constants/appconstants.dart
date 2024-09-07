@@ -60,4 +60,7 @@ class AppConstants {
     static const deletecoupon = "coupon/deleteCoupon/";
     static const getsellersearchchatlist = "chat/getChatListBUidSearch?id=";
     static const getchatscount = "chat/seller-count/";
+    static const updaterefundorderstatus = "order/refund-status";
+    static const getwallettransection = "user-seller/transaction/";
+    static const sociallogin = "auth/social-login";
 }

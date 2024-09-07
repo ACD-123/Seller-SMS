@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
 class ActiveProducts extends StatefulWidget {
@@ -72,7 +73,7 @@ void apidata()async{
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisSpacing: 2.w,
-                                    childAspectRatio: 3.3.sp,
+                                    childAspectRatio: 3.2.sp,
                                     mainAxisSpacing: 2.h,
                                     crossAxisCount: 3),
                             itemBuilder: (context, index) {
@@ -170,8 +171,8 @@ void apidata()async{
                                           Text(
                                               activeproducts?.discountPrice ==
                                                       "0"
-                                                  ? "\$${activeproducts?.price.toString() ?? ""}"
-                                                  : "\$${activeproducts?.discountPrice.toString() ?? ""}",
+                                                  ? "${currencytext()}${activeproducts?.price.toString() ?? ""}"
+                                                  : "${currencytext()}${activeproducts?.discountPrice.toString() ?? ""}",
                                               style: TextStyle(
                                                   fontSize: 14.sp,
                                                   color: Color(0xff2E3192),
@@ -181,7 +182,7 @@ void apidata()async{
                                           ),
                                           Text(
                                             activeproducts?.discountPrice != "0"
-                                                ? "\$${activeproducts?.price.toString() ?? ""}"
+                                                ? "${currencytext()}${activeproducts?.price.toString() ?? ""}"
                                                 : "",
                                             style: TextStyle(
                                                 fontSize: 12.sp,

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -20,9 +21,16 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isEmailSelected = true;
   final loginController =
       Get.put(AuthenticationController(authRepo: Get.find()));
+
+  gettoken() async {
+    // print(get)
+    final fcmToekn = await FirebaseMessaging.instance.getToken();
+    print(fcmToekn);
+  }
   @override
   void initState() {
     super.initState();
+    gettoken() ;
     loginController.loginemailcontroller.value.clear();
     loginController.loginpasswordcontroller.value.clear();
     loginController.loadremebermecredentials();
@@ -38,6 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.all(15.0),
             child: SingleChildScrollView(
               child: Column(children: [
+                SizedBox(
+                  height: 4.h,
+                ),
                 ShowUpAnimation(
                   delayStart: const Duration(milliseconds: 1000),
                   animationDuration: const Duration(milliseconds: 1000),
@@ -209,6 +220,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.1,
                 ),
+                Obx(() => Center(
+                  child: loginController.socialloginloading.value ? 
+                  customcircularprogress(): GestureDetector(
+                    onTap: () {
+                      //  showSuccessSnackbar(message: "Comming Soon");
+                            loginController.handlegoogleSignIn();
+                    },
+                    child: Container(
+                      height: 6.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: const Color(0xffFEFEFE),
+                          border: Border.all(color: const Color(0xffACACAC))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/googleicon.png',
+                            height: 3.5.h,
+                            width: 7.w,
+                            fit: BoxFit.fill,
+                          ),
+                          SizedBox(
+                            width: 3.w,
+                          ),
+                          Text(
+                            "Login with Gmail",
+                            style: TextStyle(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xff2D2D2D)),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),),
+                SizedBox(
+                  height: 2.h,
+                ),
                 ShowUpAnimation(
                   delayStart: const Duration(milliseconds: 500),
                   animationDuration: const Duration(milliseconds: 500),
@@ -256,17 +307,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 1.h,
                 ),
                 InkWell(
-                      onTap: () {
-                       Get.toNamed(RouteConstants.privacypolicy);
-                      },
-                      child:  Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Color(0xff474747),
-                        ),
-                      ),
+                  onTap: () {
+                    Get.toNamed(RouteConstants.privacypolicy);
+                  },
+                  child: Text(
+                    'Privacy Policy',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Color(0xff474747),
                     ),
+                  ),
+                ),
               ]),
             ),
           ),

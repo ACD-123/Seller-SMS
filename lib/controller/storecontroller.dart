@@ -19,6 +19,7 @@ import 'package:smsseller/models/sellershopfeedback_model.dart';
 import 'package:smsseller/models/sellershopproduct_model.dart';
 import 'package:smsseller/models/sellershopprofiledata_model.dart';
 import 'package:smsseller/models/sellertotalsalestats_model.dart';
+import 'package:smsseller/models/transection_model.dart';
 import 'package:smsseller/repositries/storerepo.dart';
 import 'package:smsseller/seller/sellerchatlistscreen.dart';
 
@@ -1012,6 +1013,43 @@ class StoreController extends GetxController {
       deletecouponloading.value = false;
     } finally {
       deletecouponloading.value = false;
+    }
+  }
+
+
+
+/////////////get wallet transection api
+ final Rx<TransectionModel?> getwallettransections =
+      Rx<TransectionModel?>(null);
+  final RxBool getwallettransectionsloading = false.obs;
+  final RxBool getwallettransectionsreloadloading = false.obs;
+  final RxInt walletpage = 1.obs;
+  Future<void> getWalletTransections() async {
+    if (getwallettransectionsreloadloading.value || getwallettransectionsloading.value)
+      return;
+    if (walletpage.value > 1 &&
+        walletpage.value >
+            (getwallettransections.value?.data?.pagination?.totalPages ?? 0)) {
+      return;
+    }
+
+    try {
+      walletpage.value > 1
+          ? getwallettransectionsreloadloading.value = true
+          : getwallettransectionsloading.value = true;
+      final value = await storeRepo.getWalletTransection(walletpage.value);
+      if (walletpage.value > 1) {
+        getwallettransections.value?.data?.transactions
+            ?.addAll(value?.data?.transactions ?? []);
+      } else {
+        getwallettransections.value = value;
+      }
+      walletpage.value++;
+      getwallettransectionsreloadloading.value = false;
+      getwallettransectionsloading.value = false;
+    } catch (e) {
+      getwallettransectionsreloadloading.value = false;
+      getwallettransectionsloading.value = false;
     }
   }
 }

@@ -1,0 +1,3 @@
+currencytext() {
+  return "CFA";
+}

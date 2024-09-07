@@ -40,6 +40,7 @@ import 'package:smsseller/seller/sellerwelcomescreen.dart';
 import 'package:smsseller/seller/splashscreen.dart';
 import 'package:smsseller/seller/steppper.dart';
 import 'package:smsseller/seller/updatestepper.dart';
+import 'package:smsseller/seller/wallet_screen.dart';
 
 import '../seller/sellerchatlistscreen.dart';
 
@@ -120,6 +121,10 @@ class RouteGenerator {
       GetPage(
         name: RouteConstants.updatecouponscreen,
         page: () => const UpdateCouponScreen(),
+      ),
+      GetPage(
+        name: RouteConstants.walletscreen,
+        page: () => const WalletScreen(),
       ),
       // GetPage(
       //   name: RouteConstants.checkout,

@@ -257,4 +257,35 @@ class OrderRepo extends GetxService {
       throw Exception(e);
     }
   }
+
+  //////update refund Order Status
+  Future updateRefundOrderStatus({
+    required String id,
+    required String status,
+  }) async {
+    final mapData = {
+     "id":id,
+    "status":status.toString()
+    };
+
+    print(mapData);
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.updaterefundorderstatus, data: mapData);
+      if (res.statusCode == 200) {
+        Get.offAllNamed(RouteConstants.sellerdashboard);
+        final message = jsonDecode(res.body)['message'];
+        showSuccessSnackbar(message: message);
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+       showErrrorSnackbar(
+        message: 'An unexpected error occurred. Please try again later.',
+      );
+    }
+  }
 }

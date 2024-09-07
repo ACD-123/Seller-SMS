@@ -86,4 +86,5 @@ class RouteConstants {
   static String discountscouponsscreen = '/discountscouponsscreen';
   static String addnewcouponscreen = '/addnewcouponscreen';
    static String updatecouponscreen = '/updatecouponscreen';
+   static String walletscreen = '/walletscreen';
 }

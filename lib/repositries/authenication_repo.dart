@@ -118,6 +118,43 @@ class AuthRepo extends GetxService {
     }
   }
 
+//////////////social login API
+  Future socialLogin({
+    required String email,
+    required String name,
+    required String accesstoken,
+  }) async {
+    final mapData = {
+      "email": email.toString(),
+      "name":name,
+      "access_token":accesstoken,
+      "provider":"Google",
+      "is_user": 0
+      };
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.sociallogin, data: mapData);
+      if (res.statusCode == 200) {
+        final message = jsonDecode(res.body)['message'];
+        showSuccessSnackbar(message: message);
+        final token = jsonDecode(res.body)['data']['token'];
+        final istrustedseller =
+            jsonDecode(res.body)['data']['is_trusted_seller'];
+        istrustedseller == false
+            ? Get.offAllNamed(RouteConstants.selerwelcome)
+            : Get.offAllNamed(RouteConstants.sellerdashboard);
+        LocalStorage().setString("token", token);
+        LocalStorage().setBool("istrustedseller", istrustedseller);
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+      showErrrorSnackbar(message: e.toString());
+    }
+  }
 //////////////send OTP API
   Future SendOTP({
     required String email,

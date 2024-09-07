@@ -18,6 +18,7 @@ import 'package:smsseller/models/sellershopfeedback_model.dart';
 import 'package:smsseller/models/sellershopproduct_model.dart';
 import 'package:smsseller/models/sellershopprofiledata_model.dart';
 import 'package:smsseller/models/sellertotalsalestats_model.dart';
+import 'package:smsseller/models/transection_model.dart';
 import 'package:smsseller/services/apiservices.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -568,4 +569,23 @@ data: null
       );
     }
   }
+
+////////get wallet transections api
+  Future<TransectionModel?> getWalletTransection(int page) async {
+    try {
+      final sellerguid = LocalStorage().getString("sellerguid");
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getwallettransection}$sellerguid?page=$page",
+      );
+      if (res.statusCode == 200) {
+        final listofwallettransections = transectionModelFromJson(res.body);
+        return listofwallettransections;
+      } else {
+        throw Exception("No data field found in the GetWalletTransections");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 }

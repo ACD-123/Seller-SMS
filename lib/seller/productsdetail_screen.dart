@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
 class ProductPreviewScreen extends StatefulWidget {
@@ -130,8 +131,8 @@ class _ProductPreviewScreenState extends State<ProductPreviewScreen> {
                                     productcontroller.getproductpreviewbyid
                                                 .value?.data?.discountPrice ==
                                             "0"
-                                        ? "\$${productcontroller.getproductpreviewbyid.value?.data?.price ?? ""}"
-                                        : "\$${productcontroller.getproductpreviewbyid.value?.data?.discountPrice ?? ""}",
+                                        ? "${currencytext()}${productcontroller.getproductpreviewbyid.value?.data?.price ?? ""}"
+                                        : "${currencytext()}${productcontroller.getproductpreviewbyid.value?.data?.discountPrice ?? ""}",
                                     style: TextStyle(
                                         fontSize: 18.sp,
                                         fontWeight: FontWeight.bold,
@@ -144,7 +145,7 @@ class _ProductPreviewScreenState extends State<ProductPreviewScreen> {
                                     productcontroller.getproductpreviewbyid
                                                 .value?.data?.discountPrice !=
                                             "0"
-                                        ? "\$${productcontroller.getproductpreviewbyid.value?.data?.price ?? ""}"
+                                        ? "${currencytext()}${productcontroller.getproductpreviewbyid.value?.data?.price ?? ""}"
                                         : "",
                                     style: TextStyle(
                                         fontSize: 15.sp,

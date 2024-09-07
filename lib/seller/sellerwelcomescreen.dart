@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
 // import 'package:sms/constants/route_constants.dart';
 // import 'package:sms/customcomponents/custombutton.dart';
 
-class SellerWelcomeScreen extends StatelessWidget {
+class SellerWelcomeScreen extends StatefulWidget {
   const SellerWelcomeScreen({super.key});
 
   @override
+  State<SellerWelcomeScreen> createState() => _SellerWelcomeScreenState();
+}
+
+class _SellerWelcomeScreenState extends State<SellerWelcomeScreen> {
+  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
+  @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
@@ -61,7 +69,15 @@ class SellerWelcomeScreen extends StatelessWidget {
                 hinttext: "Let’s Get Started",
                 ontap: () {
                   Get.toNamed(RouteConstants.sellercreateshopscreen);
-                })
+                }),
+            SizedBox(height: 1.h,),
+            custombutton(
+                hinttext: "Sign Out",
+                ontap: () {
+                  authcontroller.signout();
+                 
+                }),
+              
           ],
         ),
       ),

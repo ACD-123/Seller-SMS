@@ -9,7 +9,6 @@ import 'package:smsseller/customcomponents/customelevatedbutton.dart';
 import 'package:smsseller/customcomponents/customwidgets.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/passwordtextfield.dart';
-import 'package:smsseller/seller/authentication/forgotemailverification.dart';
 
 class Signup extends StatefulWidget {
   Signup({super.key});
@@ -138,7 +137,6 @@ class _SignupState extends State<Signup> {
                       return null;
                     },
                     controller: phonnumbercontroller,
-                    
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
@@ -150,7 +148,8 @@ class _SignupState extends State<Signup> {
                     initialCountryCode: 'KE',
                     onChanged: (phone) {
                       logincontroller.signupphonecode.value = phone.countryCode;
-                      logincontroller.signupphonecountrycode.value = phone.countryISOCode;
+                      logincontroller.signupphonecountrycode.value =
+                          phone.countryISOCode;
                     },
                   ),
                   SizedBox(
@@ -207,17 +206,15 @@ class _SignupState extends State<Signup> {
                       editingController:
                           logincontroller.signupstreetaddrescontroller.value,
                       validator: (v) {
-                        if (logincontroller
-                            .signupstreetaddres.value.isEmpty) {
+                        if (logincontroller.signupstreetaddres.value.isEmpty) {
                           return 'Street Address can\'t be empty';
                         }
 
                         return null;
                       },
-                      hintText:
-                          logincontroller.signupstreetaddres.value.isEmpty
-                              ? 'Street Address'
-                              : logincontroller.signupstreetaddres.value,
+                      hintText: logincontroller.signupstreetaddres.value.isEmpty
+                          ? 'Street Address'
+                          : logincontroller.signupstreetaddres.value,
                       image: 'assets/images/streetaddresicon.png',
                     ),
                   ),
@@ -238,7 +235,8 @@ class _SignupState extends State<Signup> {
                               onTap: () {
                                 logincontroller
                                     .setSelectedPlace(place['place_id']);
-                                logincontroller.signupstreetaddres.value = place['description'];
+                                logincontroller.signupstreetaddres.value =
+                                    place['description'];
                                 logincontroller
                                     .signupstreetaddrescontroller.value
                                     .clear();
@@ -336,7 +334,9 @@ class _SignupState extends State<Signup> {
                                     ? showErrrorSnackbar(
                                         message: "Please Enter Phone Number")
                                     : logincontroller.Signup(
-                                      phonecountrycode: logincontroller.signupphonecountrycode.value.toString(),
+                                        phonecountrycode: logincontroller
+                                            .signupphonecountrycode.value
+                                            .toString(),
                                         name: fullnamecontroller.value.text
                                             .toString(),
                                         email: emailTextEditingContoller
@@ -362,43 +362,70 @@ class _SignupState extends State<Signup> {
                   ),
                   // const Center(child: Text('Continue With')),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                  Center(
-                    child: ElevetedButton(
-                      buttonName: 'Login With Facebook',
-                      textColor: Colors.white,
-                      ontap: () async {
-                       showSuccessSnackbar(message: "Comming Soon");
-                      },
-                      fontSize: 14,
+                  // Center(
+                  //   child: ElevetedButton(
+                  //     buttonName: 'Login With Facebook',
+                  //     textColor: Colors.white,
+                  //     ontap: () async {
+                  //      showSuccessSnackbar(message: "Comming Soon");
+                  //     },
+                  //     fontSize: 14,
 
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      color: const Color(0xff3B5998),
-                      // gradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
+                  //     width: MediaQuery.of(context).size.width * 0.7,
+                  //     color: const Color(0xff3B5998),
+                  //     // gradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: MediaQuery.of(context).size.height * 0.02,
+                  // ),
+                  Obx(
+                    () => Center(
+                      child: logincontroller.socialloginloading.value
+                          ? customcircularprogress()
+                          : GestureDetector(
+                              onTap: () {
+                                // showSuccessSnackbar(message: "Comming Soon");
+                                logincontroller.handlegoogleSignIn();
+                              },
+                              child: Container(
+                                height: 6.h,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: const Color(0xffFEFEFE),
+                                    border: Border.all(
+                                        color: const Color(0xffACACAC))),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/googleicon.png',
+                                      height: 3.5.h,
+                                      width: 7.w,
+                                      fit: BoxFit.fill,
+                                    ),
+                                    SizedBox(
+                                      width: 3.w,
+                                    ),
+                                    Text(
+                                      "Login with Gmail",
+                                      style: TextStyle(
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff2D2D2D)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: 1.h,
                   ),
-                  Center(
-                    child: ElevetedButton(
-                      buttonName: 'Login With Google',
-                      textColor: Colors.black,
-                      ontap: ()  {
-                        showSuccessSnackbar(message: "Comming Soon");
-                      },
-                      fontSize: 14,
-                      borderColor: Colors.black,
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      color: Colors.white,
-                      // gradientColors: [Color(0xFF8B2CA0), Color(0xFF00C3C9)],
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  Center(child: const Text('Already have an Account ')),
+                  const Center(child: const Text('Already have an Account ')),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Get.offAllNamed(RouteConstants.loginscreen);
                     },
                     child: Center(

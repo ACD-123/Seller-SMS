@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -22,11 +23,11 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
 
   final List<Map<String, dynamic>> options = [
     {
-      "id": "1",
-      "status": "Accept",
+      "id": "approved",
+      "status": "Approve",
     },
     {
-      "id": "2",
+      "id": "rejected",
       "status": "Reject",
     },
   ];
@@ -296,8 +297,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                         ),
                                                       ),
                                                       SizedBox(
-                                                        width: 5.w,
+                                                        width: 3.w,
                                                       ),
+                                                       refunddetailsdata?.refund?.status == "pending"  ? 
+                                         
                                                       SizedBox(
                                                         height: 2.8.h,
                                                         width: 25.w,
@@ -351,14 +354,8 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                               (newValue) {
                                                             selectedoption =
                                                                 newValue!;
-                                                            // ordercontroller.updateOrderStatus(
-                                                            //     id: ordercontroller
-                                                            //             .getorderdetailsbyid
-                                                            //             .value
-                                                            //             ?.data
-                                                            //             ?.id ??
-                                                            //         0,
-                                                            //     status: newValue.toString());
+                                                            ordercontroller.updateRefundOrderStatus(id:  refunddetailsdata?.refund?.id.toString() ?? "", status: newValue);
+                                                          
                                                           },
                                                           items: options.map(
                                                               (statusoptions) {
@@ -381,30 +378,30 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                             );
                                                           }).toList(),
                                                         )),
+                                                      ):
+                                                      Row(children: [
+                                                        Text(
+                                                        'Approval: ',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 13.sp,
+                                                            color: const Color(
+                                                                0xff757474)),
                                                       ),
-                                                      // Row(children: [
-                                                      //   Text(
-                                                      //   'Approval: ',
-                                                      //   style: TextStyle(
-                                                      //       fontWeight:
-                                                      //           FontWeight.w700,
-                                                      //       fontSize: 13.sp,
-                                                      //       color: const Color(
-                                                      //           0xff757474)),
-                                                      // ),
-                                                      // Text(
-                                                      //   refunddetailsdata
-                                                      //           ?.refund?.status
-                                                      //           .toString() ??
-                                                      //       "",
-                                                      //   style: TextStyle(
-                                                      //       fontWeight:
-                                                      //           FontWeight.w700,
-                                                      //       fontSize: 13.sp,
-                                                      //       color: const Color(
-                                                      //           0xffE2001B)),
-                                                      // )
-                                                      // ],)
+                                                      Text(
+                                                        refunddetailsdata
+                                                                ?.refund?.status
+                                                                .toString() ??
+                                                            "",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                            fontSize: 13.sp,
+                                                            color: const Color(
+                                                                0xffE2001B)),
+                                                      )
+                                                      ],)
                                                     ],
                                                   ),
                                                   Text(
@@ -415,8 +412,8 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                                     ?.product
                                                                     ?.discountPrice ==
                                                                 "0"
-                                                        ? 'XOF ${refunddetailsdata?.product?.price ?? ""}'
-                                                        : 'XOF ${refunddetailsdata?.product?.discountPrice ?? ""}',
+                                                        ? '${currencytext()}${refunddetailsdata?.product?.price ?? ""}'
+                                                        : '${currencytext()}${refunddetailsdata?.product?.discountPrice ?? ""}',
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w700,
@@ -431,8 +428,8 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                                     ?.product
                                                                     ?.discountPrice ==
                                                                 null
-                                                            ? 'Save XOF 0 ( ${(refunddetailsdata?.product?.disPercentage ?? "").toStringAsFixed(2)}% off )'
-                                                            : 'Save XOF ${'${((double.parse(refunddetailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(refunddetailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${refunddetailsdata?.product?.disPercentage.toString() ?? ""}% off )',
+                                                            ? 'Save ${currencytext()}0 ( ${(refunddetailsdata?.product?.disPercentage ?? "").toStringAsFixed(2)}% off )'
+                                                            : 'Save ${currencytext()}${'${((double.parse(refunddetailsdata?.product?.price.toString() ?? "0.00")) - (double.parse(refunddetailsdata?.product?.discountPrice.toString() ?? "0.00"))).toStringAsFixed(2)}'} ( ${refunddetailsdata?.product?.disPercentage.toString() ?? ""}% off )',
                                                         style: TextStyle(
                                                             fontSize: 12.sp,
                                                             color: Color(
@@ -685,15 +682,15 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                       title:
                                           'Subtotal (${ordercontroller.getrefundorderdetailsbyid.value?.data?.orderProductIds?.length} items)',
                                       amount:
-                                          'XOF ${ordercontroller.getrefundorderdetailsbyid.value?.data?.subtotalPrice.toString() ?? ""}'),
+                                          '${currencytext()}${ordercontroller.getrefundorderdetailsbyid.value?.data?.subtotalPrice.toString() ?? ""}'),
                                   customamountrow(
                                       title: 'Shipping',
                                       amount:
-                                          'XOF ${ordercontroller.getrefundorderdetailsbyid.value?.data?.shippingCost.toString() ?? ""}'),
+                                          '${currencytext()}${ordercontroller.getrefundorderdetailsbyid.value?.data?.shippingCost.toString() ?? ""}'),
                                   customamountrow(
                                       title: 'Discount',
                                       amount:
-                                          'XOF ${ordercontroller.getrefundorderdetailsbyid.value?.data?.discount.toString() ?? ""}'),
+                                          '${currencytext()}${ordercontroller.getrefundorderdetailsbyid.value?.data?.discount.toString() ?? ""}'),
                                   const Divider(
                                     color: Color(0xffAAA4A4),
                                   ),
@@ -709,7 +706,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                             color: Color(0xff2E3192)),
                                       ),
                                       Text(
-                                        'XOF ${((double.parse(ordercontroller.getrefundorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getrefundorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
+                                        '${currencytext()}${((double.parse(ordercontroller.getrefundorderdetailsbyid.value?.data?.totalPrice.toString() ?? "0.00")) + (double.parse(ordercontroller.getrefundorderdetailsbyid.value?.data?.shippingCost.toString() ?? "0.00"))).toStringAsFixed(2)}',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 17.sp,

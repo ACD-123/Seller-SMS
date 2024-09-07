@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -8,7 +6,6 @@ import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
-import 'package:smsseller/models/notifications_model.dart';
 import 'package:smsseller/services/local_storage.dart';
 
 class OrdersNotifications extends StatefulWidget {
@@ -25,6 +22,7 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
   @override
   void initState() {
     super.initState();
+     chatcontroller.setnotificationsCurrentPage("selling");
     chatcontroller.notificationspage.value = 1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       chatcontroller.getNotifications("selling");

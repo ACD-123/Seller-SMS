@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -7,9 +8,15 @@ import 'package:smsseller/controller/splashcontroller.dart';
 import 'package:smsseller/services/local_storage.dart';
 import 'services/dependencies.dart' as dep;
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  try {
+    await Firebase.initializeApp();
+    print('Firebase is successfully connected.');
+  } catch (error) {
+    print('Failed to connect to Firebase: $error');
+  }
   await dep.init();
   await LocalStorage().init();
   runApp(const MyApp());
