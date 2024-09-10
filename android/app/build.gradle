@@ -52,16 +52,29 @@ android {
         versionName flutterVersionName
     }
     signingConfigs {
-        release {
-            storeFile file('smsseller.jks')
+        debug {
+            storeFile file('smsseller.jks') 
             storePassword 'smsseller'
             keyAlias 'smsselleralias'
-            keyPassword 'smsseller'
+            keyPassword 'smsseller' 
+        }
+        release {
+            storeFile file('smssellerrelease.jks') 
+            storePassword 'smsseller'
+            keyAlias 'smssellereleasealias' 
+            keyPassword 'smsseller' 
         }
     }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             signingConfig signingConfigs.release
+            minifyEnabled false 
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

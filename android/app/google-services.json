@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:809186703812:android:cb4cb2496c47c9b57b4c91",
+        "mobilesdk_app_id": "1:809186703812:android:0185aec7cebf43ea7b4c91",
         "android_client_info": {
-          "package_name": "com.example.smsseller"
+          "package_name": "com.example.smscustomer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "809186703812-u7niu9elkqa6rir38kdpus2m33kahiku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCVQYXFuoArjZH4iCv3U-IOOqT7NoaNEqo"
@@ -20,7 +25,63 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809186703812-u7niu9elkqa6rir38kdpus2m33kahiku.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "809186703812-d01idql0alq5f4n3fao6dvit74hk98hl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smsseller"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809186703812:android:cb4cb2496c47c9b57b4c91",
+        "android_client_info": {
+          "package_name": "com.example.smsseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809186703812-0mcls6bpok79f6t2lib9s5uv43am6obf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smsseller",
+            "certificate_hash": "39ec48684d2f64fa3f591789f44bab6586cef4dd"
+          }
+        },
+        {
+          "client_id": "809186703812-u7niu9elkqa6rir38kdpus2m33kahiku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVQYXFuoArjZH4iCv3U-IOOqT7NoaNEqo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809186703812-u7niu9elkqa6rir38kdpus2m33kahiku.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "809186703812-d01idql0alq5f4n3fao6dvit74hk98hl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smsseller"
+              }
+            }
+          ]
         }
       }
     }

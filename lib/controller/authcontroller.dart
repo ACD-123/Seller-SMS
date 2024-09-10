@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -363,6 +365,28 @@ class AuthenticationController extends GetxController {
     }
   }
 
+
+////////////update fcm api
+  var updatefcmloading = false.obs;
+  Future<void> updateFCM({
+    required String fcmtoken,
+  }) async {
+    try {
+      updatefcmloading.value = true;
+      await authRepo.updateFCM(fcmtoken: fcmtoken.toString());
+
+      updatefcmloading.value = false;
+    } finally {
+      updatefcmloading.value = false;
+    }
+  }
+///get fcm 
+gettoken() async {
+    final fcmtoken = await FirebaseMessaging.instance.getToken();
+
+    updateFCM(fcmtoken: fcmtoken.toString());
+    print(fcmtoken);
+  }
 ////////signout
   signout() {
     LocalStorage().remove("istrustedseller");

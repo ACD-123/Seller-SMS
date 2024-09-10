@@ -140,16 +140,16 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
                                                       .toString() ??
                                                   "",
                                               style: TextStyle(
-                                                  fontSize: 12.sp,
-                                                  color: Color(0xff777777)),
+                                                  fontSize: 13.sp,
+                                                  color: const Color(0xff777777)),
                                             ),
                                             subtitle: Text(
                                               chatssnotificationsdata?.message
                                                       .toString() ??
                                                   "",
                                               style: TextStyle(
-                                                  fontSize: 12.sp,
-                                                  color: Color(0xff777777)),
+                                                  fontSize: 13.sp,
+                                                  color: const Color(0xff777777)),
                                             ),
                                             trailing: Text(
                                               chatssnotificationsdata?.date

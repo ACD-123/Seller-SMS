@@ -141,8 +141,8 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                               maxLines: 2,
                             ),
                             leading: CircleAvatar(
-                              child: Image.network(
-                                  searhdata?.senderProfileImage == null
+                              backgroundImage: NetworkImage(
+                                  searhdata?.senderProfileImage == null 
                                       ? AppConstants.noimage
                                       : searhdata?.senderProfileImage ??
                                           AppConstants.noimage),

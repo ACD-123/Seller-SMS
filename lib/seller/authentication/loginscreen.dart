@@ -1,4 +1,4 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -22,15 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final loginController =
       Get.put(AuthenticationController(authRepo: Get.find()));
 
-  gettoken() async {
-    // print(get)
-    final fcmToekn = await FirebaseMessaging.instance.getToken();
-    print(fcmToekn);
-  }
+
   @override
   void initState() {
     super.initState();
-    gettoken() ;
     loginController.loginemailcontroller.value.clear();
     loginController.loginpasswordcontroller.value.clear();
     loginController.loadremebermecredentials();
@@ -47,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: SingleChildScrollView(
               child: Column(children: [
                 SizedBox(
-                  height: 4.h,
+                  height: 8.h,
                 ),
                 ShowUpAnimation(
                   delayStart: const Duration(milliseconds: 1000),
@@ -196,8 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          height: 48,
-                          width: MediaQuery.of(context).size.width,
+                          height: 6.h,
+                          width:82.w,
                           margin: const EdgeInsets.only(left: 20.0, right: 20),
                           child: ElevatedButton(
                               onPressed: () {
@@ -218,7 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               )),
                         ))),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.1,
+                  height: 2.h,
                 ),
                 Obx(() => Center(
                   child: loginController.socialloginloading.value ? 
@@ -229,8 +224,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     child: Container(
                       height: 6.h,
+                      width:82.w,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(25),
                           color: const Color(0xffFEFEFE),
                           border: Border.all(color: const Color(0xffACACAC))),
                       child: Row(
@@ -304,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 1.h,
+                  height: 6.h,
                 ),
                 InkWell(
                   onTap: () {

@@ -199,6 +199,7 @@ class ChatController extends GetxController {
       searchsellerchatlisttloading(true);
       await chatRepo.getSellerSearchChatList(key).then((value) {
         searchsellerchatlist.value = value;
+        print("Getted data:${value?.data?.length}");
         searchsellerchatlisttloading(false);
       });
     } catch (e) {

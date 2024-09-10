@@ -40,11 +40,9 @@ class Datum {
   String? uid;
   String? participants;
   String? senderName;
-  String? senderLastName;
   String? receiverName;
   String? receiverLastName;
   String? senderProfileImage;
-  String? receiverProfileImage;
   int? id;
   String? date;
   DateTime? dateNew;
@@ -56,11 +54,9 @@ class Datum {
     required this.uid,
     required this.participants,
     required this.senderName,
-    required this.senderLastName,
     required this.receiverName,
     required this.receiverLastName,
     required this.senderProfileImage,
-    required this.receiverProfileImage,
     required this.id,
     required this.date,
     required this.dateNew,
@@ -73,11 +69,9 @@ class Datum {
         uid: json["uid"],
         participants: json["participants"],
         senderName: json["sender_name"],
-        senderLastName: json["sender_last_name"],
         receiverName: json["receiver_name"],
         receiverLastName: json["receiver_last_name"],
         senderProfileImage: json["sender_profile_image"],
-        receiverProfileImage: json["receiver_profile_image"],
         id: json["id"],
         date: json["date"],
         dateNew: json["date_new"] != null
@@ -92,11 +86,9 @@ class Datum {
         "uid": uid,
         "participants": participants,
         "sender_name": senderName,
-        "sender_last_name": senderLastName,
         "receiver_name": receiverName,
         "receiver_last_name": receiverLastName,
         "sender_profile_image": senderProfileImage,
-        "receiver_profile_image": receiverProfileImage,
         "id": id,
         "date": date,
         "date_new": dateNew?.toIso8601String(),

@@ -358,10 +358,9 @@ class _SignupState extends State<Signup> {
                           ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: 2.h,
                   ),
                   // const Center(child: Text('Continue With')),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   // Center(
                   //   child: ElevetedButton(
                   //     buttonName: 'Login With Facebook',
@@ -391,7 +390,7 @@ class _SignupState extends State<Signup> {
                               child: Container(
                                 height: 6.h,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
+                                    borderRadius: BorderRadius.circular(17),
                                     color: const Color(0xffFEFEFE),
                                     border: Border.all(
                                         color: const Color(0xffACACAC))),

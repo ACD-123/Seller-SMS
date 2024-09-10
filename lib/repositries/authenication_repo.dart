@@ -278,4 +278,27 @@ class AuthRepo extends GetxService {
       showErrrorSnackbar(message: e.toString());
     }
   }
+
+//////////////update fcm API
+  Future updateFCM({
+    required String fcmtoken,
+  }) async {
+    final mapData = {
+       "fcm_token": fcmtoken,
+      };
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.updatefcm, data: mapData);
+      if (res.statusCode == 200) {
+       print(res.body);
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+      showErrrorSnackbar(message: e.toString());
+    }
+  }
 }

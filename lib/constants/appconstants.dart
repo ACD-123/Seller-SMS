@@ -63,4 +63,5 @@ class AppConstants {
     static const updaterefundorderstatus = "order/refund-status";
     static const getwallettransection = "user-seller/transaction/";
     static const sociallogin = "auth/social-login";
+     static const updatefcm = "user/update-fcm";
 }

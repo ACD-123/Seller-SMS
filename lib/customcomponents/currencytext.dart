@@ -1,3 +1,3 @@
 currencytext() {
-  return "CFA";
+  return "CFA ";
 }

@@ -32,6 +32,7 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
   }
 apisdata()async{
    await storecontroller.getSellerShopProfileData();
+   authcontroller.gettoken();
     chatcontroller.getChatsCount();
     chatcontroller.getNotificationsCount();
     storecontroller.getSellerProfileData();
