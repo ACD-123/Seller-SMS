@@ -361,6 +361,8 @@ class StoreController extends GetxController {
   final shopnamecontroller = TextEditingController().obs;
   final whatyousellcontroller = TextEditingController().obs;
   final shopregistrationnumcontroller = TextEditingController().obs;
+   final shippingdomesticcontroller = TextEditingController().obs;
+  final shippingnationcontroller = TextEditingController().obs;
   final createaboutshop = TextEditingController().obs;
   final createshopphonecode = ''.obs;
   final createshopphonecountrycode = ''.obs;
@@ -376,6 +378,8 @@ class StoreController extends GetxController {
     try {
       sellercreateshoploading.value = true;
       await storeRepo.createsellershop(
+        shippingdomestic:  shippingdomesticcontroller.value.text.toString(),
+        shippingnation: shippingnationcontroller.value.text.toString(),
           context: context,
           name: shopnamecontroller.value.text.toString(),
           address: address,
@@ -626,12 +630,13 @@ class StoreController extends GetxController {
   }
 
 //////seller side shop feedback
+final RxString sellersidefeedbackfiltervalue = ''.obs;
   final Rx<SellerShopFeedbackModel?> getsellersideshoppfeedback =
       Rx<SellerShopFeedbackModel?>(null);
   final RxBool getsellersideshopfeedbackloading = false.obs;
   final RxBool getsellersideshopfeedbackreloading = false.obs;
   RxInt sellershopfeedbackspage = 1.obs;
-  getSellerShopFeedback() async {
+  getSellerShopFeedback(String filter) async {
     if (getsellersideshopfeedbackreloading.value ||
         getsellersideshopfeedbackloading.value) return;
     if (sellershopfeedbackspage.value > 1 &&
@@ -646,12 +651,16 @@ class StoreController extends GetxController {
           : getsellersideshopfeedbackloading.value = true;
       final value = await storeRepo.getSellerShopFeedback(
           getsellershopprofiledata.value?.data?.sellerData?.guid ?? "",
-          sellershopfeedbackspage.value);
+          sellershopfeedbackspage.value,filter);
       if (sellershopfeedbackspage.value > 1) {
         getsellersideshoppfeedback.value?.data?.feedback
             ?.addAll(value?.data?.feedback ?? []);
+        sellersidefeedbackfiltervalue.value = filter;
+         reasonfeedbackcontroller();
       } else {
         getsellersideshoppfeedback.value = value;
+      sellersidefeedbackfiltervalue.value = filter;
+        reasonfeedbackcontroller();
       }
       sellershopfeedbackspage.value++;
       getsellersideshopfeedbackloading.value = false;
@@ -784,6 +793,8 @@ class StoreController extends GetxController {
   final updateshopregistrationnumcontroller = TextEditingController().obs;
   final updateshopphonenumbercontroller = TextEditingController().obs;
   final updateaboutshopcontroller = TextEditingController().obs;
+  final updateshopshippingdomesticcontroller = TextEditingController().obs;
+  final updateshopshippingnationcontroller = TextEditingController().obs;
   final updateshopphonecode = ''.obs;
   final updateshopphonecountrycode = ''.obs;
   final RxBool updatesellershoploading = false.obs;
@@ -798,6 +809,16 @@ class StoreController extends GetxController {
     try {
       updatesellershoploading.value = true;
       await storeRepo.updateSellershop(
+          shippingdomestic:
+              updateshopshippingdomesticcontroller.value.text.isEmpty
+                  ? getsellershopprofiledata
+                          .value?.data?.sellerData?.shippingdomestic ??
+                      ''
+                  : updateshopshippingdomesticcontroller.value.text.toString(),
+          shippingnation: updateshopshippingnationcontroller.value.text.isEmpty
+              ? getsellershopprofiledata.value?.data?.sellerData?.shippingnation ??
+                  ''
+              : updateshopshippingnationcontroller.value.text.toString(),
           context: context,
           name: updateshopnamecontroller.value.text.isEmpty
               ? getsellershopprofiledata.value?.data?.sellerData?.shopName ?? ''
@@ -822,26 +843,12 @@ class StoreController extends GetxController {
                   ''
               : updateshopphonecode.value.toString(),
           phonenumber: updateshopphonenumbercontroller.value.text.isEmpty
-              ? getsellershopprofiledata.value?.data?.sellerData?.phoneNumber ??
-                  ''
+              ? getsellershopprofiledata.value?.data?.sellerData?.phoneNumber ?? ''
               : updateshopphonenumbercontroller.value.text.toString(),
-          phonecountrycode: updateshopphonecountrycode.value.isEmpty
-              ? getsellershopprofiledata
-                      .value?.data?.sellerData?.phoneCountryCode ??
-                  ''
-              : updateshopphonecountrycode.value.toString(),
-          whatyousell: updateshopwhatyousellcontroller.value.text.isEmpty
-              ? getsellershopprofiledata.value?.data?.sellerData?.sell ?? ''
-              : updateshopwhatyousellcontroller.value.text.toString(),
-          registrationnumber:
-              updateshopregistrationnumcontroller.value.text.isEmpty
-                  ? getsellershopprofiledata
-                          .value?.data?.sellerData?.registrationNumber ??
-                      ''
-                  : updateshopregistrationnumcontroller.value.text.toString(),
-          description: updateaboutshopcontroller.value.text.isEmpty
-              ? getsellershopprofiledata.value?.data?.sellerData?.shopDescription ?? ''
-              : updateaboutshopcontroller.value.text.toString(),
+          phonecountrycode: updateshopphonecountrycode.value.isEmpty ? getsellershopprofiledata.value?.data?.sellerData?.phoneCountryCode ?? '' : updateshopphonecountrycode.value.toString(),
+          whatyousell: updateshopwhatyousellcontroller.value.text.isEmpty ? getsellershopprofiledata.value?.data?.sellerData?.sell ?? '' : updateshopwhatyousellcontroller.value.text.toString(),
+          registrationnumber: updateshopregistrationnumcontroller.value.text.isEmpty ? getsellershopprofiledata.value?.data?.sellerData?.registrationNumber ?? '' : updateshopregistrationnumcontroller.value.text.toString(),
+          description: updateaboutshopcontroller.value.text.isEmpty ? getsellershopprofiledata.value?.data?.sellerData?.shopDescription ?? '' : updateaboutshopcontroller.value.text.toString(),
           categories: updateshopselectedCategoriesIds,
           mainimage: updatesellershopmainimage.value,
           coverimage: updatesellershopcoverimage.value,
@@ -1016,17 +1023,15 @@ class StoreController extends GetxController {
     }
   }
 
-
-
 /////////////get wallet transection api
- final Rx<TransectionModel?> getwallettransections =
+  final Rx<TransectionModel?> getwallettransections =
       Rx<TransectionModel?>(null);
   final RxBool getwallettransectionsloading = false.obs;
   final RxBool getwallettransectionsreloadloading = false.obs;
   final RxInt walletpage = 1.obs;
   Future<void> getWalletTransections() async {
-    if (getwallettransectionsreloadloading.value || getwallettransectionsloading.value)
-      return;
+    if (getwallettransectionsreloadloading.value ||
+        getwallettransectionsloading.value) return;
     if (walletpage.value > 1 &&
         walletpage.value >
             (getwallettransections.value?.data?.pagination?.totalPages ?? 0)) {

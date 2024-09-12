@@ -6,6 +6,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -81,8 +82,12 @@ class _SellerShopState extends State<SellerShop> {
                               onTap: () {
                                 productcontroller.getProductPreviewbyId(
                                     sellershopdata?.guid.toString() ?? "");
-                                Get.toNamed(
-                                    RouteConstants.productpreviewscreen);
+                                 productcontroller.getproductwisefeedbacks.value = null;
+                                 productcontroller.productwisefeedbackpage.value = 1;
+                               productcontroller.getProductWiseFeedbacks(
+                                    guid: sellershopdata?.guid.toString() ?? "", filter: "all");
+                                  Get.toNamed(
+                                      RouteConstants.productpreviewscreen,arguments: sellershopdata?.guid.toString() ?? "");
                               },
                               child: SizedBox(
                                 height: 29.h,
@@ -157,7 +162,7 @@ class _SellerShopState extends State<SellerShop> {
                                       ),
                                     ),
                                     Text(
-                                      sellershopdata?.title ?? "",
+                                      toCamelCase(sellershopdata?.title ?? ""),
                                       style: TextStyle(
                                           fontSize: 13.sp,
                                           fontWeight: FontWeight.w500),
@@ -208,9 +213,9 @@ class _SellerShopState extends State<SellerShop> {
                                           width: 0.5.w,
                                         ),
                                         Text(
-                                            sellershopdata?.ratingCount
+                                            "(${sellershopdata?.ratingCount
                                                     .toString() ??
-                                                "",
+                                                ""})",
                                             style: TextStyle(
                                               fontSize: 11.sp,
                                             )),

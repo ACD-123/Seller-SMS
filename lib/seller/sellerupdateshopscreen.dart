@@ -22,6 +22,8 @@ class _SellerUpdateShopScreenState extends State<SellerUpdateShopScreen> {
       Get.put(AuthenticationController(authRepo: Get.find()));
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   void getapidata() async {
+     storecontroller.updateshopshippingdomesticcontroller.value.clear();
+    storecontroller.updateshopshippingnationcontroller.value.clear();
     storecontroller.updateshopselectedCategories.clear();
     storecontroller.updateshopselectedCategoriesIds.clear();
     storecontroller.updateshopremovedbannersimage.clear();
@@ -247,19 +249,38 @@ class _SellerUpdateShopScreenState extends State<SellerUpdateShopScreen> {
                     SizedBox(
                       height: 1.5.h,
                     ),
-                    // customtextformfield(
-                    //     validator: (v) {
-                    //       if (v!.isEmpty) {
-                    //         return "Please Enter Email";
-                    //       } else if (!v.isEmail) {
-                    //         return 'Invalid Email';
-                    //       }
-                    //       return null;
-                    //     },
-                    //     hinttext: "Email"),
-                    // SizedBox(
-                    //   height: 1.5.h,
-                    // ),
+                    customtextformfield(
+                        keyboardType: TextInputType.number,
+                        controller:
+                            storecontroller.updateshopshippingdomesticcontroller.value,
+                        hinttext: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.shippingdomestic ??
+                            "Shipping Domestic",
+                        validator: (v) {
+                          if (v!.isEmpty) {
+                            return "Please Enter Shipping Domestic";
+                          }
+                          return null;
+                        }),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                    customtextformfield(
+                        keyboardType: TextInputType.number,
+                        controller:
+                            storecontroller.updateshopshippingnationcontroller.value,
+                        hinttext: storecontroller.getsellershopprofiledata.value
+                                ?.data?.sellerData?.shippingnation ??
+                            "Shipping Nation",
+                        validator: (v) {
+                          if (v!.isEmpty) {
+                            return "Please Enter Shipping Nation";
+                          }
+                          return null;
+                        }),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
                     Obx(
                       () => customtextformfield(
                           controller: authcontroller

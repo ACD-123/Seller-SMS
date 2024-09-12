@@ -5,6 +5,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -141,9 +142,9 @@ void socket() {
                                                             AppConstants
                                                                 .noimage)),
                                             title: Text(
-                                              chatssnotificationsdata?.title
+                                              toCamelCase(chatssnotificationsdata?.title
                                                       .toString() ??
-                                                  "",
+                                                  ""),
                                               style: TextStyle(
                                                   fontSize: 13.sp,
                                                   color: const Color(0xff777777)),

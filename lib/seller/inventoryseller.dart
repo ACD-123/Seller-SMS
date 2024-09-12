@@ -6,6 +6,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/customelevatedbutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/seller/activeproducts.dart';
@@ -157,13 +158,13 @@ storecontroller.getSellerShopProfileData();
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          storecontroller
+                                         toCamelCase( storecontroller
                                                   .getsellershopprofiledata
                                                   .value
                                                   ?.data
                                                   ?.sellerData
                                                   ?.shopName ??
-                                              "",
+                                              ""),
                                           style: const TextStyle(
                                             fontSize: 14,
                                           ),
@@ -209,14 +210,14 @@ storecontroller.getSellerShopProfileData();
                                                 )),
                                           ],
                                         ),
-                                        Text(storecontroller
+                                        Text(toCamelCase(storecontroller
                                                 .getsellershopprofiledata
                                                 .value
                                                 ?.data
                                                 ?.sellerData
                                                 ?.joined
                                                 .toString() ??
-                                            "")
+                                            ""))
                                       ],
                                     ),
                                   ],

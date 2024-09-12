@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
@@ -224,7 +225,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                custombutton(hinttext: "Withdraw"),
+                                custombutton(hinttext: "Withdraw",ontap: (){
+                                  showSuccessSnackbar(message: "Comming Soon");
+                                }),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -331,9 +334,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                               SizedBox(
                                                 width: 18.w,
                                                 child: Text(
-                                                  transactiondata?.date
+                                                  toCamelCase(transactiondata?.date
                                                           .toString() ??
-                                                      "",
+                                                      ""),
                                                   style: TextStyle(
                                                       color: const Color(
                                                               0XFF000000)
@@ -366,9 +369,9 @@ class _WalletScreenState extends State<WalletScreen> {
                                               SizedBox(
                                                 width: 18.w,
                                                 child: Text(
-                                                  transactiondata?.type
+                                                  toCamelCase(transactiondata?.type
                                                           .toString() ??
-                                                      "",
+                                                      ""),
                                                   style: TextStyle(
                                                       color: const Color(
                                                               0XFF000000)

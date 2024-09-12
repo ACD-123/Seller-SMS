@@ -13,6 +13,7 @@ import 'package:smsseller/models/deletedproducts_model.dart';
 import 'package:smsseller/models/getcategories_model.dart';
 import 'package:smsseller/models/inactiveproduct_model.dart';
 import 'package:smsseller/models/productpreview_model.dart';
+import 'package:smsseller/models/productwisefeedbacks_model.dart';
 import 'package:smsseller/services/apiservices.dart';
 
 class ProductRepo extends GetxService {
@@ -285,6 +286,23 @@ class ProductRepo extends GetxService {
       return showErrrorSnackbar(message: 'No Internet Connection');
     } catch (e) {
       showErrrorSnackbar(message: e.toString());
+    }
+  }
+
+////////////product wise feedbacks api
+  Future<ProductWiseFeedbackModel?> getProductWiseFeedbacks({required String guid,required String filter,required String page}) async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getproductwisefeedback}$guid?filter=$filter&page=$page",
+      );
+      if (res.statusCode == 200) {
+        final listofproductwisefeedbacks = productWiseFeedbackModelFromJson(res.body);
+        return listofproductwisefeedbacks;
+      } else {
+        throw Exception("No data field found in the GetProductWiseFeedbacks");
+      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 
 import '../customcomponents/customappbar.dart';
 
@@ -43,7 +44,7 @@ class _SellerSettingScreenState extends State<SellerSettingScreen> {
               ),
               Obx(
                 () => Text(
-                  storecontroller.getsellerprofiledata.value?.data?.name ?? "",
+                  toCamelCase(storecontroller.getsellerprofiledata.value?.data?.name ?? ""),
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w700,
@@ -53,7 +54,7 @@ class _SellerSettingScreenState extends State<SellerSettingScreen> {
               ),
               Obx(
                 () => Text(
-                  "Joined since : ${storecontroller.getsellerprofiledata.value?.data?.joined ?? ""}",
+                  "Joined since : ${toCamelCase(storecontroller.getsellerprofiledata.value?.data?.joined ?? "")}",
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w400,

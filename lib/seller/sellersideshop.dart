@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/seller/aboutseller.dart';
 import 'package:smsseller/seller/feedbacksellerside.dart';
 import 'package:smsseller/seller/sellershop.dart';
@@ -133,9 +134,9 @@ class _SellerShopState extends State<SellerSideShop>
                                     SizedBox(
                                       width: 55.w,
                                       child: Text(
-                                        storecontroller.getsellershopabout.value
+                                        toCamelCase(storecontroller.getsellershopabout.value
                                                 ?.data?.shopName ??
-                                            "",
+                                            ""),
                                         style: TextStyle(
                                           fontSize: 15.sp,
                                         ),

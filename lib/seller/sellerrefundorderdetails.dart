@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
@@ -93,10 +94,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    ordercontroller.getrefundorderdetailsbyid
+                                    toCamelCase(ordercontroller.getrefundorderdetailsbyid
                                             .value?.data?.user?.name
                                             .toString() ??
-                                        "",
+                                        ""),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15.sp,
@@ -112,10 +113,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                 ],
                               ),
                               Text(
-                                ordercontroller.getrefundorderdetailsbyid.value
+                                toCamelCase(ordercontroller.getrefundorderdetailsbyid.value
                                         ?.data?.user?.address
                                         .toString() ??
-                                    "",
+                                    ""),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,
@@ -196,14 +197,14 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                 fontSize: 14.sp,
                                 borderradius: 15,
                                 color: const Color(0xff2E3192),
-                                buttonName: ordercontroller
+                                buttonName: toCamelCase(ordercontroller
                                         .getrefundorderdetailsbyid
                                         .value
                                         ?.data
                                         ?.orderProductIds
                                         ?.first
                                         .status ??
-                                    "")
+                                    ""))
                           ],
                         ),
                       ),
@@ -390,10 +391,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                                 0xff757474)),
                                                       ),
                                                       Text(
-                                                        refunddetailsdata
+                                                        toCamelCase(refunddetailsdata
                                                                 ?.refund?.status
                                                                 .toString() ??
-                                                            "",
+                                                            ""),
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w700,
@@ -507,7 +508,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                                         right: 1
                                                                             .w),
                                                                 child: Text(
-                                                                  "${attributedata?.attribute?.name ?? ""}, ",
+                                                                  "${toCamelCase(attributedata?.attribute?.name ?? "")}, ",
                                                                   style: TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -551,7 +552,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                     width: 1.w,
                                                   ),
                                                   Text(
-                                                    '${refunddetailsdata?.refund?.media?.length.toString() ?? 0} images',
+                                                    '${refunddetailsdata?.refund?.media?.length.toString() ?? 0} Images',
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -636,10 +637,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                       horizontal: 12,
                                                       vertical: 15),
                                                   child: Text(
-                                                    refunddetailsdata
+                                                   toCamelCase( refunddetailsdata
                                                             ?.refund?.reason
                                                             .toString() ??
-                                                        "",
+                                                        ""),
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w400,
@@ -680,7 +681,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                 children: [
                                   customamountrow(
                                       title:
-                                          'Subtotal (${ordercontroller.getrefundorderdetailsbyid.value?.data?.orderProductIds?.length} items)',
+                                          'Subtotal (${ordercontroller.getrefundorderdetailsbyid.value?.data?.orderProductIds?.length} Items)',
                                       amount:
                                           '${currencytext()}${ordercontroller.getrefundorderdetailsbyid.value?.data?.subtotalPrice.toString() ?? ""}'),
                                   customamountrow(
@@ -752,10 +753,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 15),
                                     child: Text(
-                                      ordercontroller.getrefundorderdetailsbyid
+                                      toCamelCase(ordercontroller.getrefundorderdetailsbyid
                                               .value?.data?.note
                                               .toString() ??
-                                          "",
+                                          ""),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 13.sp,

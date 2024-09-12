@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -87,8 +88,12 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
                                 onTap: () {
                                   productcontroller.getProductPreviewbyId(
                                       inactiveproducts?.guid ?? "");
+                                       productcontroller.getproductwisefeedbacks.value = null;
+                                              productcontroller.productwisefeedbackpage.value = 1;
+                                  productcontroller.getProductWiseFeedbacks(
+                                    guid: inactiveproducts?.guid.toString() ?? "", filter: "all");
                                   Get.toNamed(
-                                      RouteConstants.productpreviewscreen);
+                                      RouteConstants.productpreviewscreen,arguments: inactiveproducts?.guid.toString() ?? "");
                                 },
                                 child: SizedBox(
                                   height: 29.h,
@@ -158,8 +163,8 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
                                         ],
                                       ),
                                       Text(
-                                        inactiveproducts?.title.toString() ??
-                                            "",
+                                        toCamelCase(inactiveproducts?.title.toString() ??
+                                            ""),
                                         style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w500),
@@ -217,9 +222,9 @@ class _OutofStockProductsState extends State<OutofStockProducts> {
                                             width: 0.5.w,
                                           ),
                                          SizedBox(width: 7.5.w,child:  Text(
-                                              inactiveproducts?.ratingCount
+                                              "(${inactiveproducts?.ratingCount
                                                       .toString() ??
-                                                  "",
+                                                  ""})",
                                               style: TextStyle(
                                                 fontSize: 11.sp,
                                                 overflow: TextOverflow.ellipsis,

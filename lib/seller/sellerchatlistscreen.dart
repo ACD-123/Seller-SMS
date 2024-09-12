@@ -6,6 +6,7 @@ import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
@@ -133,7 +134,7 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                         child: Card(
                           child: ListTile(
                             subtitle: Text(
-                              searhdata?.message ?? "",
+                              toCamelCase(searhdata?.message ?? ""),
                               style: TextStyle(
                                   fontSize: 13.sp,
                                   color: const Color(0xff757474),
@@ -148,7 +149,7 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                                           AppConstants.noimage),
                             ),
                             title: Text(
-                              searhdata?.senderName.toString() ?? "",
+                              toCamelCase(searhdata?.senderName.toString() ?? ""),
                               style: TextStyle(
                                   fontSize: 14.sp,
                                   color: const Color(0xff1B1B1B),
@@ -246,14 +247,14 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                                                         AppConstants.noimage),
                                           ),
                                           title: Text(
-                                            chatslistdata?.senderName ?? "",
+                                           toCamelCase( chatslistdata?.senderName ?? ""),
                                             style: TextStyle(
                                                 fontSize: 14.sp,
                                                 color: Color(0xff1B1B1B),
                                                 fontWeight: FontWeight.w600),
                                           ),
                                           subtitle: Text(
-                                            chatslistdata?.message ?? "",
+                                            toCamelCase(chatslistdata?.message ?? ""),
                                             style: TextStyle(
                                                 fontSize: 13.sp,
                                                 color: Color(0xff757474),

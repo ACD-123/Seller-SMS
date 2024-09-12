@@ -4,6 +4,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -74,9 +75,9 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                               .getsellerchatroomdetails.value!.data!.isEmpty
                       ? const SizedBox()
                       : Text(
-                          chatcontroller.getsellerchatroomdetails.value?.data
+                          toCamelCase(chatcontroller.getsellerchatroomdetails.value?.data
                                   ?.first?.testuser?.name ??
-                              "",
+                              ""),
                           style: TextStyle(
                               color: const Color(0xffFFFFFF),
                               fontWeight: FontWeight.w700,
@@ -149,7 +150,7 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                                             ?.originalUrl ??
                                         AppConstants.noimage,
                             time: chattroomdata?.time ?? "",
-                            text: chattroomdata?.message ?? "",
+                            text: toCamelCase(chattroomdata?.message ?? ""),
                             isCurrentUser:
                                 sellerid == chattroomdata?.uid ? false : true,
                             profileImage: chattroomdata?.seller?.mainImage ==

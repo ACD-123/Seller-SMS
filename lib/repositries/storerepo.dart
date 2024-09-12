@@ -61,6 +61,8 @@ class StoreRepo extends GetxService {
     required String whatyousell,
     required String registrationnumber,
     required String description,
+     required String shippingdomestic,
+    required String shippingnation,
     required List<int> categories,
     required File? mainimage,
     required File? coverimage,
@@ -80,6 +82,8 @@ class StoreRepo extends GetxService {
       "sell": whatyousell,
       "registration_number": registrationnumber,
       "categories": categories,
+      "shipping_domestic": shippingdomestic,
+      "shipping_nation": shippingnation,
     };
     Map<String, String> stringMapData =
         mapData.map((key, value) => MapEntry(key, value.toString()));
@@ -190,10 +194,10 @@ class StoreRepo extends GetxService {
 
   ////////get seller side shop feedback
   Future<SellerShopFeedbackModel?> getSellerShopFeedback(
-      String guid, int page) async {
+      String guid, int page,String filter) async {
     try {
       final res = await apiClient.getFromServer(
-        endPoint: "${AppConstants.getsellershopfeedback}$guid?page=$page",
+        endPoint: "${AppConstants.getsellershopfeedback}$guid?filter=$filter&page=$page",
       );
       if (res.statusCode == 200) {
         final listofsellershopfeedback =
@@ -338,6 +342,8 @@ class StoreRepo extends GetxService {
     required String whatyousell,
     required String registrationnumber,
     required String description,
+    required String shippingdomestic,
+    required String shippingnation,
     required List<int> categories,
     required File? mainimage,
     required File? coverimage,
@@ -359,6 +365,8 @@ class StoreRepo extends GetxService {
       "registration_number": registrationnumber,
       "categories": categories,
       "deleted_files": deletedids,
+      "shipping_domestic": shippingdomestic,
+      "shipping_nation": shippingnation,
     };
     Map<String, String> stringMapData =
         mapData.map((key, value) => MapEntry(key, value.toString()));

@@ -5,6 +5,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -136,9 +137,9 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
                                                             AppConstants
                                                                 .noimage)),
                                             title: Text(
-                                              chatssnotificationsdata?.title
+                                              toCamelCase(chatssnotificationsdata?.title
                                                       .toString() ??
-                                                  "",
+                                                  ""),
                                               style: TextStyle(
                                                   fontSize: 13.sp,
                                                   color: const Color(0xff777777)),
@@ -152,9 +153,9 @@ class _OrdersNotificationsState extends State<OrdersNotifications> {
                                                   color: const Color(0xff777777)),
                                             ),
                                             trailing: Text(
-                                              chatssnotificationsdata?.date
+                                              toCamelCase(chatssnotificationsdata?.date
                                                       .toString() ??
-                                                  "",
+                                                  ""),
                                               style: TextStyle(
                                                   fontSize: 13.sp,
                                                   color: Color(0xff000000)

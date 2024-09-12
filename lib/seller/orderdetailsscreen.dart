@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
@@ -80,9 +81,9 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    ordercontroller.getorderdetailsbyid.value
+                                    toCamelCase(ordercontroller.getorderdetailsbyid.value
                                             ?.data?.user?.name ??
-                                        "",
+                                        ""),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15.sp,
@@ -98,9 +99,9 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                 ],
                               ),
                               Text(
-                                ordercontroller.getorderdetailsbyid.value?.data
+                                toCamelCase(ordercontroller.getorderdetailsbyid.value?.data
                                         ?.user?.address ??
-                                    "",
+                                    ""),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,
@@ -181,14 +182,14 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                 fontSize: 14.sp,
                                 borderradius: 15,
                                 color: const Color(0xff2E3192),
-                                buttonName: ordercontroller
+                                buttonName: toCamelCase(ordercontroller
                                         .getorderdetailsbyid
                                         .value
                                         ?.data
                                         ?.orderProductIds
                                         ?.first
                                         .status ??
-                                    "")
+                                    ""))
                           ],
                         ),
                       ),
@@ -252,8 +253,8 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                detailsdata?.product?.title ??
-                                                    "",
+                                                toCamelCase(detailsdata?.product?.title ??
+                                                    ""),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 15.sp),
@@ -352,10 +353,10 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                                                 EdgeInsets.only(
                                                                     right: 1.w),
                                                             child: Text(
-                                                             "${attributedata
+                                                             "${toCamelCase(attributedata
                                                                       ?.attribute
                                                                       ?.name ??
-                                                                  ""}, ",
+                                                                  "")}, ",
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -401,7 +402,7 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                 children: [
                                   customamountrow(
                                       title:
-                                          'Subtotal (${ordercontroller.getorderdetailsbyid.value?.data?.orderProductIds?.length} items)',
+                                          'Subtotal (${ordercontroller.getorderdetailsbyid.value?.data?.orderProductIds?.length} Items)',
                                       amount:
                                           '${currencytext()}${ordercontroller.getorderdetailsbyid.value?.data?.subtotalPrice ?? ""}'),
                                   customamountrow(
@@ -473,9 +474,9 @@ class _SellerOrderDetailsState extends State<SellerOrderDetails> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 15),
                                     child: Text(
-                                      ordercontroller.getorderdetailsbyid.value
+                                      toCamelCase(ordercontroller.getorderdetailsbyid.value
                                               ?.data?.note ??
-                                          "",
+                                          ""),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 13.sp,

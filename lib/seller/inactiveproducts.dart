@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -88,8 +89,12 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                 onTap: () {
                                   productcontroller.getProductPreviewbyId(
                                       inactiveproducts?.guid ?? "");
+                             productcontroller.getproductwisefeedbacks.value = null;
+                                    productcontroller.productwisefeedbackpage.value = 1;
+                        productcontroller.getProductWiseFeedbacks(
+                                    guid: inactiveproducts?.guid.toString() ?? "", filter: "all");
                                   Get.toNamed(
-                                      RouteConstants.productpreviewscreen);
+                                      RouteConstants.productpreviewscreen,arguments: inactiveproducts?.guid.toString() ?? "");
                                 },
                                 child: SizedBox(
                                   height: 29.h,
@@ -159,8 +164,8 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                         ],
                                       ),
                                       Text(
-                                        inactiveproducts?.title.toString() ??
-                                            "",
+                                        toCamelCase(inactiveproducts?.title.toString() ??
+                                            ""),
                                         style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w500),
@@ -218,9 +223,9 @@ class _InActiveProductsState extends State<InActiveProducts> {
                                           ),
                                           SizedBox(width: 7.5.w,
                                           child: Text(
-                                              inactiveproducts?.ratingCount
+                                              "(${inactiveproducts?.ratingCount
                                                       .toString() ??
-                                                  "",
+                                                  ""})",
                                               style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 fontSize: 11.sp,

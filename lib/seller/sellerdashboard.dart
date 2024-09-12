@@ -7,6 +7,8 @@ import 'package:smsseller/constants/sockets.dart';
 import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/controller/chatcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
 import 'package:smsseller/services/local_storage.dart';
 
@@ -204,9 +206,9 @@ apisdata()async{
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        storecontroller.getsellerprofiledata
+                                        toCamelCase(storecontroller.getsellerprofiledata
                                                 .value?.data?.name ??
-                                            "",
+                                            ""),
                                         style: TextStyle(
                                             color: Color(0xff2E3192),
                                             fontWeight: FontWeight.w700,
@@ -216,7 +218,7 @@ apisdata()async{
                                         width: 1.w,
                                       ),
                                       Text(
-                                        'Hello ${storecontroller.getsellerprofiledata.value?.data?.name ?? ""}',
+                                        'Hello ${toCamelCase(storecontroller.getsellerprofiledata.value?.data?.name ?? "")}',
                                         style: TextStyle(
                                             color: Color(0xff2E3192),
                                             fontWeight: FontWeight.w400,
@@ -396,7 +398,7 @@ apisdata()async{
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'CFA${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
+                                        '${currencytext()}${storecontroller.getsellertotalsalesstats.value?.data?.currentMonthEarning ?? ""}',
                                         style: TextStyle(
                                             color: Color(0xffFFFFFF),
                                             fontWeight: FontWeight.w600,

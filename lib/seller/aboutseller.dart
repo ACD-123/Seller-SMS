@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
 class AboutSeller extends StatefulWidget {
@@ -85,9 +86,9 @@ class _AboutSellerState extends State<AboutSeller> {
                           height: MediaQuery.of(context).size.height * 0.01,
                         ),
                         Text(
-                          storecontroller.getsellershopabout.value?.data
+                          toCamelCase(storecontroller.getsellershopabout.value?.data
                                   ?.shopDescription ??
-                              "",
+                              ""),
                           style: TextStyle(fontSize: 14.sp),
                         ),
                         SizedBox(
@@ -131,9 +132,9 @@ class _AboutSellerState extends State<AboutSeller> {
                                     ),
                                   ),
                                   Text(
-                                    storecontroller.getsellershopabout.value
+                                    toCamelCase(storecontroller.getsellershopabout.value
                                             ?.data?.joined ??
-                                        "",
+                                        ""),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14.sp,
@@ -225,7 +226,7 @@ class _AboutSellerState extends State<AboutSeller> {
                                     ),
                                     SizedBox(height: 1.h),
                                     Text(
-                                      categorydata?.name ?? "",
+                                      toCamelCase(categorydata?.name ?? ""),
                                       style: TextStyle(fontSize: 14.sp),
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,

@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/custom_textformfield.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
@@ -157,9 +158,9 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           height: 5.h,
                         ),
                         Text(
-                          storecontroller
+                          toCamelCase(storecontroller
                                   .getsellerprofiledata.value?.data?.name ??
-                              "",
+                              ""),
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
@@ -167,7 +168,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                           ),
                         ),
                         Text(
-                          "Joined since : ${storecontroller.getsellerprofiledata.value?.data?.joined ?? ""}",
+                          "Joined since : ${toCamelCase(storecontroller.getsellerprofiledata.value?.data?.joined ?? "")}",
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w400,
@@ -185,9 +186,9 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                               customtextformfield(
                                   controller: storecontroller
                                       .updatesellerprofilename.value,
-                                  hinttext: storecontroller.getsellerprofiledata
+                                  hinttext: toCamelCase(storecontroller.getsellerprofiledata
                                           .value?.data?.name ??
-                                      "",
+                                      ""),
                                   suffixicon: Image.asset(
                                       'assets/images/profilesettingediticon.png')),
                               SizedBox(

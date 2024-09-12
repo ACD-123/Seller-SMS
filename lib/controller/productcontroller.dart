@@ -11,6 +11,7 @@ import 'package:smsseller/models/deletedproducts_model.dart';
 import 'package:smsseller/models/getcategories_model.dart';
 import 'package:smsseller/models/inactiveproduct_model.dart';
 import 'package:smsseller/models/productpreview_model.dart';
+import 'package:smsseller/models/productwisefeedbacks_model.dart';
 import 'package:smsseller/repositries/productrepo.dart';
 
 class ProductController extends GetxController {
@@ -459,6 +460,58 @@ RxBool deletedproductloading = false.obs;
       deletedproductloading.value = false;
     } finally {
       deletedproductloading.value = false;
+    }
+  }
+
+///////////get product wise feedbacks
+ final Rx<ProductWiseFeedbackModel?> getproductwisefeedbacks =
+      Rx<ProductWiseFeedbackModel?>(null);
+  final RxBool getproductwisefeedbacksloading = false.obs;
+  final RxBool getproductwisefeedbacksreloading = false.obs;
+  final RxInt productwisefeedbackpage = 1.obs;
+  Future<void> getProductWiseFeedbacks({required String guid,required String filter}) async {
+    if (getproductwisefeedbacksreloading.value || getproductwisefeedbacksloading.value)
+      return;
+    if (productwisefeedbackpage.value > 1 &&
+        productwisefeedbackpage.value >
+            (getproductwisefeedbacks.value?.data?.pagination?.totalPages ?? 0)) {
+      return;
+    }
+
+    try {
+      productwisefeedbackpage.value > 1
+          ? getproductwisefeedbacksreloading.value = true
+          : getproductwisefeedbacksloading.value = true;
+      final value = await productRepo.getProductWiseFeedbacks(
+        guid: guid, filter: filter, page: productwisefeedbackpage.value.toString());
+      if (productwisefeedbackpage.value > 1) {
+        getproductwisefeedbacks.value?.data?.feedback
+            ?.addAll(value?.data?.feedback ?? []);
+       
+        productwisefiltervalue.value = filter;
+         reasonproductwisefeedbackcontroller();
+      } else {
+        getproductwisefeedbacks.value = value;
+      
+        productwisefiltervalue.value = filter;
+          reasonproductwisefeedbackcontroller();
+      }
+      productwisefeedbackpage.value++;
+      getproductwisefeedbacksreloading.value = false;
+      getproductwisefeedbacksloading.value = false;
+    } catch (e) {
+      getproductwisefeedbacksreloading.value = false;
+      getproductwisefeedbacksloading.value = false;
+    }
+  }
+////////// product wise reply feedback api
+ final RxString productwisefiltervalue = ''.obs;
+  Map<int, TextEditingController> productwisereplyfeedbackControllers = {};
+  void reasonproductwisefeedbackcontroller() {
+    for (int i = 0;
+        i < (getproductwisefeedbacks.value?.data?.feedback?.length ?? 0);
+        i++) {
+      productwisereplyfeedbackControllers[i] = TextEditingController();
     }
   }
 

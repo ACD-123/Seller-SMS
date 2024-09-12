@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
@@ -18,18 +19,19 @@ class ActiveProducts extends StatefulWidget {
 class _ActiveProductsState extends State<ActiveProducts> {
   final productcontroller = Get.put(ProductController(productRepo: Get.find()));
   ScrollController scrollcontroller = ScrollController();
-void apidata()async{
- productcontroller. deleteproductswitchbutton.clear();
-     productcontroller.page.value = 1;
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
- await  productcontroller.getActiveProducts();
- productcontroller.getactivedeleteproductswitchboolvalue();
+  void apidata() async {
+    productcontroller.deleteproductswitchbutton.clear();
+    productcontroller.page.value = 1;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await productcontroller.getActiveProducts();
+      productcontroller.getactivedeleteproductswitchboolvalue();
     });
-}
+  }
+
   @override
   void initState() {
     super.initState();
- apidata();
+    apidata();
     scrollcontroller.addListener(_scrollListener);
   }
 
@@ -84,10 +86,15 @@ void apidata()async{
                                   ?.products?[index];
                               return GestureDetector(
                                 onTap: () {
+                                  productcontroller.productwisefeedbackpage.value = 1;
                                   productcontroller.getProductPreviewbyId(
                                       activeproducts?.guid.toString() ?? "");
+                                productcontroller.getproductwisefeedbacks.value = null;
+                                       productcontroller.productwisefeedbackpage.value = 1;
+                                  productcontroller.getProductWiseFeedbacks(
+                                    guid: activeproducts?.guid.toString() ?? "", filter: "all");
                                   Get.toNamed(
-                                      RouteConstants.productpreviewscreen);
+                                      RouteConstants.productpreviewscreen,arguments: activeproducts?.guid.toString() ?? "");
                                 },
                                 child: SizedBox(
                                   height: 29.h,
@@ -129,7 +136,6 @@ void apidata()async{
                                               ),
                                             ),
                                           ),
-                                          
                                           Positioned(
                                               top: 5,
                                               right: 5,
@@ -155,11 +161,10 @@ void apidata()async{
                                                           0xff484BA0),
                                                     ))),
                                               )),
-                                         
                                         ],
                                       ),
                                       Text(
-                                        activeproducts?.title.toString() ?? "",
+                                        toCamelCase(activeproducts?.title.toString() ?? ""),
                                         style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w500),
@@ -195,55 +200,73 @@ void apidata()async{
                                         ],
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                        Row(children: [  RatingBarIndicator(
-                                            rating: activeproducts
-                                                    ?.ratingAsDouble ??
-                                                0.0,
-                                            itemBuilder: (context, index) =>
-                                                const Icon(
-                                              Icons.star,
-                                              color: Color(0xffFFAD33),
-                                            ),
-                                            itemCount: 5,
-                                            itemSize: 13.sp,
-                                            direction: Axis.horizontal,
+                                          Row(
+                                            children: [
+                                              RatingBarIndicator(
+                                                rating: activeproducts
+                                                        ?.ratingAsDouble ??
+                                                    0.0,
+                                                itemBuilder: (context, index) =>
+                                                    const Icon(
+                                                  Icons.star,
+                                                  color: Color(0xffFFAD33),
+                                                ),
+                                                itemCount: 5,
+                                                itemSize: 13.sp,
+                                                direction: Axis.horizontal,
+                                              ),
+                                              SizedBox(
+                                                width: 0.5.w,
+                                              ),
+                                              SizedBox(
+                                                width: 7.5.w,
+                                                child: Text(
+                                                    "(${activeproducts?.ratingCount
+                                                            .toString() ??
+                                                        ""})",
+                                                    style: TextStyle(
+                                                      fontSize: 11.sp,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    )),
+                                              ),
+                                            ],
                                           ),
                                           SizedBox(
-                                            width: 0.5.w,
-                                          ),
-                                          SizedBox(
-                                            width: 7.5.w,
-                                            child: Text(
-                                              activeproducts?.ratingCount
-                                                        .toString() ??
-                                                    "",
-                                                 
-                                                style: TextStyle(
-                                                  fontSize: 11.sp,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  
-                                                )),
-                                          ),],),
-                                             SizedBox(
-                                                height: 4.h,
-                                                width: 9.w,
-                                                child: Transform.scale(
-                                                  scale: 3.sp,
-                                                  child: Obx(() =>  Switch(
-                                                    value: productcontroller.deleteproductswitchbutton[index]?.value ?? true,
+                                            height: 4.h,
+                                            width: 9.w,
+                                            child: Transform.scale(
+                                                scale: 3.sp,
+                                                child: Obx(
+                                                  () => Switch(
+                                                    value: productcontroller
+                                                            .deleteproductswitchbutton[
+                                                                index]
+                                                            ?.value ??
+                                                        true,
                                                     onChanged: (value) {
-                                                     productcontroller.isdeleteactiveproduct(index, value);
-                                                     productcontroller.deleteProduct(id: activeproducts?.id ?? 0, status: 0);
+                                                      productcontroller
+                                                          .isdeleteactiveproduct(
+                                                              index, value);
+                                                      productcontroller
+                                                          .deleteProduct(
+                                                              id: activeproducts
+                                                                      ?.id ??
+                                                                  0,
+                                                              status: 0);
                                                     },
                                                     activeTrackColor:
                                                         Colors.green,
-                                                  inactiveTrackColor: Colors.red,
-                                                    inactiveThumbColor: Colors.white,
-                                                  ),)
-                                                ),
-                                              )
+                                                    inactiveTrackColor:
+                                                        Colors.red,
+                                                    inactiveThumbColor:
+                                                        Colors.white,
+                                                  ),
+                                                )),
+                                          )
                                         ],
                                       )
                                     ],

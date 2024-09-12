@@ -28,12 +28,15 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
     authcontroller.signupstreetaddres.value = '';
     authcontroller.signupcountryregioncontroller.value.clear();
     authcontroller.signupcitycontroller.value.clear();
+    
     authcontroller.signupzipcodecontroller.value.clear();
     authcontroller.signupstateprovincecontroller.value.clear();
     storecontroller.phonenumbercontroller.value.clear();
     storecontroller.shopnamecontroller.value.clear();
     storecontroller.shopregistrationnumcontroller.value.clear();
     storecontroller.whatyousellcontroller.value.clear();
+    storecontroller.shippingdomesticcontroller.value.clear();
+    storecontroller.shippingnationcontroller.value.clear();
   }
 
   @override
@@ -197,6 +200,32 @@ class _SellerCreateShopScreenState extends State<SellerCreateShopScreen> {
                           return null;
                         },
                         hinttext: "Commercial Registration ID"),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                     customtextformfield(
+                      keyboardType: TextInputType.number,
+                        controller: storecontroller.shippingdomesticcontroller.value,
+                        validator: (v) {
+                          if (v!.isEmpty) {
+                            return "Please Enter Shipping Domestic";
+                          }
+                          return null;
+                        },
+                        hinttext: "Shipping Domestic"),
+                    SizedBox(
+                      height: 1.5.h,
+                    ),
+                    customtextformfield(
+                        keyboardType: TextInputType.number,
+                        controller: storecontroller.shippingnationcontroller.value,
+                        validator: (v) {
+                          if (v!.isEmpty) {
+                            return "Please Enter Shipping Nation";
+                          }
+                          return null;
+                        },
+                        hinttext: "Shipping Nation"),
                     SizedBox(
                       height: 1.5.h,
                     ),

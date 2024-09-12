@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
@@ -550,7 +551,11 @@ Future<void> refreshdata()async{
                                   child: customproductcontainer(
                                       orderid:
                                           "Order Id: ${recentordersdata?.orderid ?? ""}",
-                                      productname: recentordersdata?.note ?? "",
+                                      productname: recentordersdata?.note == null || recentordersdata!.note!.isEmpty ?
+                                      "":
+                                      
+                                      
+                                      "Note: ${toCamelCase(recentordersdata.note ?? "")}",
                                       productimage: recentordersdata
                                                   ?.user
                                                   ?.media ==

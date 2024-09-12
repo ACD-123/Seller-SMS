@@ -66,6 +66,8 @@ class SellerData {
   dynamic sell;
   String? registrationNumber;
   dynamic phoneCountryCode;
+  dynamic shippingdomestic;
+  dynamic shippingnation;
   String? coverImage;
   String? mainImage;
   List<Banners>? banners;
@@ -98,6 +100,8 @@ class SellerData {
     this.phoneCountryCode,
     this.coverImage,
     this.mainImage,
+    this.shippingdomestic,
+    this.shippingnation,
     this.banners,
     this.joined,
     this.isFavourite,
@@ -142,6 +146,8 @@ double get ratingAsDouble {
     rating: json["rating"],
     ratingCount: json["rating_count"],
     productCount: json["product_count"],
+    shippingdomestic: json["shipping_domestic"],
+    shippingnation: json["shipping_nation"],
      categories: json["category"] == null ? null : List<Category>.from(json["category"].map((x) => Category.fromJson(x))),
     media: json["media"] == null ? null : List<Media>.from(json["media"].map((x) => Media.fromJson(x))),
   );
@@ -171,6 +177,8 @@ double get ratingAsDouble {
     "is_favourite": isFavourite,
     "favourite_count": favouriteCount,
     "rating": rating,
+    "shipping_domestic": shippingdomestic,
+    "shipping_nation": shippingnation,
     "rating_count": ratingCount,
     "product_count": productCount,
     "categories": categories == null ? [] : List<dynamic>.from(media!.map((x) => x.toJson())),

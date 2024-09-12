@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
@@ -86,9 +87,9 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    ordercontroller.getorderdetailsbyid.value
+                                    toCamelCase(ordercontroller.getorderdetailsbyid.value
                                             ?.data?.user?.name ??
-                                        "",
+                                        ""),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 15.sp,
@@ -104,9 +105,9 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                 ],
                               ),
                               Text(
-                                ordercontroller.getorderdetailsbyid.value?.data
+                                toCamelCase(ordercontroller.getorderdetailsbyid.value?.data
                                         ?.user?.address ??
-                                    "",
+                                    ""),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,
@@ -323,7 +324,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                detailsdata?.product?.title ?? "",
+                                                toCamelCase(detailsdata?.product?.title ?? ""),
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 15.sp),
@@ -419,10 +420,10 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                                                 EdgeInsets.only(
                                                                     right: 1.w),
                                                             child: Text(
-                                                              "${attributedata
+                                                              "${toCamelCase(attributedata
                                                                       ?.attribute
                                                                       ?.name ??
-                                                                  ""}, ",
+                                                                  "")}, ",
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -468,7 +469,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                 children: [
                                   customamountrow(
                                       title:
-                                          'Subtotal (${ordercontroller.getorderdetailsbyid.value?.data?.orderProductIds?.length} items)',
+                                          'Subtotal (${ordercontroller.getorderdetailsbyid.value?.data?.orderProductIds?.length} Items)',
                                       amount:
                                           '${currencytext()}${ordercontroller.getorderdetailsbyid.value?.data?.subtotalPrice ?? ""}'),
                                   customamountrow(
@@ -532,9 +533,9 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 15),
                               child: Text(
-                                ordercontroller.getorderdetailsbyid.value?.data
+                               toCamelCase( ordercontroller.getorderdetailsbyid.value?.data
                                         ?.note ??
-                                    "",
+                                    ""),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 13.sp,

@@ -4,6 +4,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 
 import '../customcomponents/customeleveted_button.dart';
@@ -300,7 +301,11 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
                                   child: customproductcontainer(
                                     orderid:
                                         "Order Id# ${pendingdata?.orderid ?? ""}",
-                                    productname: pendingdata?.note ?? "",
+                                    productname:pendingdata?.note == null || pendingdata!.note!.isEmpty
+                                    ? ""
+                                    :
+                                    
+                                    "Note: ${toCamelCase(pendingdata?.note ?? "")}",
                                     productimage:
                                         pendingdata?.user?.media == null
                                             ? AppConstants.noimage
@@ -355,7 +360,10 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
                                   child: customproductcontainer(
                                     orderid:
                                         "Order Id# ${activedata?.orderid ?? ""}",
-                                    productname: activedata?.note ?? "",
+                                    productname:activedata?.note == null || activedata!.note!.isEmpty ?
+                                    "":
+                                    
+                                    "Note: ${toCamelCase(activedata.note ?? "")}",
                                     productimage:
                                         activedata?.user?.media == null
                                             ? AppConstants.noimage
@@ -411,7 +419,10 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
                                   child: customproductcontainer(
                                     orderid:
                                         "Order Id# ${completeddata?.orderid ?? ""}",
-                                    productname: completeddata?.note ?? "",
+                                    productname: completeddata?.note == null || completeddata!.note!.isEmpty ? 
+                                    "":
+                                    
+                                    "Note: ${toCamelCase(completeddata.note ?? "")}",
                                     productimage:
                                         completeddata?.user?.media == null
                                             ? AppConstants.noimage
@@ -467,7 +478,10 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
                                   child: customproductcontainer(
                                     orderid:
                                         "Order Id# ${refundeddata?.orderid ?? ""}",
-                                    productname: refundeddata?.note ?? "",
+                                    productname: refundeddata?.note == null || refundeddata!.note!.isEmpty ? 
+                                    "":
+                                    
+                                    "Note: ${toCamelCase(refundeddata.note ?? "")}",
                                     productimage:
                                         refundeddata?.user?.media == null
                                             ? AppConstants.noimage
@@ -523,7 +537,10 @@ class _SellerOrderHistoryScreenState extends State<SellerOrderHistoryScreen> {
                                   child: customproductcontainer(
                                     orderid:
                                         "Order Id# ${rejecteddata?.orderid ?? ""}",
-                                    productname: rejecteddata?.note ?? "",
+                                    productname: rejecteddata?.note ==null || rejecteddata!.note!.isEmpty ? 
+                                    "":
+                                    
+                                    "Note: ${toCamelCase(rejecteddata.note ?? "")}",
                                     productimage:
                                         rejecteddata?.user?.media == null
                                             ? AppConstants.noimage

@@ -383,7 +383,7 @@ class AuthenticationController extends GetxController {
 ///get fcm 
 gettoken() async {
     final fcmtoken = await FirebaseMessaging.instance.getToken();
-
+showSuccessSnackbar(message: fcmtoken.toString());
     updateFCM(fcmtoken: fcmtoken.toString());
     print(fcmtoken);
   }
