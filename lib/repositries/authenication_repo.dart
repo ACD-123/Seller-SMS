@@ -290,7 +290,6 @@ class AuthRepo extends GetxService {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.updatefcm, data: mapData);
       if (res.statusCode == 200) {
-        showSuccessSnackbar(message: "FCM uPDATED");
        print(res.body);
       } else {
         final message = jsonDecode(res.body)['message'];
