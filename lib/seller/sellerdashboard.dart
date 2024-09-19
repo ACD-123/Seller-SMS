@@ -207,12 +207,12 @@ apisdata()async{
                                     children: [
                                       Text(
                                         toCamelCase(storecontroller.getsellerprofiledata
-                                                .value?.data?.name ??
+                                                .value?.data?.seller?.shopName ??
                                             ""),
                                         style: TextStyle(
-                                            color: Color(0xff2E3192),
+                                            color: const Color(0xff2E3192),
                                             fontWeight: FontWeight.w700,
-                                            fontSize: 18.sp),
+                                            fontSize: 17.sp),
                                       ),
                                       SizedBox(
                                         width: 1.w,

@@ -51,6 +51,7 @@ class Data {
   String? joined;
   int? isUser;
   bool? isTrustedSeller;
+  Seller? seller;
   List<Media>? media;
 
   Data({
@@ -73,6 +74,7 @@ class Data {
     this.isUser,
     this.isTrustedSeller,
     this.phonecountrycode,
+    this.seller,
     this.media,
   });
 
@@ -102,6 +104,9 @@ class Data {
         joined: json["joined"],
         isUser: json["is_user"],
         isTrustedSeller: json["is_trusted_seller"],
+        seller: json["seller"] == null ? null : 
+        
+        Seller.fromJson(json["seller"]),
         media: json["media"] != null
             ? List<Media>.from(json["media"].map((x) => Media.fromJson(x)))
             : null,
@@ -126,6 +131,8 @@ class Data {
         "joined": joined,
         "is_user": isUser,
         "phonecountrycode": phonecountrycode,
+         "seller": seller == null ? null : 
+         seller?.toJson(),
         "is_trusted_seller": isTrustedSeller,
         "media": media?.map((x) => x.toJson()).toList(),
       };
@@ -151,3 +158,26 @@ class Media {
         "original_url": originalUrl,
       };
 }
+class Seller {
+    int? id;
+    String? shopName;
+   
+
+    Seller({
+        required this.id,
+        
+        required this.shopName,
+       
+    });
+
+    factory Seller.fromJson(Map<String, dynamic> json) => Seller(
+        id: json["id"],
+        shopName: json["shop_name"],
+        
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "shop_name": shopName,
+       
+    };}
