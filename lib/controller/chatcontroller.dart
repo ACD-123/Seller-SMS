@@ -39,19 +39,53 @@ class ChatController extends GetxController {
   final Rx<SellerChatRoomDetailsModel?> getsellerchatroomdetails =
       Rx<SellerChatRoomDetailsModel?>(null);
   final RxBool getsellerchatroomdetailsloading = false.obs;
+  final RxBool getsellerchatroomdetailsreloading = false.obs;
+  final RxInt chatdetailpage = 1.obs;
   int? _lastRoomId;
-  getsellerChatRoomDetails(int roomid) async {
+  // getsellerChatRoomDetails(int roomid) async {
+  //   try {
+  //     _lastRoomId == roomid
+  //         ? getsellerchatroomdetailsloading(false)
+  //         : getsellerchatroomdetailsloading(true);
+  //     await chatRepo.getSellerChatRoomDetails(roomid).then((value) {
+  //       _lastRoomId = roomid;
+  //       getsellerchatroomdetails.value = value;
+  //       getsellerchatroomdetailsloading(false);
+  //     });
+  //   } catch (e) {
+  //     getsellerchatroomdetailsloading(false);
+  //   }
+  // }
+
+  Future<void> getsellerChatRoomDetails(int roomid) async {
+    if (getsellerchatroomdetailsreloading.value ||
+        getsellerchatroomdetailsloading.value) return;
+    if (chatdetailpage.value > 1 &&
+        chatdetailpage.value >
+            (getsellerchatroomdetails.value?.pagination?.totalPages ?? 0)) {
+      return;
+    }
+
     try {
-      _lastRoomId == roomid
-          ? getsellerchatroomdetailsloading(false)
-          : getsellerchatroomdetailsloading(true);
-      await chatRepo.getSellerChatRoomDetails(roomid).then((value) {
+      chatdetailpage.value > 1
+          ? getsellerchatroomdetailsreloading.value = true
+          : _lastRoomId == roomid
+              ? getsellerchatroomdetailsloading.value = false
+              : getsellerchatroomdetailsloading.value = true;
+      final value = await chatRepo.getSellerChatRoomDetails(
+          roomid, chatdetailpage.value.toString());
+      if (chatdetailpage.value > 1) {
+        getsellerchatroomdetails.value?.data?.addAll(value?.data ?? []);
+      } else {
         _lastRoomId = roomid;
         getsellerchatroomdetails.value = value;
-        getsellerchatroomdetailsloading(false);
-      });
+      }
+      chatdetailpage.value++;
+      getsellerchatroomdetailsreloading.value = false;
+      getsellerchatroomdetailsloading.value = false;
     } catch (e) {
-      getsellerchatroomdetailsloading(false);
+      getsellerchatroomdetailsreloading.value = false;
+      getsellerchatroomdetailsloading.value = false;
     }
   }
 

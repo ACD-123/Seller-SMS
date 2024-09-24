@@ -27,11 +27,13 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
     super.initState();
     chatcontroller.sendmessagecontroller.value.clear();
     final guid = LocalStorage().getString('sellerguid');
+    _scrollcontroller.addListener(_scrollListener);
     sellerid = guid;
     _webSocketService = WebSocketService(AppConstants.socketbaseurl);
     _webSocketService.connect(
       channel: 'chat-channel-$guid',
       onMessage: (message) {
+        chatcontroller.chatdetailpage.value = 1;
         chatcontroller.getsellerChatRoomDetails(roomid);
         print('New message: $message');
       },
@@ -51,6 +53,14 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
     });
     chatcontroller.getsellerChatList();
     chatcontroller.getChatsCount();
+  }
+
+  void _scrollListener() {
+    if (_scrollcontroller.offset >=
+            _scrollcontroller.position.minScrollExtent &&
+        !_scrollcontroller.position.outOfRange) {
+      chatcontroller.getsellerChatRoomDetails(roomid);
+    }
   }
 
   @override
@@ -75,8 +85,8 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                               .getsellerchatroomdetails.value!.data!.isEmpty
                       ? const SizedBox()
                       : Text(
-                          toCamelCase(chatcontroller.getsellerchatroomdetails.value?.data
-                                  ?.first?.testuser?.name ??
+                          toCamelCase(chatcontroller.getsellerchatroomdetails
+                                  .value?.data?.first?.testuser?.name ??
                               ""),
                           style: TextStyle(
                               color: const Color(0xffFFFFFF),
@@ -121,21 +131,35 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
             ),
           );
         } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (_scrollcontroller.hasClients) {
-              _scrollcontroller
-                  .jumpTo(_scrollcontroller.position.maxScrollExtent);
-            }
-          });
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   if (_scrollcontroller.hasClients) {
+          //     _scrollcontroller
+          //         .jumpTo(_scrollcontroller.position.minScrollExtent);
+          //   }
+          // });
+
           return Form(
             key: formkey,
             child: Column(
               children: [
+                chatcontroller.getsellerchatroomdetailsreloading.value
+                    ? Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 1.h),
+                          child: SizedBox(
+                            height: 3.h,
+                            width: 6.w,
+                            child: customcircularprogress(),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 Expanded(
                     child: ListView.builder(
+                        reverse: true,
                         controller: _scrollcontroller,
                         shrinkWrap: true,
-                        // physics: const NeverScrollableScrollPhysics(),
+                        physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: chatcontroller
                             .getsellerchatroomdetails.value?.data?.length,
                         itemBuilder: (context, index) {
@@ -195,6 +219,7 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                                               .sendmessagecontroller.value.text
                                               .toString())
                                       .then((value) {
+                                        chatcontroller.chatdetailpage.value = 1;
                                     chatcontroller.getsellerChatRoomDetails(
                                         chatcontroller.getsellerchatroomdetails
                                                 .value?.data?.first?.roomId ??

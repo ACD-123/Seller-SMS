@@ -29,7 +29,7 @@ class _InventorySellerState extends State<InventorySeller>
   @override
   void initState() {
     super.initState();
-storecontroller.getSellerShopProfileData();
+    storecontroller.getSellerShopProfileData();
     productcontroller.getsellerCategoriesList();
     productcontroller.getBrandsList();
     _tabController = TabController(length: 3, vsync: this);
@@ -106,7 +106,7 @@ storecontroller.getSellerShopProfileData();
               : storecontroller.getsellershopprofiledata.value == null
                   ? Padding(
                       padding: EdgeInsets.symmetric(horizontal: 1.h),
-                      child:  Center(child: nodatatext("No Shop Data")),
+                      child: Center(child: nodatatext("No Shop Data")),
                     )
                   : Card(
                       elevation: 1,
@@ -158,7 +158,7 @@ storecontroller.getSellerShopProfileData();
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                         toCamelCase( storecontroller
+                                          toCamelCase(storecontroller
                                                   .getsellershopprofiledata
                                                   .value
                                                   ?.data
@@ -257,19 +257,20 @@ storecontroller.getSellerShopProfileData();
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 storecontroller
-                                              .getsellershopprofiledata.value ==
-                                          null
-                                      ? nodatatext("No Products") :
-                                Text(storecontroller
-                                              .getsellershopprofiledata
-                                              .value
-                                              ?.data
-                                              ?.sellerData
-                                              ?.productCount
-                                              .toString() ??
-                                          "",
-                                  style: TextStyle(fontSize: 20.sp),
-                                )
+                                            .getsellershopprofiledata.value ==
+                                        null
+                                    ? nodatatext("No Products")
+                                    : Text(
+                                        storecontroller
+                                                .getsellershopprofiledata
+                                                .value
+                                                ?.data
+                                                ?.sellerData
+                                                ?.productCount
+                                                .toString() ??
+                                            "",
+                                        style: TextStyle(fontSize: 20.sp),
+                                      )
                               ],
                             ),
                           ),

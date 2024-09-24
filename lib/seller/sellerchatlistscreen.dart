@@ -218,6 +218,7 @@ class _SellerChatsListScreenState extends State<SellerChatsListScreen> {
                             },
                             child: GestureDetector(
                               onTap: () {
+                                     chatcontroller.chatdetailpage.value = 1;
                                 chatcontroller.getsellerChatRoomDetails(
                                     chatslistdata?.id ?? 0);
                                 Get.toNamed(RouteConstants.sellerchatscreen,

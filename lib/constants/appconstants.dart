@@ -1,9 +1,9 @@
 class AppConstants {
   static const noimage =
       "https://static.vecteezy.com/system/resources/thumbnails/022/014/063/small_2x/missing-picture-page-for-website-design-or-mobile-app-design-no-image-available-icon-vector.jpg";
-  static const baseApiURL = 'https://smsbackend.testingwebsitelink.com/api/';
+  static const baseApiURL = 'https://smsbackendv1.testingwebsitelink.com/api/';
   static const placesbaseapiurl = 'AIzaSyDg6Ci3L6yS5YvtKAkWQjnodGUtlNYHw9Y';
-  static const socketbaseurl = "wss://smsbackend.testingwebsitelink.com:6001/app/cdbc9f9c829f8381a3f5";
+  static const socketbaseurl = "wss://smsbackendv1.testingwebsitelink.com:6001/app/cdbc9f9c829f8381a3f5";
   static const signup = "auth/register";
   static const login = "auth/login";
   static const changepassword = "auth/reset-password";
