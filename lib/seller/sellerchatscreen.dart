@@ -57,7 +57,7 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
 
   void _scrollListener() {
     if (_scrollcontroller.offset >=
-            _scrollcontroller.position.minScrollExtent &&
+            _scrollcontroller.position.maxScrollExtent &&
         !_scrollcontroller.position.outOfRange) {
       chatcontroller.getsellerChatRoomDetails(roomid);
     }
