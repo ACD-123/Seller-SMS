@@ -137,7 +137,7 @@ class AuthRepo extends GetxService {
       "access_token": accesstoken,
       "provider": "Google",
       "phone_code": phonecode,
-      "country_code": countrycode,
+      "phone_country_code": countrycode,
       "phone_number": phonenumber,
       "orange_pay": orangepay,
       "is_user": 0
@@ -151,11 +151,13 @@ class AuthRepo extends GetxService {
         final token = jsonDecode(res.body)['data']['token'];
         final istrustedseller =
             jsonDecode(res.body)['data']['is_trusted_seller'];
+        final issubscription = jsonDecode(res.body)['data']['is_subscribed'];
         istrustedseller == false
             ? Get.offAllNamed(RouteConstants.selerwelcome)
             : Get.offAllNamed(RouteConstants.sellerdashboard);
         LocalStorage().setString("token", token);
         LocalStorage().setBool("istrustedseller", istrustedseller);
+        LocalStorage().setInt("isSubscription", issubscription);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -205,11 +207,13 @@ class AuthRepo extends GetxService {
         final token = jsonDecode(res.body)['data']['token'];
         final istrustedseller =
             jsonDecode(res.body)['data']['is_trusted_seller'];
+        final issubscription = jsonDecode(res.body)['data']['is_subscribed'];
         istrustedseller == false
             ? Get.offAllNamed(RouteConstants.selerwelcome)
             : Get.offAllNamed(RouteConstants.sellerdashboard);
         LocalStorage().setString("token", token);
         LocalStorage().setBool("istrustedseller", istrustedseller);
+        LocalStorage().setInt("isSubscription", issubscription);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -336,9 +340,7 @@ class AuthRepo extends GetxService {
   Future<Map<String, dynamic>> googleLoginDetails({
     required String email,
   }) async {
-    final mapData = {
-      "email": email,
-    };
+    final mapData = {"email": email, "is_user": "0"};
     try {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.googlelogindetails, data: mapData);

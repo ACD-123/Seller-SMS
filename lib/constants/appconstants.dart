@@ -68,4 +68,5 @@ class AppConstants {
   static const updatefcm = "user/update-fcm";
   static const getproductwisefeedback = "feedback/product/";
   static const googlelogindetails = "auth/check";
+  static const withdrawamount = "seller/witdraw/";
 }

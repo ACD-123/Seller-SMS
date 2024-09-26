@@ -7,11 +7,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/googlelogindetails_popup.dart';
 import 'package:smsseller/models/subcriptionpaymenturl_model.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
 import 'package:smsseller/seller/authentication/webviewscreen.dart';
 import 'package:smsseller/services/local_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthenticationController extends GetxController {
   AuthRepo authRepo;
@@ -407,17 +409,67 @@ class AuthenticationController extends GetxController {
       Rx<GetSubscriptionPaymentUrlModel?>(null);
   final RxBool getsubscriptionpaymenturlloading = false.obs;
 
-  getSubscriptionPayment() async {
+// Future<void> getSubscriptionPayment() async {
+//     try {
+//       getsubscriptionpaymenturlloading(true);
+//       await authRepo.getSubscriptionPaymentUrl().then((value) {
+//         getsubscriptionpaymenturl.value = value;
+//  try {
+//     final paymentUrl = value?.data?.paymentUrl ?? "";
+
+//     if (paymentUrl != null && paymentUrl.isNotEmpty) {
+//       final Uri url = Uri.parse(paymentUrl);
+//       if (!await launchUrl(url)) {
+//         throw Exception('Could not launch URL');
+//       }
+
+//       Get.toNamed(RouteConstants.sellercreateshopscreen);
+//     } else {
+//       throw Exception('Payment URL is invalid or empty.');
+//     }
+//   } catch (e) {
+//     showErrrorSnackbar(message: "Failed to fetch payment URL: ${e.toString()}");
+//   } finally {
+//     getsubscriptionpaymenturlloading(false);
+//   }
+//         // Get.to(() => SubscriptionPaymentWebView(
+//         //       url: value?.data?.paymentUrl.toString() ?? "",
+//         //     ));
+//         getsubscriptionpaymenturlloading(false);
+//       });
+//     } catch (e) {
+//       getsubscriptionpaymenturlloading(false);
+//     }
+//   }
+  Future<void> getSubscriptionPayment() async {
     try {
       getsubscriptionpaymenturlloading(true);
-      await authRepo.getSubscriptionPaymentUrl().then((value) {
-        getsubscriptionpaymenturl.value = value;
-        Get.to(() => SubscriptionPaymentWebView(
-              url: value?.data?.paymentUrl.toString() ?? "",
-            ));
+      final value = await authRepo.getSubscriptionPaymentUrl();
+      getsubscriptionpaymenturl.value = value;
+
+      try {
+        final paymentUrl = value?.data?.paymentUrl ?? "";
+
+        if (paymentUrl.isNotEmpty) {
+          final Uri url = Uri.parse(paymentUrl);
+          if (!await launchUrl(url)) {
+            throw Exception('Could not launch URL');
+          }
+
+          Get.toNamed(RouteConstants.sellercreateshopscreen);
+        } else {
+          throw Exception('Payment URL is invalid or empty.');
+        }
+      } catch (e) {
         getsubscriptionpaymenturlloading(false);
-      });
+        print(e);
+        showErrrorSnackbar(message: "Failed to fetch payment URL");
+      } finally {
+        getsubscriptionpaymenturlloading(false);
+      }
     } catch (e) {
+      showErrrorSnackbar(
+          message: "Failed to load subscription payment URL: ${e.toString()}");
       getsubscriptionpaymenturlloading(false);
     }
   }
@@ -453,6 +505,7 @@ class AuthenticationController extends GetxController {
     LocalStorage().remove("token");
     LocalStorage().remove("sellerguid");
     LocalStorage().remove("user_id");
+    LocalStorage().remove("isSubscription");
     googlesSignOut();
     Get.offAllNamed(RouteConstants.loginscreen);
   }

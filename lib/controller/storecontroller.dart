@@ -1062,4 +1062,20 @@ class StoreController extends GetxController {
       getwallettransectionsloading.value = false;
     }
   }
+
+/////withdraw amount request api
+  RxBool withdrawamountloading = false.obs;
+  final withdrawamountcontroller = TextEditingController().obs;
+  final withdrawformkey = GlobalKey<FormState>();
+  Future<void> withDrawAmount(String id) async {
+    try {
+      withdrawamountloading.value = true;
+      await storeRepo.withDrawAmount(
+          amount: withdrawamountcontroller.value.text.toString());
+
+      withdrawamountloading.value = false;
+    } finally {
+      withdrawamountloading.value = false;
+    }
+  }
 }

@@ -595,4 +595,36 @@ class StoreRepo extends GetxService {
       throw Exception(e);
     }
   }
+
+//////////with draw amount api
+  Future<void> withDrawAmount({
+    required String amount,
+  }) async {
+    final userData = {
+      "amount": amount.toString(),
+    };
+    try {
+      final String sellerguid = LocalStorage().getString("sellerguid");
+      final response = await apiClient.postToServer(
+        endPoint: "${AppConstants.withdrawamount}$sellerguid",
+        data: userData,
+      );
+
+      if (response.statusCode == 200) {
+        Get.back();
+        final message = jsonDecode(response.body)['message'];
+        showSuccessSnackbar(message: message);
+      } else if (response.statusCode == 422) {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      } else {
+        final message = jsonDecode(response.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } catch (e) {
+      showErrrorSnackbar(
+        message: 'An unexpected error occurred. Please try again later.',
+      );
+    }
+  }
 }

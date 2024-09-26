@@ -6,6 +6,7 @@ import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SubscriptionPaymentScreen extends StatefulWidget {
   const SubscriptionPaymentScreen({super.key});
@@ -69,8 +70,26 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                         child: customcircularprogress(),
                       )
                     : custombutton(
-                        ontap: () {
-                          authcontroller.getSubscriptionPayment();
+                        ontap: () async {
+                          await authcontroller.getSubscriptionPayment();
+                          print(authcontroller.getsubscriptionpaymenturl.value
+                                  ?.data?.paymentUrl ??
+                              "");
+                          // try {
+                          //   final Uri url = Uri.parse(authcontroller
+                          //           .getsubscriptionpaymenturl
+                          //           .value
+                          //           ?.data
+                          //           ?.paymentUrl ??
+                          //       "");
+                          //   if (!await launchUrl(url)) {
+                          //     throw Exception('Could not launch URL');
+                          //   }
+                          //   Get.toNamed(RouteConstants.sellercreateshopscreen);
+                          // } catch (e) {
+                          //   showErrrorSnackbar(
+                          //       message: "Failed to fetch payment URL.");
+                          // }
                         },
                         hinttext: "Buy Now"),
               ),

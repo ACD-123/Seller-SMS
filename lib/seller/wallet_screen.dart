@@ -225,9 +225,20 @@ class _WalletScreenState extends State<WalletScreen> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
-                                custombutton(hinttext: "Withdraw",ontap: (){
-                                  showSuccessSnackbar(message: "Comming Soon");
-                                }),
+                                custombutton(
+                                    hinttext: "Withdraw",
+                                    ontap: () {
+                                      storecontroller
+                                          .withdrawamountcontroller.value
+                                          .clear();
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return withdrawAmountPopup();
+                                          });
+                                      // showSuccessSnackbar(
+                                      //     message: "Comming Soon");
+                                    }),
                                 SizedBox(
                                   height: 2.h,
                                 ),
@@ -301,7 +312,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               ),
                             ),
                           ),
-                        storecontroller.getwallettransections.value?.data
+                          storecontroller.getwallettransections.value?.data
                                       ?.transactions?.isEmpty ??
                                   true
                               ? Center(
@@ -334,7 +345,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                               SizedBox(
                                                 width: 18.w,
                                                 child: Text(
-                                                  toCamelCase(transactiondata?.date
+                                                  toCamelCase(transactiondata
+                                                          ?.date
                                                           .toString() ??
                                                       ""),
                                                   style: TextStyle(
@@ -369,7 +381,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                               SizedBox(
                                                 width: 18.w,
                                                 child: Text(
-                                                  toCamelCase(transactiondata?.type
+                                                  toCamelCase(transactiondata
+                                                          ?.type
                                                           .toString() ??
                                                       ""),
                                                   style: TextStyle(
@@ -383,19 +396,141 @@ class _WalletScreenState extends State<WalletScreen> {
                                           ),
                                         ),
                                         const Divider(),
-                                        
                                       ],
                                     );
                                   }),
-                                  storecontroller.getwallettransectionsreloadloading.value ?
-                                        Center(child: customcircularprogress(),)
-                                        : const  SizedBox(),
-
-
-                                SizedBox(height: 5.h,)
+                          storecontroller
+                                  .getwallettransectionsreloadloading.value
+                              ? Center(
+                                  child: customcircularprogress(),
+                                )
+                              : const SizedBox(),
+                          SizedBox(
+                            height: 5.h,
+                          )
                         ],
                       ),
           )),
     );
   }
+}
+
+/////withdraw amount popup
+
+Widget withdrawAmountPopup() {
+  final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
+  return AlertDialog(
+    // title: const Text("Select Image Source"),
+    content: SingleChildScrollView(
+        child: Form(
+      key: storecontroller.withdrawformkey,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Icon(
+                    Icons.clear,
+                    color: const Color(0xff2E3192),
+                    size: 20.sp,
+                  )),
+            ),
+            SizedBox(
+              height: 2.h,
+            ),
+            Text(
+              "Enter Amount",
+              style: TextStyle(
+                  color: Colors.grey[500],
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 1.h,
+            ),
+            TextFormField(
+              controller: storecontroller.withdrawamountcontroller.value,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (v) {
+                if (v!.isEmpty) {
+                  return 'Amount can\'t be empty';
+                } else {
+                  final withdrawAmount = double.tryParse(
+                      storecontroller.withdrawamountcontroller.value.text);
+                  final availableBalance =
+                      storecontroller.getwallettransections.value?.data?.earned;
+
+                  if (withdrawAmount != null && availableBalance != null) {
+                    if (withdrawAmount > availableBalance) {
+                      return "Amount exceeds Earnings";
+                    }
+                  } else {
+                    return 'Invalid amount or balance';
+                  }
+                }
+                return null;
+              },
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: const Color(0xF3F3F3), width: 0),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                isDense: true,
+                contentPadding: const EdgeInsets.all(18.0),
+                border: InputBorder.none,
+                hintText:
+                    '${currencytext()}${storecontroller.getwallettransections.value?.data?.earned}',
+                hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16.sp),
+              ),
+            ),
+            SizedBox(
+              height: 2.h,
+            ),
+            Obx(() => storecontroller.withdrawamountloading.value
+                ? Center(
+                    child: customcircularprogress(),
+                  )
+                : custombutton(
+                    hinttext: "Withdraw",
+                    ontap: () {
+                      final withdrawAmount = double.tryParse(
+                          storecontroller.withdrawamountcontroller.value.text);
+                      final earnings = storecontroller
+                          .getwallettransections.value?.data?.earned;
+
+                      if (storecontroller.withdrawformkey.currentState!
+                          .validate()) {
+                        if (withdrawAmount != null && earnings != null) {
+                          if (withdrawAmount > earnings) {
+                            showErrrorSnackbar(
+                                message: "Amount Exceeds Earnings");
+                          } else {
+                            storecontroller.withDrawAmount(storecontroller
+                                .withdrawamountcontroller.value.text
+                                .toString());
+                          }
+                        } else {
+                          showErrrorSnackbar(
+                              message: "Invalid amount or earnings.");
+                        }
+                      }
+                    }))
+          ],
+        ),
+      ),
+    )),
+  );
 }
