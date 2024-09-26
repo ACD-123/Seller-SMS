@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -22,10 +21,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final loginController =
       Get.put(AuthenticationController(authRepo: Get.find()));
 
-
   @override
   void initState() {
     super.initState();
+    loginController.googleaccesstoken.value = '';
+    loginController.googleemail.value = '';
+    loginController.googlefullname.value = '';
     loginController.loginemailcontroller.value.clear();
     loginController.loginpasswordcontroller.value.clear();
     loginController.loadremebermecredentials();
@@ -192,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           height: 6.h,
-                          width:82.w,
+                          width: 82.w,
                           margin: const EdgeInsets.only(left: 20.0, right: 20),
                           child: ElevatedButton(
                               onPressed: () {
@@ -215,44 +216,54 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 2.h,
                 ),
-                Obx(() => Center(
-                  child: loginController.socialloginloading.value ? 
-                  customcircularprogress(): GestureDetector(
-                    onTap: () {
-                      //  showSuccessSnackbar(message: "Comming Soon");
-                            loginController.handlegoogleSignIn();
-                    },
-                    child: Container(
-                      height: 6.h,
-                      width:82.w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: const Color(0xffFEFEFE),
-                          border: Border.all(color: const Color(0xffACACAC))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/googleicon.png',
-                            height: 3.5.h,
-                            width: 7.w,
-                            fit: BoxFit.fill,
+                Obx(
+                  () => Center(
+                    child: loginController.socialloginloading.value
+                        ? customcircularprogress()
+                        : GestureDetector(
+                            onTap: () {
+                              loginController.socialaccountnocontroller.value
+                                  .clear();
+                              loginController.socialphonenumbercontroller.value
+                                  .clear();
+                              loginController.socialphonecode.value = '';
+                              loginController.socialphonecountrycode.value = '';
+                              //  showSuccessSnackbar(message: "Comming Soon");
+                              loginController.handlegoogleSignIn(context);
+                            },
+                            child: Container(
+                              height: 6.h,
+                              width: 82.w,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: const Color(0xffFEFEFE),
+                                  border: Border.all(
+                                      color: const Color(0xffACACAC))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/googleicon.png',
+                                    height: 3.5.h,
+                                    width: 7.w,
+                                    fit: BoxFit.fill,
+                                  ),
+                                  SizedBox(
+                                    width: 3.w,
+                                  ),
+                                  Text(
+                                    "Login with Gmail",
+                                    style: TextStyle(
+                                        fontSize: 15.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xff2D2D2D)),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          SizedBox(
-                            width: 3.w,
-                          ),
-                          Text(
-                            "Login with Gmail",
-                            style: TextStyle(
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xff2D2D2D)),
-                          )
-                        ],
-                      ),
-                    ),
                   ),
-                ),),
+                ),
                 SizedBox(
                   height: 2.h,
                 ),

@@ -186,8 +186,11 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                               customtextformfield(
                                   controller: storecontroller
                                       .updatesellerprofilename.value,
-                                  hinttext: toCamelCase(storecontroller.getsellerprofiledata
-                                          .value?.data?.name ??
+                                  hinttext: toCamelCase(storecontroller
+                                          .getsellerprofiledata
+                                          .value
+                                          ?.data
+                                          ?.name ??
                                       ""),
                                   suffixicon: Image.asset(
                                       'assets/images/profilesettingediticon.png')),
@@ -273,6 +276,16 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
                                     "",
                                 // suffixicon: Image.asset(
                                 //     'assets/images/profilesettingediticon.png')
+                              ),
+                              SizedBox(
+                                height: 1.5.h,
+                              ),
+                              customtextformfield(
+                                controller: storecontroller
+                                    .updateorangepayaccountno.value,
+                                hinttext: storecontroller.getsellerprofiledata
+                                        .value?.data?.orangepay ??
+                                    "Orange Pay Account No:",
                               ),
                               SizedBox(
                                 height: 1.5.h,

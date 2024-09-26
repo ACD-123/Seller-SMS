@@ -361,7 +361,7 @@ class StoreController extends GetxController {
   final shopnamecontroller = TextEditingController().obs;
   final whatyousellcontroller = TextEditingController().obs;
   final shopregistrationnumcontroller = TextEditingController().obs;
-   final shippingdomesticcontroller = TextEditingController().obs;
+  final shippingdomesticcontroller = TextEditingController().obs;
   final shippingnationcontroller = TextEditingController().obs;
   final createaboutshop = TextEditingController().obs;
   final createshopphonecode = ''.obs;
@@ -378,8 +378,8 @@ class StoreController extends GetxController {
     try {
       sellercreateshoploading.value = true;
       await storeRepo.createsellershop(
-        shippingdomestic:  shippingdomesticcontroller.value.text.toString(),
-        shippingnation: shippingnationcontroller.value.text.toString(),
+          shippingdomestic: shippingdomesticcontroller.value.text.toString(),
+          shippingnation: shippingnationcontroller.value.text.toString(),
           context: context,
           name: shopnamecontroller.value.text.toString(),
           address: address,
@@ -484,6 +484,7 @@ class StoreController extends GetxController {
 
   final updatesellerprofilephonenumber = TextEditingController().obs;
   final updatesellerprofilename = TextEditingController().obs;
+  final updateorangepayaccountno = TextEditingController().obs;
   final updatesellerprofilephonecode = ''.obs;
   final updatesellerprofilephonecountrycode = ''.obs;
 
@@ -501,6 +502,9 @@ class StoreController extends GetxController {
       await storeRepo
           .updatesellerprofiledata(
               context: context,
+              orangepay: updateorangepayaccountno.value.text.isEmpty
+                  ? getsellerprofiledata.value?.data?.orangepay.toString() ?? ""
+                  : updateorangepayaccountno.value.text.toString(),
               phonecountrycode:
                   updatesellerprofilephonecountrycode.value.isEmpty
                       ? getsellerprofiledata.value?.data?.phonecountrycode
@@ -630,7 +634,7 @@ class StoreController extends GetxController {
   }
 
 //////seller side shop feedback
-final RxString sellersidefeedbackfiltervalue = ''.obs;
+  final RxString sellersidefeedbackfiltervalue = ''.obs;
   final Rx<SellerShopFeedbackModel?> getsellersideshoppfeedback =
       Rx<SellerShopFeedbackModel?>(null);
   final RxBool getsellersideshopfeedbackloading = false.obs;
@@ -651,15 +655,16 @@ final RxString sellersidefeedbackfiltervalue = ''.obs;
           : getsellersideshopfeedbackloading.value = true;
       final value = await storeRepo.getSellerShopFeedback(
           getsellershopprofiledata.value?.data?.sellerData?.guid ?? "",
-          sellershopfeedbackspage.value,filter);
+          sellershopfeedbackspage.value,
+          filter);
       if (sellershopfeedbackspage.value > 1) {
         getsellersideshoppfeedback.value?.data?.feedback
             ?.addAll(value?.data?.feedback ?? []);
         sellersidefeedbackfiltervalue.value = filter;
-         reasonfeedbackcontroller();
+        reasonfeedbackcontroller();
       } else {
         getsellersideshoppfeedback.value = value;
-      sellersidefeedbackfiltervalue.value = filter;
+        sellersidefeedbackfiltervalue.value = filter;
         reasonfeedbackcontroller();
       }
       sellershopfeedbackspage.value++;

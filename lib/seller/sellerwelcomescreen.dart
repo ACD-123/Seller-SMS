@@ -15,10 +15,10 @@ class SellerWelcomeScreen extends StatefulWidget {
 }
 
 class _SellerWelcomeScreenState extends State<SellerWelcomeScreen> {
-  final authcontroller = Get.put(AuthenticationController(authRepo: Get.find()));
+  final authcontroller =
+      Get.put(AuthenticationController(authRepo: Get.find()));
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
@@ -68,16 +68,16 @@ class _SellerWelcomeScreenState extends State<SellerWelcomeScreen> {
             custombutton(
                 hinttext: "Let’s Get Started",
                 ontap: () {
-                  Get.toNamed(RouteConstants.sellercreateshopscreen);
+                  Get.toNamed(RouteConstants.subscriptionpayment);
                 }),
-            SizedBox(height: 1.h,),
+            SizedBox(
+              height: 1.h,
+            ),
             custombutton(
                 hinttext: "Sign Out",
                 ontap: () {
                   authcontroller.signout();
-                 
                 }),
-              
           ],
         ),
       ),

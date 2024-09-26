@@ -7,6 +7,7 @@ import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/whitecustomdialogpopup.dart';
+import 'package:smsseller/models/subcriptionpaymenturl_model.dart';
 import 'package:smsseller/services/apiservices.dart';
 import 'package:smsseller/services/local_storage.dart';
 // import 'package:sms/services/apiservices.dart';
@@ -23,6 +24,7 @@ class AuthRepo extends GetxService {
     required String phonecode,
     required String phonenumber,
     required String phonecountrycode,
+    required String orangepay,
     required String zipcode,
     required String address,
     required String city,
@@ -36,6 +38,7 @@ class AuthRepo extends GetxService {
       "phone_code": phonecode.toString(),
       "phone_number": phonenumber.toString(),
       "phone_country_code": phonecountrycode.toString(),
+      "orange_pay": orangepay.toString(),
       "zip_code": zipcode.toString(),
       "address": address.toString(),
       "city": city.toString(),
@@ -123,14 +126,22 @@ class AuthRepo extends GetxService {
     required String email,
     required String name,
     required String accesstoken,
+    required String phonecode,
+    required String phonenumber,
+    required String countrycode,
+    required String orangepay,
   }) async {
     final mapData = {
       "email": email.toString(),
-      "name":name,
-      "access_token":accesstoken,
-      "provider":"Google",
+      "name": name,
+      "access_token": accesstoken,
+      "provider": "Google",
+      "phone_code": phonecode,
+      "country_code": countrycode,
+      "phone_number": phonenumber,
+      "orange_pay": orangepay,
       "is_user": 0
-      };
+    };
     try {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.sociallogin, data: mapData);
@@ -155,6 +166,7 @@ class AuthRepo extends GetxService {
       showErrrorSnackbar(message: e.toString());
     }
   }
+
 //////////////send OTP API
   Future SendOTP({
     required String email,
@@ -279,18 +291,36 @@ class AuthRepo extends GetxService {
     }
   }
 
+////////////get subscription payment url api
+  Future<GetSubscriptionPaymentUrlModel?> getSubscriptionPaymentUrl() async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: AppConstants.getsubscriptionpaymenturl,
+      );
+      if (res.statusCode == 200) {
+        final listofpaymenturl =
+            getSubscriptionPaymentUrlModelFromJson(res.body);
+        return listofpaymenturl;
+      } else {
+        throw Exception("No data field found in the GetSubscriptionPaymentUrl");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 //////////////update fcm API
   Future updateFCM({
     required String fcmtoken,
   }) async {
     final mapData = {
-       "fcm_token": fcmtoken,
-      };
+      "fcm_token": fcmtoken,
+    };
     try {
       final res = await apiClient.postToServer(
           endPoint: AppConstants.updatefcm, data: mapData);
       if (res.statusCode == 200) {
-       print(res.body);
+        print(res.body);
       } else {
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
@@ -299,6 +329,32 @@ class AuthRepo extends GetxService {
       return showErrrorSnackbar(message: 'No Internet Connection');
     } catch (e) {
       showErrrorSnackbar(message: e.toString());
+    }
+  }
+
+///////google login details api
+  Future<Map<String, dynamic>> googleLoginDetails({
+    required String email,
+  }) async {
+    final mapData = {
+      "email": email,
+    };
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.googlelogindetails, data: mapData);
+      if (res.statusCode == 200) {
+        print(res.body);
+        return jsonDecode(res.body);
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+        return {'status': false, 'data': []};
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+      showErrrorSnackbar(message: e.toString());
+      return {'status': false, 'data': []};
     }
   }
 }

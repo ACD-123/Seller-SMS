@@ -39,6 +39,7 @@ import 'package:smsseller/seller/sellerupdateshopscreen.dart';
 import 'package:smsseller/seller/sellerwelcomescreen.dart';
 import 'package:smsseller/seller/splashscreen.dart';
 import 'package:smsseller/seller/steppper.dart';
+import 'package:smsseller/seller/subscription_screen.dart';
 import 'package:smsseller/seller/updatestepper.dart';
 import 'package:smsseller/seller/wallet_screen.dart';
 
@@ -93,7 +94,7 @@ class RouteGenerator {
         name: RouteConstants.faq,
         page: () => const Faq(),
       ),
-       GetPage(
+      GetPage(
         name: RouteConstants.addnewcouponscreen,
         page: () => const AddNewCouponScreen(),
       ),
@@ -125,6 +126,10 @@ class RouteGenerator {
       GetPage(
         name: RouteConstants.walletscreen,
         page: () => const WalletScreen(),
+      ),
+      GetPage(
+        name: RouteConstants.subscriptionpayment,
+        page: () => const SubscriptionPaymentScreen(),
       ),
       // GetPage(
       //   name: RouteConstants.checkout,
@@ -182,7 +187,7 @@ class RouteGenerator {
         name: RouteConstants.stepper,
         page: () => MyStepperApp(),
       ),
-       GetPage(
+      GetPage(
         name: RouteConstants.updatestepper,
         page: () => UpdateStepper(),
       ),
@@ -190,7 +195,7 @@ class RouteGenerator {
         name: RouteConstants.productpreviewscreen,
         page: () => const ProductPreviewScreen(),
       ),
-       GetPage(
+      GetPage(
         name: RouteConstants.notificationsetting,
         page: () => const NotificationsSettingScreen(),
       ),
@@ -384,7 +389,7 @@ class RouteGenerator {
         name: RouteConstants.sellerupdateshop,
         page: () => const SellerUpdateShopScreen(),
       ),
-       GetPage(
+      GetPage(
         name: RouteConstants.sellerupdateshopdetails,
         page: () => const SellerUpdateShopDetails(),
       ),
@@ -392,7 +397,7 @@ class RouteGenerator {
         name: RouteConstants.sellerpendingdetailsscreen,
         page: () => const SellerPendingOrderDetails(),
       ),
-       GetPage(
+      GetPage(
         name: RouteConstants.sellerorderdetailsscreen,
         page: () => const SellerOrderDetails(),
       ),

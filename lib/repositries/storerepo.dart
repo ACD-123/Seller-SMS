@@ -61,7 +61,7 @@ class StoreRepo extends GetxService {
     required String whatyousell,
     required String registrationnumber,
     required String description,
-     required String shippingdomestic,
+    required String shippingdomestic,
     required String shippingnation,
     required List<int> categories,
     required File? mainimage,
@@ -120,10 +120,12 @@ class StoreRepo extends GetxService {
       if (res.statusCode == 200) {
         final String sellerguid =
             jsonDecode(res.body)['data']['sellerData']['guid'];
-        final String selleruserid = jsonDecode(res.body)['data']['user']['seller']['user_id'].toString();
+        final String selleruserid = jsonDecode(res.body)['data']['user']
+                ['seller']['user_id']
+            .toString();
 
         LocalStorage().setString("sellerguid", sellerguid);
-         LocalStorage().setString("user_id", selleruserid);
+        LocalStorage().setString("user_id", selleruserid);
         final listofsellershopprofiledata =
             sellerShopProfileDataFromJson(res.body);
         return listofsellershopprofiledata;
@@ -194,10 +196,11 @@ class StoreRepo extends GetxService {
 
   ////////get seller side shop feedback
   Future<SellerShopFeedbackModel?> getSellerShopFeedback(
-      String guid, int page,String filter) async {
+      String guid, int page, String filter) async {
     try {
       final res = await apiClient.getFromServer(
-        endPoint: "${AppConstants.getsellershopfeedback}$guid?filter=$filter&page=$page",
+        endPoint:
+            "${AppConstants.getsellershopfeedback}$guid?filter=$filter&page=$page",
       );
       if (res.statusCode == 200) {
         final listofsellershopfeedback =
@@ -216,6 +219,7 @@ class StoreRepo extends GetxService {
     required BuildContext context,
     required String name,
     required String address,
+    required String orangepay,
     required String city,
     required String state,
     required String country,
@@ -227,6 +231,7 @@ class StoreRepo extends GetxService {
   }) async {
     final mapData = {
       "name": name,
+      "orange_pay": orangepay,
       "phone_code": phonecode,
       "phone_number": phonenumber,
       "phone_country_code": phonecountrycode,
@@ -532,10 +537,9 @@ class StoreRepo extends GetxService {
       );
 
       if (response.statusCode == 200) {
-         Get.back();
+        Get.back();
         final message = jsonDecode(response.body)['message'];
         showSuccessSnackbar(message: message);
-        
       } else if (response.statusCode == 422) {
         final message = jsonDecode(response.body)['message'];
         showErrrorSnackbar(message: message);
@@ -551,17 +555,13 @@ class StoreRepo extends GetxService {
   }
 
 //////////delete coupon
-  Future<void> deleteCoupon({
-    required String id
-  }) async {
+  Future<void> deleteCoupon({required String id}) async {
     try {
       final response = await apiClient.postToServer(
-        endPoint: "${AppConstants.deletecoupon}$id",
-data: null
-      );
+          endPoint: "${AppConstants.deletecoupon}$id", data: null);
 
       if (response.statusCode == 200) {
-           Get.back();
+        Get.back();
         final message = jsonDecode(response.body)['message'];
         showSuccessSnackbar(message: message);
       } else if (response.statusCode == 422) {
@@ -595,5 +595,4 @@ data: null
       throw Exception(e);
     }
   }
-
 }

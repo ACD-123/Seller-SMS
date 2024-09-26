@@ -7,8 +7,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/constants/route_constants.dart';
-import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/customcomponents/googlelogindetails_popup.dart';
+import 'package:smsseller/models/subcriptionpaymenturl_model.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
+import 'package:smsseller/seller/authentication/webviewscreen.dart';
 import 'package:smsseller/services/local_storage.dart';
 
 class AuthenticationController extends GetxController {
@@ -133,10 +135,12 @@ class AuthenticationController extends GetxController {
     required String phonecode,
     required String phonecountrycode,
     required String phonenumber,
+    required String orangepay,
   }) async {
     try {
       signuploading.value = true;
       await authRepo.signup(
+          orangepay: orangepay.toString(),
           phonecountrycode: signupphonecountrycode.toString(),
           name: name.toString(),
           email: email.toString(),
@@ -314,21 +318,26 @@ class AuthenticationController extends GetxController {
 //////////////google signin
 
   GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
-
-  Future<void> handlegoogleSignIn() async {
+  final RxString googleaccesstoken = ''.obs;
+  final RxString googlefullname = ''.obs;
+  final RxString googleemail = ''.obs;
+  Future<void> handlegoogleSignIn(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
           await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSignInAccount.authentication;
-        final String accessToken = googleSignInAuthentication.accessToken!;
-        final String fullname = googleSignInAccount.displayName ?? 'Unknown';
-        final String email = googleSignInAccount.email ?? 'Unknown';
-        socialLogin(email: email, name: fullname, accesstoken: accessToken);
-        print('Access Token: $accessToken');
-        print('Email: $email');
-        print('Full Name: $fullname');
+        googleaccesstoken.value = googleSignInAuthentication.accessToken!;
+        googlefullname.value = googleSignInAccount.displayName ?? 'Unknown';
+        googleemail.value = googleSignInAccount.email ?? 'Unknown';
+        // ignore: use_build_context_synchronously
+        googleLoginDetails(
+            email: googleemail.value.toString(), context: context);
+        // socialLogin(email: email, name: fullname, accesstoken: accessToken);
+        print('Access Token: ${googleaccesstoken.value.toString()}');
+        print('Email: ${googleemail.value.toString()}');
+        print('Full Name: ${googlefullname.value.toString()}');
       } else {
         print('Google Sign in canceled');
       }
@@ -349,22 +358,27 @@ class AuthenticationController extends GetxController {
 
 ///////////re-sent otp
   var socialloginloading = false.obs;
-  Future<void> socialLogin({
-    required String email,
-    required String name,
-    required String accesstoken,
-  }) async {
+  final RxString socialphonecountrycode = ''.obs;
+  final RxString socialphonecode = ''.obs;
+  final socialphonenumbercontroller = TextEditingController().obs;
+  final socialaccountnocontroller = TextEditingController().obs;
+  Future<void> socialLogin() async {
     try {
       socialloginloading.value = true;
       await authRepo.socialLogin(
-          email: email, name: name, accesstoken: accesstoken);
+          phonecode: socialphonecode.value.toString(),
+          phonenumber: socialphonenumbercontroller.value.text.toString(),
+          countrycode: socialphonecountrycode.value.toString(),
+          orangepay: socialaccountnocontroller.value.text.toString(),
+          email: googleemail.value.toString(),
+          name: googlefullname.value.toString(),
+          accesstoken: googleaccesstoken.value.toString());
 
       socialloginloading.value = false;
     } finally {
       socialloginloading.value = false;
     }
   }
-
 
 ////////////update fcm api
   var updatefcmloading = false.obs;
@@ -380,12 +394,59 @@ class AuthenticationController extends GetxController {
       updatefcmloading.value = false;
     }
   }
-///get fcm 
-gettoken() async {
+
+  ///get fcm
+  gettoken() async {
     final fcmtoken = await FirebaseMessaging.instance.getToken();
     updateFCM(fcmtoken: fcmtoken.toString());
     print(fcmtoken);
   }
+
+  //////////////get subscription payment url api
+  final Rx<GetSubscriptionPaymentUrlModel?> getsubscriptionpaymenturl =
+      Rx<GetSubscriptionPaymentUrlModel?>(null);
+  final RxBool getsubscriptionpaymenturlloading = false.obs;
+
+  getSubscriptionPayment() async {
+    try {
+      getsubscriptionpaymenturlloading(true);
+      await authRepo.getSubscriptionPaymentUrl().then((value) {
+        getsubscriptionpaymenturl.value = value;
+        Get.to(() => SubscriptionPaymentWebView(
+              url: value?.data?.paymentUrl.toString() ?? "",
+            ));
+        getsubscriptionpaymenturlloading(false);
+      });
+    } catch (e) {
+      getsubscriptionpaymenturlloading(false);
+    }
+  }
+
+////////////google login payment check api
+  final googledetailsformkey = GlobalKey<FormState>();
+  var googlelogindetailsloading = false.obs;
+  Future<void> googleLoginDetails(
+      {required String email, required BuildContext context}) async {
+    try {
+      googlelogindetailsloading.value = true;
+      final response = await authRepo.googleLoginDetails(email: email);
+      if (response['data'].isEmpty) {
+        await showDialog(
+          // ignore: use_build_context_synchronously
+          context: context,
+          builder: (BuildContext context) {
+            return googlelogindetailsPopup();
+          },
+        );
+      } else {
+        socialLogin();
+      }
+      googlelogindetailsloading.value = false;
+    } finally {
+      googlelogindetailsloading.value = false;
+    }
+  }
+
 ////////signout
   signout() {
     LocalStorage().remove("istrustedseller");

@@ -3,7 +3,8 @@ class AppConstants {
       "https://static.vecteezy.com/system/resources/thumbnails/022/014/063/small_2x/missing-picture-page-for-website-design-or-mobile-app-design-no-image-available-icon-vector.jpg";
   static const baseApiURL = 'https://smsbackendv1.testingwebsitelink.com/api/';
   static const placesbaseapiurl = 'AIzaSyDg6Ci3L6yS5YvtKAkWQjnodGUtlNYHw9Y';
-  static const socketbaseurl = "wss://smsbackendv1.testingwebsitelink.com:6001/app/cdbc9f9c829f8381a3f5";
+  static const socketbaseurl =
+      "wss://smsbackendv1.testingwebsitelink.com:6001/app/cdbc9f9c829f8381a3f5";
   static const signup = "auth/register";
   static const login = "auth/login";
   static const changepassword = "auth/reset-password";
@@ -42,6 +43,7 @@ class AppConstants {
   static const getcompletedorders = "order/completed-seller";
   static const getrefundedorders = "order/refunded-seller";
   static const getrejectedorders = "order/rejected-seller";
+  static const getsubscriptionpaymenturl = "seller/subscription";
   static const getsellerchatlist = "chat/getChatListBUid?id=";
   static const getsellerchatroomdetails = "chat/getById?room_id=";
   static const sendmessage = "chat/sendMessage";
@@ -55,14 +57,15 @@ class AppConstants {
   static const updatenotificationssetting = "user/updateNotificationSetting";
   static const createcoupon = "coupon/store";
   static const getcoupon = "coupon?user_date=";
-   static const getcouponbyid = "coupon/getById/";
-    static const updatecoupon = "coupon/update/";
-    static const deletecoupon = "coupon/deleteCoupon/";
-    static const getsellersearchchatlist = "chat/getChatListBUidSearch?id=";
-    static const getchatscount = "chat/seller-count/";
-    static const updaterefundorderstatus = "order/refund-status";
-    static const getwallettransection = "user-seller/transaction/";
-    static const sociallogin = "auth/social-login";
-     static const updatefcm = "user/update-fcm";
-     static const getproductwisefeedback = "feedback/product/";
+  static const getcouponbyid = "coupon/getById/";
+  static const updatecoupon = "coupon/update/";
+  static const deletecoupon = "coupon/deleteCoupon/";
+  static const getsellersearchchatlist = "chat/getChatListBUidSearch?id=";
+  static const getchatscount = "chat/seller-count/";
+  static const updaterefundorderstatus = "order/refund-status";
+  static const getwallettransection = "user-seller/transaction/";
+  static const sociallogin = "auth/social-login";
+  static const updatefcm = "user/update-fcm";
+  static const getproductwisefeedback = "feedback/product/";
+  static const googlelogindetails = "auth/check";
 }

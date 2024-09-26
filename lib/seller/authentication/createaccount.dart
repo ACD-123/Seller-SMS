@@ -26,11 +26,16 @@ class _SignupState extends State<Signup> {
   TextEditingController confirmpasswordcontroller = TextEditingController();
   TextEditingController phonnumbercontroller = TextEditingController();
   TextEditingController fullnamecontroller = TextEditingController();
+  TextEditingController orangepayaccountcontroller = TextEditingController();
   final isObsCure = true.obs;
 
   @override
   void initState() {
     super.initState();
+    logincontroller.googleaccesstoken.value = '';
+    logincontroller.googleemail.value = '';
+    logincontroller.googlefullname.value = '';
+    orangepayaccountcontroller.clear();
     fullnamecontroller.clear();
     phonnumbercontroller.clear();
     passwordcontroller.clear();
@@ -155,7 +160,56 @@ class _SignupState extends State<Signup> {
                   SizedBox(
                     height: 1.h,
                   ),
-
+                  TextFormField(
+                    controller: orangepayaccountcontroller,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (v) {
+                      if (v!.isEmpty) {
+                        return 'Account Number can\'t be empty';
+                      }
+                      return null;
+                    },
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Color(0xF3F3F3), width: 0),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      isDense: true,
+                      contentPadding: const EdgeInsets.all(18.0),
+                      border: InputBorder.none,
+                      hintText: 'Orange Pay Account No:',
+                      hintStyle:
+                          TextStyle(color: Colors.grey[500], fontSize: 14),
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/images/ion_card-outline.png',
+                          scale: 20.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // EmailCustomTextField(
+                  //   editingController: orangepayaccountcontroller,
+                  //   validator: (v) {
+                  //     if (v!.isEmpty) {
+                  //       return 'Account Number can\'t be empty';
+                  //     }
+                  //     return null;
+                  //   },
+                  //   hintText: 'Orange Pay Account No:',
+                  //   image: 'assets/images/ion_card-outline.png',
+                  // ),
+                  SizedBox(
+                    height: 1.h,
+                  ),
                   Obx(
                     () => CustomTextFieldPassword(
                       image: 'assets/images/pasword.png',
@@ -334,6 +388,9 @@ class _SignupState extends State<Signup> {
                                     ? showErrrorSnackbar(
                                         message: "Please Enter Phone Number")
                                     : logincontroller.Signup(
+                                        orangepay: orangepayaccountcontroller
+                                            .value.text
+                                            .toString(),
                                         phonecountrycode: logincontroller
                                             .signupphonecountrycode.value
                                             .toString(),
@@ -384,8 +441,16 @@ class _SignupState extends State<Signup> {
                           ? customcircularprogress()
                           : GestureDetector(
                               onTap: () {
-                                // showSuccessSnackbar(message: "Comming Soon");
-                                logincontroller.handlegoogleSignIn();
+                                logincontroller.socialaccountnocontroller.value
+                                    .clear();
+                                logincontroller
+                                    .socialphonenumbercontroller.value
+                                    .clear();
+                                logincontroller.socialphonecode.value = '';
+                                logincontroller.socialphonecountrycode.value =
+                                    '';
+                                //  showSuccessSnackbar(message: "Comming Soon");
+                                logincontroller.handlegoogleSignIn(context);
                               },
                               child: Container(
                                 height: 6.h,

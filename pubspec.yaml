@@ -53,7 +53,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.2.42
   card_slider: ^1.0.5
   getwidget: any
-  webview_flutter: ^4.8.0
+  webview_flutter: ^3.0.4
   intl_phone_field: ^3.2.0
   firebase_core: ^2.27.0
   firebase_messaging: ^14.7.19

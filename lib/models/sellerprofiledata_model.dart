@@ -45,9 +45,10 @@ class Data {
   String? state;
   String? country;
   String? zipCode;
-    String? phonecountrycode;
+  String? phonecountrycode;
   String? provider;
   dynamic accessToken;
+  String? orangepay;
   String? joined;
   int? isUser;
   bool? isTrustedSeller;
@@ -71,6 +72,7 @@ class Data {
     this.provider,
     this.accessToken,
     this.joined,
+    this.orangepay,
     this.isUser,
     this.isTrustedSeller,
     this.phonecountrycode,
@@ -102,11 +104,10 @@ class Data {
         accessToken: json["access_token"],
         phonecountrycode: json["phone_country_code"],
         joined: json["joined"],
+        orangepay: json["orange_pay"],
         isUser: json["is_user"],
         isTrustedSeller: json["is_trusted_seller"],
-        seller: json["seller"] == null ? null : 
-        
-        Seller.fromJson(json["seller"]),
+        seller: json["seller"] == null ? null : Seller.fromJson(json["seller"]),
         media: json["media"] != null
             ? List<Media>.from(json["media"].map((x) => Media.fromJson(x)))
             : null,
@@ -129,10 +130,10 @@ class Data {
         "provider": provider,
         "access_token": accessToken,
         "joined": joined,
+        "orangepay": orangepay,
         "is_user": isUser,
         "phonecountrycode": phonecountrycode,
-         "seller": seller == null ? null : 
-         seller?.toJson(),
+        "seller": seller == null ? null : seller?.toJson(),
         "is_trusted_seller": isTrustedSeller,
         "media": media?.map((x) => x.toJson()).toList(),
       };
@@ -158,26 +159,23 @@ class Media {
         "original_url": originalUrl,
       };
 }
+
 class Seller {
-    int? id;
-    String? shopName;
-   
+  int? id;
+  String? shopName;
 
-    Seller({
-        required this.id,
-        
-        required this.shopName,
-       
-    });
+  Seller({
+    required this.id,
+    required this.shopName,
+  });
 
-    factory Seller.fromJson(Map<String, dynamic> json) => Seller(
+  factory Seller.fromJson(Map<String, dynamic> json) => Seller(
         id: json["id"],
         shopName: json["shop_name"],
-        
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "shop_name": shopName,
-       
-    };}
+      };
+}
