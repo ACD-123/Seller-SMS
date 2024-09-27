@@ -106,7 +106,7 @@ class _SellerWelcomeScreenState extends State<SellerWelcomeScreen> {
                                   SizedBox(
                                     width: 48.w,
                                     child: Text(
-                                      'Hello ${toCamelCase(storecontroller.getsellerprofiledata.value?.data?.name ?? "")}sdjfsjfisdfiofsi',
+                                      'Hello ${toCamelCase(storecontroller.getsellerprofiledata.value?.data?.name ?? "")}',
                                       style: TextStyle(
                                           color: const Color(0xff2E3192),
                                           fontWeight: FontWeight.w400,
