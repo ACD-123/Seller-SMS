@@ -7,7 +7,6 @@ import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SubscriptionPaymentScreen extends StatefulWidget {
   const SubscriptionPaymentScreen({super.key});
@@ -50,7 +49,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                 height: 1.h,
               ),
               Text(
-                "${currencytext()}2940",
+                "${currencytext()}1250",
                 style: TextStyle(
                     fontSize: 31.sp,
                     fontWeight: FontWeight.w900,
