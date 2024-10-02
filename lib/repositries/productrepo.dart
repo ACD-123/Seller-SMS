@@ -11,6 +11,7 @@ import 'package:smsseller/models/brandslist_model.dart';
 import 'package:smsseller/models/categorywiseattributes_model.dart';
 import 'package:smsseller/models/deletedproducts_model.dart';
 import 'package:smsseller/models/getcategories_model.dart';
+import 'package:smsseller/models/getsubcategory_model.dart';
 import 'package:smsseller/models/inactiveproduct_model.dart';
 import 'package:smsseller/models/productpreview_model.dart';
 import 'package:smsseller/models/productwisefeedbacks_model.dart';
@@ -37,6 +38,22 @@ class ProductRepo extends GetxService {
     }
   }
 
+////////get seller sub category api
+  Future<GetSubCategoryModel?> getSellerSubCategoriesList(String id) async {
+    try {
+      final res = await apiClient.getFromServer(
+        endPoint: "${AppConstants.getsellersubcategorieslist}$id?page_size=9999999999",
+      );
+      if (res.statusCode == 200) {
+        final listofsellersubcategories = getSubCategoryModelFromJson(res.body);
+        return listofsellersubcategories;
+      } else {
+        throw Exception("No data field found in the GetSellerSubCategoriesList");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 ////////getbrandslist api
   Future<GetBrandsListModel?> getBrandsList() async {
     try {

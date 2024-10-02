@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/authcontroller.dart';
+import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
@@ -49,7 +50,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
                 height: 1.h,
               ),
               Text(
-                "\$5.00",
+                "${currencytext()}2940",
                 style: TextStyle(
                     fontSize: 31.sp,
                     fontWeight: FontWeight.w900,

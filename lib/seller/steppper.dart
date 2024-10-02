@@ -82,6 +82,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
   @override
   void initState() {
     super.initState();
+    productcontroller.getsellersubcategorieslist.value = null;
     productcontroller.createproductselectedAttributes.clear();
     productcontroller.createselectedcategoryattributesList.clear();
     productcontroller.getcategoryattributes.value = null;
@@ -597,11 +598,67 @@ class _MyStepperAppState extends State<MyStepperApp> {
                               (category) => category.id.toString() == value);
                       productcontroller
                           .getCategoryAttributes(selectedCategory?.guid ?? "");
+                       productcontroller
+                          .getsellerSubCategoriesList(value);
                     });
                   },
                 ),
               ],
             ),
+           
+    Obx(() => productcontroller.getsellersubcategorieslist.value == null ||       
+    productcontroller.getsellersubcategorieslist.value!.data!.subCategories!.isEmpty ?
+const SizedBox() :
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                 SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+                 Text('Sub-Category',style: TextStyle(fontSize: 15.sp),),
+                SizedBox(height: 1.h),
+                DropdownButtonFormField<String>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // validator: (v) {
+                  //   if (v == null) {
+                  //     return 'Category can\'t be empty';
+                  //   }
+                  //   return null;
+                  // },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(12),
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Color(0xffDBDBDB)),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    fillColor: Colors.white,
+                    hintText: 'Select Sub-Category',
+                  ),
+                  value: productcontroller.createproductselectedsubcategory?.value,
+                  items: productcontroller.getsellersubcategorieslist.value?.data?.subCategories
+                      ?.map((subcategories) {
+                    return DropdownMenuItem<String>(
+                      value: subcategories.id.toString(),
+                      child: Text(subcategories.name.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    productcontroller.createSelectedproductsubCategorydropdown(value!);
+                    // setState(() {
+                    //   productcontroller.createselectedcategoryattributesList.clear();
+                    //   productcontroller.createproductcategory.value = value!;
+                    //  var selectedsubCategory = productcontroller
+                    //       .getsellersubcategorieslist.value?.data?.subCategories
+                    //       ?.firstWhere(
+                    //           (subcategory) => subcategory.id.toString() == value);
+                    //   productcontroller
+                    //       .getCategoryAttributes(selectedsubCategory?.guid.toString() ?? "");
+                    }
+                    
+                    
+                ),
+              ],
+            ),),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),

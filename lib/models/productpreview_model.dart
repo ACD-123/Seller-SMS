@@ -48,7 +48,7 @@ class Data {
   String? rating;
   int? ratingCount;
   Brand? brand;
-  Brand? category;
+  Category? category;
 List<NewAttribute>? newattributes;
   List<Attribute>? attributes;
   List<Media>? media;
@@ -91,7 +91,7 @@ double ratingasdouble(){
         ratingCount: json["rating_count"],
         brand: json["brand"] == null ? null : Brand.fromJson(json["brand"]),
         category:
-            json["category"] == null ? null : Brand.fromJson(json["category"]),
+            json["category"] == null ? null : Category.fromJson(json["category"]),
         attributes: json["attributes"] == null
             ? null
             : List<Attribute>.from(
@@ -131,6 +131,33 @@ double ratingasdouble(){
       };
 }
 
+class Category {
+    int? id;
+    String? guid;
+     String? name;
+    String? parentId;
+
+    Category({
+        required this.id,
+        required this.guid,
+         required this.name,
+        required this.parentId,
+    });
+
+    factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json["id"],
+        guid: json["guid"],
+           name: json["name"],
+        parentId: json["parent_id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "guid": guid,
+        "name": name,
+        "parent_id": parentId,
+    };
+}
 class Attribute {
   int? id;
   String? name;

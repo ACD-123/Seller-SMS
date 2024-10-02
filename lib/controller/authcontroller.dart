@@ -11,7 +11,6 @@ import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/googlelogindetails_popup.dart';
 import 'package:smsseller/models/subcriptionpaymenturl_model.dart';
 import 'package:smsseller/repositries/authenication_repo.dart';
-import 'package:smsseller/seller/authentication/webviewscreen.dart';
 import 'package:smsseller/services/local_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -456,7 +455,7 @@ class AuthenticationController extends GetxController {
             throw Exception('Could not launch URL');
           }
 
-          Get.toNamed(RouteConstants.sellercreateshopscreen);
+          Get.offAllNamed(RouteConstants.sellercreateshopscreen);
         } else {
           throw Exception('Payment URL is invalid or empty.');
         }

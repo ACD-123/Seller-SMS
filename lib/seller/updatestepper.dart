@@ -353,7 +353,13 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     hintText: 'Select Category',
                   ),
                   value: productcontroller
+                          .getproductpreviewbyid.value?.data?.category?.parentId == null ? 
+                  
+                  productcontroller
                           .getproductpreviewbyid.value?.data?.category?.id
+                          .toString() ??
+                      "" : productcontroller
+                          .getproductpreviewbyid.value?.data?.category?.parentId
                           .toString() ??
                       "",
                   items: productcontroller.getsellercategorieslist.value?.data
@@ -370,6 +376,57 @@ class _UpdateStepperState extends State<UpdateStepper> {
                 ),
               ],
             ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+         
+          Obx(() => 
+          productcontroller.getsellersubcategorieslist.value == null || 
+          productcontroller.getsellersubcategorieslist.value!.data!.subCategories!.isEmpty ?
+          const SizedBox() :   Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                 SizedBox(
+              height: MediaQuery.of(context).size.height * 0.02,
+            ),
+                 Text('Sub-Category (Optional)',style: TextStyle(fontSize: 15.sp),),
+                SizedBox(height: 1.h),
+                DropdownButtonFormField<String>(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  // validator: (v) {
+                  //   if (v == null) {
+                  //     return 'Category can\'t be empty';
+                  //   }
+                  //   return null;
+                  // },
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(12),
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Color(0xffDBDBDB)),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    fillColor: Colors.white,
+                    hintText: 'Select Sub-Category',
+                  ),
+                  value: productcontroller
+                          .getproductpreviewbyid.value?.data?.category?.id
+                          .toString() ??
+                      "",
+                  items: productcontroller.getsellersubcategorieslist.value?.data?.subCategories
+                      ?.map((categories) {
+                    return DropdownMenuItem<String>(
+                      value: categories.id.toString(),
+                      child: Text(categories.name.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    productcontroller.updateselectedcategoryattributesList.clear();
+                    productcontroller.updateproductsubcategorydropdown(value!);
+                  },
+                ),
+              ],
+            ),
+          ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),

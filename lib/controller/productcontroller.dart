@@ -9,6 +9,7 @@ import 'package:smsseller/models/brandslist_model.dart';
 import 'package:smsseller/models/categorywiseattributes_model.dart';
 import 'package:smsseller/models/deletedproducts_model.dart';
 import 'package:smsseller/models/getcategories_model.dart';
+import 'package:smsseller/models/getsubcategory_model.dart';
 import 'package:smsseller/models/inactiveproduct_model.dart';
 import 'package:smsseller/models/productpreview_model.dart';
 import 'package:smsseller/models/productwisefeedbacks_model.dart';
@@ -36,6 +37,22 @@ class ProductController extends GetxController {
     }
   }
 
+////////getseller subcategories list
+  final Rx<GetSubCategoryModel?> getsellersubcategorieslist =
+      Rx<GetSubCategoryModel?>(null);
+  final RxBool getsellersubcategorieslistloading = false.obs;
+
+  getsellerSubCategoriesList(String id) async {
+    try {
+      getsellersubcategorieslistloading(true);
+      await productRepo.getSellerSubCategoriesList(id).then((value) {
+        getsellersubcategorieslist.value = value;
+        getsellersubcategorieslistloading(false);
+      });
+    } catch (e) {
+      getsellersubcategorieslistloading(false);
+    }
+  }
 ////////getbrands list
   final Rx<GetBrandsListModel?> getbrandslist = Rx<GetBrandsListModel?>(null);
   final RxBool getbrandslistloading = false.obs;
@@ -71,6 +88,7 @@ class ProductController extends GetxController {
   var createproductselectedAttributes = <String, List<String>>{}.obs;
   var createselectedcategoryattributesList = <Map<String, dynamic>>[].obs;
   RxString? createproductselectedcategory;
+  RxString? createproductselectedsubcategory;
   RxString? createproductselectedbrand;
   RxString createproductcategory = ''.obs;
   RxString createproductbrand = ''.obs;
@@ -280,6 +298,12 @@ class ProductController extends GetxController {
     var selectedCategory = getsellercategorieslist.value?.data
         ?.firstWhere((category) => category.id.toString() == value);
     getCategoryAttributes(selectedCategory?.guid ?? "");
+  }
+  void updateproductsubcategorydropdown(String value) {
+    updateproductcategory.value = value;
+    var selectedsubCategory = getsellersubcategorieslist.value?.data?.subCategories
+        ?.firstWhere((subcategory) => subcategory.id.toString() == value);
+    getCategoryAttributes(selectedsubCategory?.guid ?? "");
   }
 
   Future<void> uploadupdateproductimages(BuildContext context) async {
@@ -515,4 +539,14 @@ RxBool deletedproductloading = false.obs;
     }
   }
 
+//////////CREATE PRODUCT subcategory dropdown logic
+void createSelectedproductsubCategorydropdown(String value) {
+    createselectedcategoryattributesList.clear();
+    createproductcategory.value = value;
+
+    var selectedSubCategory = getsellersubcategorieslist.value?.data?.subCategories
+        ?.firstWhere((subcategory) => subcategory.id.toString() == value);
+
+    getCategoryAttributes(selectedSubCategory?.guid.toString() ?? "");
+  }
 }

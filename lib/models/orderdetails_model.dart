@@ -40,6 +40,7 @@ class Data {
   dynamic shippingCost;
   String? note;
   String? orderid;
+  
   List<OrderProductId>? orderProductIds;
   User? user;
 
@@ -53,6 +54,7 @@ class Data {
     this.note,
     this.orderid,
     this.orderProductIds,
+  
     this.user,
   });
 
@@ -70,6 +72,7 @@ class Data {
                 .map((x) => OrderProductId.fromJson(x)))
             : null,
         user: json["user"] != null ? User.fromJson(json["user"]) : null,
+         
       );
 
   Map<String, dynamic> toJson() => {
@@ -84,9 +87,9 @@ class Data {
         "order_product_ids":
             orderProductIds != null ? orderProductIds!.map((x) => x.toJson()).toList() : null,
         "user": user?.toJson(),
+        
       };
 }
-
 class OrderProductId {
   int? id;
   int? orderId;

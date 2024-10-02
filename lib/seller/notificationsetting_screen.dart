@@ -9,7 +9,7 @@ class NotificationsSettingScreen extends StatefulWidget {
   const NotificationsSettingScreen({super.key});
 
   @override
-  State<NotificationsSettingScreen> createState() =>
+State<NotificationsSettingScreen> createState() =>
       _NotificationsSettingScreenState();
 }
 
