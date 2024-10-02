@@ -39,7 +39,8 @@ class Data {
     dynamic shippingCost;
 
     String? note;
- 
+ String? address;
+ String? phonenumber;
     dynamic couponDiscount;
     String? date;
       User? user;
@@ -57,6 +58,8 @@ class Data {
         required this.date,
         required this.orderProductIds,
         required this.user,
+         required this.address,
+        required this.phonenumber,
     });
 
     factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -68,6 +71,8 @@ class Data {
         shippingCost: json["shipping_cost"],
         note: json["note"],
         couponDiscount: json["coupon_discount"],
+        address: json["address"],
+        phonenumber: json["phone"],
         date: json["date"],
         user: json["user"] != null ? User.fromJson(json["user"]) : null,
         orderProductIds: json["order_product_ids"] != null ? List<OrderProductId>.from(json["order_product_ids"].map((x) => OrderProductId.fromJson(x))) : null,
@@ -83,6 +88,8 @@ class Data {
         "coupon_discount": couponDiscount,
         "date": date,
         "orderid": orderid,
+        "address": address,
+        "phonenumber": phonenumber,
          "user": user?.toJson(),
         "order_product_ids": orderProductIds != null ? List<dynamic>.from(orderProductIds!.map((x) => x.toJson())) : null,
     };

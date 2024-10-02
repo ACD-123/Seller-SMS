@@ -23,6 +23,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
   @override
   void initState() {
     super.initState();
+    productcontroller.getsellersubcategorieslist.value = null;
     productcontroller.updateproductcategory.value = '';
     productcontroller.updateproductbrand.value = '';
     productcontroller.updateproductselectedAttributes.clear();
@@ -42,6 +43,13 @@ class _UpdateStepperState extends State<UpdateStepper> {
             .getproductpreviewbyid.value?.data?.brandId
             .toString() ??
         "";
+    productcontroller.getproductpreviewbyid.value?.data?.category?.parentId ==
+            null
+        ? null
+        : productcontroller.getsellerSubCategoriesList(productcontroller
+                .getproductpreviewbyid.value?.data?.category?.parentId
+                .toString() ??
+            "");
     productcontroller.getCategoryAttributes(
         productcontroller.getproductpreviewbyid.value?.data?.category?.guid ??
             "");
@@ -352,16 +360,17 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     fillColor: Colors.white,
                     hintText: 'Select Category',
                   ),
-                  value: productcontroller
-                          .getproductpreviewbyid.value?.data?.category?.parentId == null ? 
-                  
-                  productcontroller
-                          .getproductpreviewbyid.value?.data?.category?.id
-                          .toString() ??
-                      "" : productcontroller
-                          .getproductpreviewbyid.value?.data?.category?.parentId
-                          .toString() ??
-                      "",
+                  value: productcontroller.getproductpreviewbyid.value?.data
+                              ?.category?.parentId ==
+                          null
+                      ? productcontroller
+                              .getproductpreviewbyid.value?.data?.category?.id
+                              .toString() ??
+                          ""
+                      : productcontroller.getproductpreviewbyid.value?.data
+                              ?.category?.parentId
+                              .toString() ??
+                          "",
                   items: productcontroller.getsellercategorieslist.value?.data
                       ?.map((categories) {
                     return DropdownMenuItem<String>(
@@ -370,7 +379,8 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    productcontroller.updateselectedcategoryattributesList.clear();
+                    productcontroller.updateselectedcategoryattributesList
+                        .clear();
                     productcontroller.updateproductcategorydropdown(value!);
                   },
                 ),
@@ -379,54 +389,68 @@ class _UpdateStepperState extends State<UpdateStepper> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-         
-          Obx(() => 
-          productcontroller.getsellersubcategorieslist.value == null || 
-          productcontroller.getsellersubcategorieslist.value!.data!.subCategories!.isEmpty ?
-          const SizedBox() :   Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                 SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
-                 Text('Sub-Category (Optional)',style: TextStyle(fontSize: 15.sp),),
-                SizedBox(height: 1.h),
-                DropdownButtonFormField<String>(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  // validator: (v) {
-                  //   if (v == null) {
-                  //     return 'Category can\'t be empty';
-                  //   }
-                  //   return null;
-                  // },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(12),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xffDBDBDB)),
-                      borderRadius: BorderRadius.circular(15.0),
+            Obx(
+              () => productcontroller.getsellersubcategorieslist.value ==
+                          null ||
+                      productcontroller.getsellersubcategorieslist.value!.data!
+                          .subCategories!.isEmpty
+                  ? const SizedBox()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Text(
+                          'Sub-Category (Optional)',
+                          style: TextStyle(fontSize: 15.sp),
+                        ),
+                        SizedBox(height: 1.h),
+                        DropdownButtonFormField<String>(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          // validator: (v) {
+                          //   if (v == null) {
+                          //     return 'Category can\'t be empty';
+                          //   }
+                          //   return null;
+                          // },
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(12),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Color(0xffDBDBDB)),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            fillColor: Colors.white,
+                            hintText: 'Select Sub-Category',
+                          ),
+                          value: productcontroller.getproductpreviewbyid.value
+                                      ?.data?.category?.parentId ==
+                                  null
+                              ? null
+                              : productcontroller.getproductpreviewbyid.value
+                                      ?.data?.category?.id
+                                      .toString() ??
+                                  "",
+                          items: productcontroller.getsellersubcategorieslist
+                              .value?.data?.subCategories
+                              ?.map((categories) {
+                            return DropdownMenuItem<String>(
+                              value: categories.id.toString(),
+                              child: Text(categories.name.toString()),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            productcontroller
+                                .updateselectedcategoryattributesList
+                                .clear();
+                            productcontroller
+                                .updateproductsubcategorydropdown(value!);
+                          },
+                        ),
+                      ],
                     ),
-                    fillColor: Colors.white,
-                    hintText: 'Select Sub-Category',
-                  ),
-                  value: productcontroller
-                          .getproductpreviewbyid.value?.data?.category?.id
-                          .toString() ??
-                      "",
-                  items: productcontroller.getsellersubcategorieslist.value?.data?.subCategories
-                      ?.map((categories) {
-                    return DropdownMenuItem<String>(
-                      value: categories.id.toString(),
-                      child: Text(categories.name.toString()),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    productcontroller.updateselectedcategoryattributesList.clear();
-                    productcontroller.updateproductsubcategorydropdown(value!);
-                  },
-                ),
-              ],
             ),
-          ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
@@ -523,6 +547,7 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                         .updateproductselectedAttributes[
                                             categoryname]
                                         ?.first,
+                               
                                     onChanged: (newValue) {
                                       if (newValue == null) return;
 
@@ -537,7 +562,6 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                       final attributeId =
                                           categoryAttributeData.id;
                                       if (attributeId == null) return;
-
                                       final selectedOption =
                                           (categoryAttributeData.options ?? [])
                                               .firstWhere(
@@ -569,28 +593,36 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                             .updateselectedcategoryattributesList
                                             .add(entry);
                                       }
-
+final newAttributeValue = '$newValue'; 
                                       final currentAttributes =
                                           productcontroller
                                               .updateproductselectedAttributes
                                               .putIfAbsent(
                                                   categoryname, () => []);
-
-                                      if (!currentAttributes
-                                          .contains(newValue)) {
-                                        productcontroller
-                                                .updateproductselectedAttributes[
-                                            categoryname] = [
-                                          ...currentAttributes,
-                                          '${categoryAttributeData.name}_$newValue',
-                                        ];
-                                      }
+if (!currentAttributes.contains(newAttributeValue)) {
+    productcontroller.updateproductselectedAttributes[categoryname] = [
+      ...currentAttributes,
+      newAttributeValue,
+    ];
+}
+                                      // if (!currentAttributes
+                                      //     .contains(newValue)) {
+                                      //   productcontroller
+                                      //           .updateproductselectedAttributes[
+                                      //       categoryname] = [
+                                      //     ...currentAttributes,
+                                      //     '${categoryAttributeData.name}_$newValue',
+                                      //   ];
+                                      // }
+                                      print(productcontroller.updateproductselectedAttributes);
                                     },
                                     items: categoryAttributeData!.options!
                                         .map<DropdownMenuItem<String>>(
                                             (option) {
-                                      final categoryvalue =
-                                          '${categoryAttributeData.name}_$option';
+                                              final categoryvalue = option; 
+
+                                      // final categoryvalue =
+                                      //     '${categoryAttributeData.name}_$option';
                                       return DropdownMenuItem<String>(
                                         value: categoryvalue,
                                         child: Text(option),

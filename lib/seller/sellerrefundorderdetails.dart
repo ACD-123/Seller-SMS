@@ -114,7 +114,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                               ),
                               Text(
                                 toCamelCase(ordercontroller.getrefundorderdetailsbyid.value
-                                        ?.data?.user?.address
+                                        ?.data?.address
                                         .toString() ??
                                     ""),
                                 style: TextStyle(
@@ -123,7 +123,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                     color: const Color(0xff757474)),
                               ),
                               Text(
-                                '${ordercontroller.getrefundorderdetailsbyid.value?.data?.user?.phoneCode.toString() ?? ""}-${ordercontroller.getrefundorderdetailsbyid.value?.data?.user?.phoneNumber.toString() ?? ""}',
+                              ordercontroller.getrefundorderdetailsbyid.value?.data?.phonenumber.toString() ?? "",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,

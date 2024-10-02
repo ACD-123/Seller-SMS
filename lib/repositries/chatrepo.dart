@@ -38,12 +38,12 @@ class ChatRepo extends GetxService {
 
 ////////get seller chat room details api
   Future<SellerChatRoomDetailsModel?> getSellerChatRoomDetails(
-      int roomid,String page) async {
+      int roomid) async {
     try {
       final String sellerguid = LocalStorage().getString("sellerguid");
       final res = await apiClient.getFromServer(
         endPoint:
-            "${AppConstants.getsellerchatroomdetails}$roomid&id=$sellerguid&page=$page&page_size=20",
+            "${AppConstants.getsellerchatroomdetails}$roomid&id=$sellerguid",
       );
       if (res.statusCode == 200) {
         final listofsellerchatroomdetails =

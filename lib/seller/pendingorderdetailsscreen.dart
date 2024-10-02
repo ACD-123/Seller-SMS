@@ -110,8 +110,7 @@ class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
                                 ],
                               ),
                               Text(
-                                ordercontroller.getorderdetailsbyid.value?.data
-                                        ?.user?.address ??
+                                ordercontroller.getorderdetailsbyid.value?.data?.address ??
                                     "",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
@@ -119,7 +118,7 @@ class _SellerPendingOrderDetailsState extends State<SellerPendingOrderDetails> {
                                     color: const Color(0xff757474)),
                               ),
                               Text(
-                                '${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneCode.toString() ?? ""}-${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneNumber.toString() ?? ""}',
+                                ordercontroller.getorderdetailsbyid.value?.data?.phone.toString() ?? "",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,

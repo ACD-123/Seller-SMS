@@ -47,6 +47,7 @@ class ProductController extends GetxController {
       getsellersubcategorieslistloading(true);
       await productRepo.getSellerSubCategoriesList(id).then((value) {
         getsellersubcategorieslist.value = value;
+        print("SubCategories:${value?.data?.subCategories?.length}");
         getsellersubcategorieslistloading(false);
       });
     } catch (e) {
@@ -294,12 +295,17 @@ class ProductController extends GetxController {
   }
 
   void updateproductcategorydropdown(String value) {
+updateproductselectedAttributes.clear();
+    updateselectedcategoryattributesList.clear();
     updateproductcategory.value = value;
     var selectedCategory = getsellercategorieslist.value?.data
         ?.firstWhere((category) => category.id.toString() == value);
     getCategoryAttributes(selectedCategory?.guid ?? "");
+    getsellerSubCategoriesList(value);
   }
   void updateproductsubcategorydropdown(String value) {
+updateproductselectedAttributes.clear();
+    updateselectedcategoryattributesList.clear();
     updateproductcategory.value = value;
     var selectedsubCategory = getsellersubcategorieslist.value?.data?.subCategories
         ?.firstWhere((subcategory) => subcategory.id.toString() == value);

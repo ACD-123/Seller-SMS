@@ -27,7 +27,7 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
     super.initState();
     chatcontroller.sendmessagecontroller.value.clear();
     final guid = LocalStorage().getString('sellerguid');
-    _scrollcontroller.addListener(_scrollListener);
+    // _scrollcontroller.addListener(_scrollListener);
     sellerid = guid;
     _webSocketService = WebSocketService(AppConstants.socketbaseurl);
     _webSocketService.connect(
@@ -55,13 +55,13 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
     chatcontroller.getChatsCount();
   }
 
-  void _scrollListener() {
-    if (_scrollcontroller.offset >=
-            _scrollcontroller.position.maxScrollExtent &&
-        !_scrollcontroller.position.outOfRange) {
-      chatcontroller.getsellerChatRoomDetails(roomid);
-    }
-  }
+  // void _scrollListener() {
+  //   if (_scrollcontroller.offset >=
+  //           _scrollcontroller.position.maxScrollExtent &&
+  //       !_scrollcontroller.position.outOfRange) {
+  //     chatcontroller.getsellerChatRoomDetails(roomid);
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -131,12 +131,13 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
             ),
           );
         } else {
-          // WidgetsBinding.instance.addPostFrameCallback((_) {
-          //   if (_scrollcontroller.hasClients) {
-          //     _scrollcontroller
-          //         .jumpTo(_scrollcontroller.position.minScrollExtent);
-          //   }
-          // });
+          
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollcontroller.hasClients) {
+              _scrollcontroller
+                  .jumpTo(_scrollcontroller.position.maxScrollExtent);
+            }
+          });
 
           return Form(
             key: formkey,
@@ -156,7 +157,7 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                     : const SizedBox(),
                 Expanded(
                     child: ListView.builder(
-                        reverse: true,
+                       
                         controller: _scrollcontroller,
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),

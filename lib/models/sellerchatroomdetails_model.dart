@@ -10,13 +10,11 @@ class SellerChatRoomDetailsModel {
     List<Datum?>? data;
     bool? status;
     String? message;
-    Pagination? pagination;
 
     SellerChatRoomDetailsModel({
         this.data,
         this.status,
         this.message,
-        this.pagination
     });
 
     factory SellerChatRoomDetailsModel.fromJson(Map<String, dynamic> json) => 
@@ -26,7 +24,7 @@ class SellerChatRoomDetailsModel {
                 : List<Datum?>.from(json["data"].map((x) => Datum.fromJson(x))),
             status: json["status"],
             message: json["message"],
-            pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
+            // pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
         );
 
     Map<String, dynamic> toJson() => {
@@ -35,7 +33,7 @@ class SellerChatRoomDetailsModel {
             : List<dynamic>.from(data!.map((x) => x?.toJson())),
         "status": status,
         "message": message,
-        "pagination": pagination?.toJson(),
+        // "pagination": pagination?.toJson(),
     };
 }
 
@@ -174,26 +172,26 @@ class Seller {
         "main_image": mainImage,
     };
 }
-class Pagination {
-    dynamic total;
-    dynamic page;
-    dynamic totalPages;
+// class Pagination {
+//     dynamic total;
+//     dynamic page;
+//     dynamic totalPages;
 
-    Pagination({
-        required this.total,
-        required this.page,
-        required this.totalPages,
-    });
+//     Pagination({
+//         required this.total,
+//         required this.page,
+//         required this.totalPages,
+//     });
 
-    factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        total: json["total"],
-        page: json["page"],
-        totalPages: json["total_pages"],
-    );
+//     factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+//         total: json["total"],
+//         page: json["page"],
+//         totalPages: json["total_pages"],
+//     );
 
-    Map<String, dynamic> toJson() => {
-        "total": total,
-        "page": page,
-        "total_pages": totalPages,
-    };
-}
+//     Map<String, dynamic> toJson() => {
+//         "total": total,
+//         "page": page,
+//         "total_pages": totalPages,
+//     };
+// }

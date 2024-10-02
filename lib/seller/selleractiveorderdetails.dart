@@ -106,7 +106,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                               ),
                               Text(
                                 toCamelCase(ordercontroller.getorderdetailsbyid.value?.data
-                                        ?.user?.address ??
+                                        ?.address ??
                                     ""),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
@@ -114,7 +114,7 @@ class _SellerActiveOrderDetailsState extends State<SellerActiveOrderDetails> {
                                     color: const Color(0xff757474)),
                               ),
                               Text(
-                                '${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneCode ?? ""}-${ordercontroller.getorderdetailsbyid.value?.data?.user?.phoneNumber ?? ""}',
+                            ordercontroller.getorderdetailsbyid.value?.data?.phone ?? "",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,

@@ -40,6 +40,8 @@ class Data {
   dynamic shippingCost;
   String? note;
   String? orderid;
+  String? address;
+  String? phone;
   
   List<OrderProductId>? orderProductIds;
   User? user;
@@ -54,6 +56,8 @@ class Data {
     this.note,
     this.orderid,
     this.orderProductIds,
+     this.address,
+    this.phone,
   
     this.user,
   });
@@ -67,6 +71,8 @@ class Data {
         shippingCost: json["shipping_cost"],
         note: json["note"],
         orderid: json["orderid"],
+         address: json["address"],
+        phone: json["phone"],
         orderProductIds: json["order_product_ids"] != null
             ? List<OrderProductId>.from(json["order_product_ids"]
                 .map((x) => OrderProductId.fromJson(x)))
@@ -84,6 +90,8 @@ class Data {
         "shipping_cost": shippingCost,
         "note": note,
         "orderid": orderid,
+        "address": address,
+        "phone": phone,
         "order_product_ids":
             orderProductIds != null ? orderProductIds!.map((x) => x.toJson()).toList() : null,
         "user": user?.toJson(),

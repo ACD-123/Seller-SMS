@@ -615,7 +615,7 @@ const SizedBox() :
                  SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-                 Text('Sub-Category',style: TextStyle(fontSize: 15.sp),),
+                 Text('Sub-Category (Optional)',style: TextStyle(fontSize: 15.sp),),
                 SizedBox(height: 1.h),
                 DropdownButtonFormField<String>(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
