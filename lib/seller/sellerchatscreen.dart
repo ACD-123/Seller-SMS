@@ -189,6 +189,43 @@ class _SellerChatScreenState extends State<SellerChatScreen> {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: TextFormField(
+                    onFieldSubmitted: (value) {
+                      if(value.isNotEmpty){
+                        if (formkey.currentState!.validate()) {
+                                  chatcontroller
+                                      .sendMessage(
+                                          roomid: chatcontroller
+                                                  .getsellerchatroomdetails
+                                                  .value
+                                                  ?.data
+                                                  ?.first
+                                                  ?.roomId ??
+                                              0,
+                                          uid: chatcontroller
+                                                  .getsellerchatroomdetails
+                                                  .value
+                                                  ?.data
+                                                  ?.first
+                                                  ?.testuser
+                                                  ?.id
+                                                  .toString() ??
+                                              "",
+                                          fromid: sellerid ?? "",
+                                          message: chatcontroller
+                                              .sendmessagecontroller.value.text
+                                              .toString())
+                                      .then((value) {
+                                        chatcontroller.chatdetailpage.value = 1;
+                                    chatcontroller.getsellerChatRoomDetails(
+                                        chatcontroller.getsellerchatroomdetails
+                                                .value?.data?.first?.roomId ??
+                                            0);
+                                    chatcontroller.sendmessagecontroller.value
+                                        .clear();
+                                  });
+                                }
+                      }
+                    },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     controller: chatcontroller.sendmessagecontroller.value,
                     style: TextStyle(fontSize: 14.sp),

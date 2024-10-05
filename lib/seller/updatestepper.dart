@@ -593,36 +593,36 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                             .updateselectedcategoryattributesList
                                             .add(entry);
                                       }
-final newAttributeValue = '$newValue'; 
+// final newAttributeValue = '$newValue'; 
                                       final currentAttributes =
                                           productcontroller
                                               .updateproductselectedAttributes
                                               .putIfAbsent(
                                                   categoryname, () => []);
-if (!currentAttributes.contains(newAttributeValue)) {
-    productcontroller.updateproductselectedAttributes[categoryname] = [
-      ...currentAttributes,
-      newAttributeValue,
-    ];
-}
-                                      // if (!currentAttributes
-                                      //     .contains(newValue)) {
-                                      //   productcontroller
-                                      //           .updateproductselectedAttributes[
-                                      //       categoryname] = [
-                                      //     ...currentAttributes,
-                                      //     '${categoryAttributeData.name}_$newValue',
-                                      //   ];
-                                      // }
+// if (!currentAttributes.contains(newAttributeValue)) {
+//     productcontroller.updateproductselectedAttributes[categoryname] = [
+//       ...currentAttributes,
+//       newAttributeValue,
+//     ];
+// }
+                                      if (!currentAttributes
+                                          .contains(newValue)) {
+                                        productcontroller
+                                                .updateproductselectedAttributes[
+                                            categoryname] = [
+                                          ...currentAttributes,
+                                          '${categoryAttributeData.name}_$newValue',
+                                        ];
+                                      }
                                       print(productcontroller.updateproductselectedAttributes);
                                     },
                                     items: categoryAttributeData!.options!
                                         .map<DropdownMenuItem<String>>(
                                             (option) {
-                                              final categoryvalue = option; 
+                                              // final categoryvalue = option; 
 
-                                      // final categoryvalue =
-                                      //     '${categoryAttributeData.name}_$option';
+                                      final categoryvalue =
+                                          '${categoryAttributeData.name}_$option';
                                       return DropdownMenuItem<String>(
                                         value: categoryvalue,
                                         child: Text(option),

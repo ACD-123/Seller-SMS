@@ -464,11 +464,11 @@ Widget withdrawAmountPopup() {
                   final withdrawAmount = double.tryParse(
                       storecontroller.withdrawamountcontroller.value.text);
                   final availableBalance =
-                      storecontroller.getwallettransections.value?.data?.earned;
+                      storecontroller.getwallettransections.value?.data?.availableBalance;
 
                   if (withdrawAmount != null && availableBalance != null) {
                     if (withdrawAmount > availableBalance) {
-                      return "Amount exceeds Earnings";
+                      return "Amount exceeds Balance";
                     }
                   } else {
                     return 'Invalid amount or balance';
@@ -492,7 +492,7 @@ Widget withdrawAmountPopup() {
                 contentPadding: const EdgeInsets.all(18.0),
                 border: InputBorder.none,
                 hintText:
-                    '${currencytext()}${storecontroller.getwallettransections.value?.data?.earned}',
+                    '${currencytext()}${storecontroller.getwallettransections.value?.data?.availableBalance}',
                 hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16.sp),
               ),
             ),
@@ -508,16 +508,21 @@ Widget withdrawAmountPopup() {
                     ontap: () {
                       final withdrawAmount = double.tryParse(
                           storecontroller.withdrawamountcontroller.value.text);
-                      final earnings = storecontroller
-                          .getwallettransections.value?.data?.earned;
+                      final availablbalance = storecontroller
+                          .getwallettransections.value?.data?.availableBalance;
 
                       if (storecontroller.withdrawformkey.currentState!
                           .validate()) {
-                        if (withdrawAmount != null && earnings != null) {
-                          if (withdrawAmount > earnings) {
+                        if (withdrawAmount != null && availablbalance != null) {
+                          if (withdrawAmount > availablbalance ) {
                             showErrrorSnackbar(
                                 message: "Amount Exceeds Earnings");
-                          } else {
+                          } else if (withdrawAmount <= 0 ) {
+                            showErrrorSnackbar(
+                                message: "Please Enter Correct Amount");
+                          } 
+                          
+                          else {
                             storecontroller.withDrawAmount(storecontroller
                                 .withdrawamountcontroller.value.text
                                 .toString());
