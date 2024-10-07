@@ -88,7 +88,8 @@ class StoreRepo extends GetxService {
     Map<String, String> stringMapData =
         mapData.map((key, value) => MapEntry(key, value.toString()));
     try {
-      final res = await apiClient.postImagesToServer(
+      for(int i = 0; i < 2; i++){
+        final res = await apiClient.postImagesToServer(
           endPoint: AppConstants.createsellershop,
           data: stringMapData,
           files: {
@@ -96,6 +97,7 @@ class StoreRepo extends GetxService {
             "main_image": mainimage,
             "banners[]": bannersimages,
           });
+      
       if (res.statusCode == 200) {
         showSuccessDialogAndNavigateToLogin(
             context, "Shop Successfully Setup", RouteConstants.sellerdashboard);
@@ -103,7 +105,7 @@ class StoreRepo extends GetxService {
         print(res.body);
         final message = jsonDecode(res.body)['message'];
         showErrrorSnackbar(message: message);
-      }
+      }}
     } on SocketException {
       return showErrrorSnackbar(message: 'No Internet Connection');
     } catch (e) {
