@@ -10,6 +10,7 @@ import 'package:smsseller/controller/authcontroller.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
 
 class SellerWelcomeScreen extends StatefulWidget {
@@ -175,6 +176,8 @@ class _SellerWelcomeScreenState extends State<SellerWelcomeScreen> {
               SizedBox(
                 height: 1.h,
               ),
+             Obx(() =>  authcontroller.logoutloading.value ? 
+              Center(child: customcircularprogress(),):
               GestureDetector(
                 onTap: () {
                   authcontroller.signout();
@@ -192,7 +195,7 @@ class _SellerWelcomeScreenState extends State<SellerWelcomeScreen> {
                             color: const Color(0xff757474),
                           ))),
                 ),
-              ),
+              ),)
               // custombutton(
               //     hinttext: "Sign Out",
               //     ontap: () {

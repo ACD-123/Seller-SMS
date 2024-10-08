@@ -10,6 +10,7 @@ import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/custombutton.dart';
+import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/services/local_storage.dart';
 
 class SellerDashboardScreen extends StatefulWidget {
@@ -28,13 +29,14 @@ class _SellerDashboardScreenState extends State<SellerDashboardScreen> {
   @override
   void initState() {
     super.initState();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    apisdata();
-  });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      apisdata();
+    });
   }
-apisdata()async{
-   await storecontroller.getSellerShopProfileData();
-   authcontroller.gettoken();
+
+  apisdata() async {
+    await storecontroller.getSellerShopProfileData();
+    authcontroller.gettoken();
     chatcontroller.getChatsCount();
     chatcontroller.getNotificationsCount();
     storecontroller.getSellerProfileData();
@@ -45,7 +47,8 @@ apisdata()async{
     ///////socket
     notificationsocketinitialize();
     chatsocketinitialize();
-}
+  }
+
 /////chatsocket
   void chatsocketinitialize() {
     final guid = LocalStorage().getString('sellerguid');
@@ -206,8 +209,12 @@ apisdata()async{
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        toCamelCase(storecontroller.getsellerprofiledata
-                                                .value?.data?.seller?.shopName ??
+                                        toCamelCase(storecontroller
+                                                .getsellerprofiledata
+                                                .value
+                                                ?.data
+                                                ?.seller
+                                                ?.shopName ??
                                             ""),
                                         style: TextStyle(
                                             color: const Color(0xff2E3192),
@@ -619,11 +626,17 @@ apisdata()async{
                   SizedBox(
                     height: 2.h,
                   ),
-                  custombutton(
-                      hinttext: "Sign Out",
-                      ontap: () {
-                        authcontroller.signout();
-                      }),
+                  Obx(
+                    () => authcontroller.logoutloading.value
+                        ? Center(
+                            child: customcircularprogress(),
+                          )
+                        : custombutton(
+                            hinttext: "Sign Out",
+                            ontap: () {
+                              authcontroller.signout();
+                            }),
+                  )
                 ],
               ),
             ),

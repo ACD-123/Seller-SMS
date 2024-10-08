@@ -498,14 +498,22 @@ class AuthenticationController extends GetxController {
     }
   }
 
+//////////logout
+  var logoutloading = false.obs;
+  Future<void> logout() async {
+    try {
+      logoutloading.value = true;
+      await authRepo.logout();
+
+      logoutloading.value = false;
+    } finally {
+      logoutloading.value = false;
+    }
+  }
+
 ////////signout
   signout() {
-    LocalStorage().remove("istrustedseller");
-    LocalStorage().remove("token");
-    LocalStorage().remove("sellerguid");
-    LocalStorage().remove("user_id");
-    LocalStorage().remove("isSubscription");
     googlesSignOut();
-    Get.offAllNamed(RouteConstants.loginscreen);
+    logout();
   }
 }

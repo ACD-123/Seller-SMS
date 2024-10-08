@@ -359,4 +359,33 @@ class AuthRepo extends GetxService {
       return {'status': false, 'data': []};
     }
   }
+
+//////////////logout
+  Future logout() async {
+    final mapData = {"type": "mobile"};
+    try {
+      final res = await apiClient.postToServer(
+          endPoint: AppConstants.logout, data: mapData);
+      if (res.statusCode == 200) {
+        final message = jsonDecode(res.body)['message'];
+        showSuccessSnackbar(message: message);
+        LocalStorage().remove("istrustedseller");
+        LocalStorage().remove("token");
+        LocalStorage().remove("sellerguid");
+        LocalStorage().remove("user_id");
+        LocalStorage().remove("isSubscription");
+        Get.offAllNamed(RouteConstants.loginscreen);
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+      }
+    } on SocketException {
+      return showErrrorSnackbar(message: 'No Internet Connection');
+    } catch (e) {
+      showErrrorSnackbar(
+          message:
+              "An unexpected error occurred Logout. Please try again later.");
+      throw Exception("Logout: $e");
+    }
+  }
 }
