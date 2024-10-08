@@ -455,7 +455,8 @@ class AuthenticationController extends GetxController {
             throw Exception('Could not launch URL');
           }
 
-          Get.offAllNamed(RouteConstants.sellercreateshopscreen);
+          Get.offAllNamed(RouteConstants.loginscreen);
+          signout();
         } else {
           throw Exception('Payment URL is invalid or empty.');
         }
