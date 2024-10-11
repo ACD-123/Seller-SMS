@@ -28,7 +28,7 @@ Future<void> showNotificationFromData(
   await flutterLocalNotificationsPlugin
       .show(0, title, body, platformChannelSpecifics, payload: payload);
 }
-
+@pragma('vm:entry-point')
 Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
   if (message.notification != null) {
     debugPrint(
