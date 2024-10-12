@@ -1034,7 +1034,9 @@ class StoreController extends GetxController {
   final RxBool getwallettransectionsloading = false.obs;
   final RxBool getwallettransectionsreloadloading = false.obs;
   final RxInt walletpage = 1.obs;
-  Future<void> getWalletTransections() async {
+  final RxString selectedtransectionstatus = "".obs;
+  Future<void> getWalletTransections(String status) async {
+    selectedtransectionstatus.value = status;
     if (getwallettransectionsreloadloading.value ||
         getwallettransectionsloading.value) return;
     if (walletpage.value > 1 &&
@@ -1047,7 +1049,7 @@ class StoreController extends GetxController {
       walletpage.value > 1
           ? getwallettransectionsreloadloading.value = true
           : getwallettransectionsloading.value = true;
-      final value = await storeRepo.getWalletTransection(walletpage.value);
+      final value = await storeRepo.getWalletTransection(walletpage.value,status);
       if (walletpage.value > 1) {
         getwallettransections.value?.data?.transactions
             ?.addAll(value?.data?.transactions ?? []);

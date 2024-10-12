@@ -18,10 +18,33 @@ class _WalletScreenState extends State<WalletScreen> {
   final storecontroller = Get.put(StoreController(storeRepo: Get.find()));
   ScrollController scrollcontroller = ScrollController();
 
+////////transection dropdown
+String? selectedtransectionoption;
+
+  final List<Map<String, dynamic>> transectionoptionslist = [
+     {
+      "id": "all",
+      "status": "All",
+    },
+    {
+      "id": "Order",
+      "status": "Order",
+    },
+    {
+      "id": "Withdraw",
+      "status": "Withdraw",
+    },
+    {
+      "id": "Refund",
+      "status": "Refund",
+    },
+   
+   
+  ];
   void _scrollListener() {
     if (scrollcontroller.offset >= scrollcontroller.position.maxScrollExtent &&
         !scrollcontroller.position.outOfRange) {
-      storecontroller.getWalletTransections();
+      storecontroller.getWalletTransections(storecontroller.selectedtransectionstatus.value.toString());
     }
   }
 
@@ -31,7 +54,7 @@ class _WalletScreenState extends State<WalletScreen> {
     super.initState();
     storecontroller.walletpage.value = 1;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      storecontroller.getWalletTransections();
+      storecontroller.getWalletTransections("all");
     });
     scrollcontroller.addListener(_scrollListener);
   }
@@ -258,6 +281,69 @@ class _WalletScreenState extends State<WalletScreen> {
                                 SizedBox(
                                   height: 2.h,
                                 ),
+                                Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 2.w, right: 2.w),
+                                child: SizedBox(
+                                  height: 4.h,
+                                  width: 33.w,
+                                  child: Center(
+                                      child: DropdownButtonFormField<String>(
+                                    decoration: InputDecoration(
+                                      hintText: "All",
+                                      hintStyle: TextStyle(
+                                        fontSize: 16.sp,
+                                        color: Color(0xff929292),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: BorderSide(
+                                            color: Color(0xffDBDBDB)),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: BorderSide(
+                                            color: Color(0xffDBDBDB)),
+                                      ),
+                                      contentPadding:
+                                          EdgeInsets.only(left: 8, right: 2),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    value: selectedtransectionoption,
+                                    onChanged: (newValue) {
+                                      selectedtransectionoption = newValue!;
+                                      storecontroller.walletpage.value = 1;
+                                     storecontroller.getWalletTransections(newValue);
+                                    },
+                                    items: transectionoptionslist
+                                        .map((statusoptions) {
+                                      return DropdownMenuItem<String>(
+                                        value: statusoptions["id"],
+                                        child: Text(
+                                          statusoptions["status"],
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            color: const Color(0xff929292),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    icon: CircleAvatar(
+                                      radius: 18.sp,
+                                      child: Image.asset(
+                                        "assets/images/arrowdropdown.png",
+                                        height: 0.7.h,
+                                        width: 2.w,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  )),
+                                ),
+                              ),
+                            ),
                                 Text(
                                   "Transactions",
                                   style: TextStyle(

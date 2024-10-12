@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/ordercontroller.dart';
@@ -7,6 +8,7 @@ import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customappbar.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/models/refundorderdetails_model.dart';
 
 import '../customcomponents/customeleveted_button.dart';
 
@@ -94,8 +96,12 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    toCamelCase(ordercontroller.getrefundorderdetailsbyid
-                                            .value?.data?.user?.name
+                                    toCamelCase(ordercontroller
+                                            .getrefundorderdetailsbyid
+                                            .value
+                                            ?.data
+                                            ?.user
+                                            ?.name
                                             .toString() ??
                                         ""),
                                     style: TextStyle(
@@ -113,8 +119,11 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                 ],
                               ),
                               Text(
-                                toCamelCase(ordercontroller.getrefundorderdetailsbyid.value
-                                        ?.data?.address
+                                toCamelCase(ordercontroller
+                                        .getrefundorderdetailsbyid
+                                        .value
+                                        ?.data
+                                        ?.address
                                         .toString() ??
                                     ""),
                                 style: TextStyle(
@@ -123,7 +132,10 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                     color: const Color(0xff757474)),
                               ),
                               Text(
-                              ordercontroller.getrefundorderdetailsbyid.value?.data?.phonenumber.toString() ?? "",
+                                ordercontroller.getrefundorderdetailsbyid.value
+                                        ?.data?.phonenumber
+                                        .toString() ??
+                                    "",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14.sp,
@@ -285,7 +297,7 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                       SizedBox(
                                                         width: 20.w,
                                                         child: Text(
-                                                       refunddetailsdata
+                                                          refunddetailsdata
                                                                   ?.product
                                                                   ?.title
                                                                   .toString() ??
@@ -300,109 +312,127 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                       SizedBox(
                                                         width: 3.w,
                                                       ),
-                                                       refunddetailsdata?.refund?.status == "pending"  ? 
-                                         
-                                                      SizedBox(
-                                                        height: 2.8.h,
-                                                        width: 25.w,
-                                                        child: Center(
-                                                            child:
-                                                                DropdownButtonFormField<
-                                                                    String>(
-                                                          decoration:
-                                                              InputDecoration(
-                                                            hintText: "Pending",
-                                                            hintStyle:
-                                                                TextStyle(
-                                                              fontSize: 16.sp,
-                                                              color: Color(
-                                                                  0xff2E3192),
-                                                            ),
-                                                            enabledBorder:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          14),
-                                                              borderSide: BorderSide(
-                                                                  color: Color(
-                                                                      0xff2E3192)),
-                                                            ),
-                                                            focusedBorder:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          14),
-                                                              borderSide: BorderSide(
-                                                                  color: Color(
-                                                                      0xff2E3192)),
-                                                            ),
-                                                            contentPadding:
-                                                                EdgeInsets.only(
-                                                                    left: 8,
-                                                                    right: 2),
-                                                            border:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          14),
-                                                            ),
-                                                          ),
-                                                          value: selectedoption,
-                                                          onChanged:
-                                                              (newValue) {
-                                                            selectedoption =
-                                                                newValue!;
-                                                            ordercontroller.updateRefundOrderStatus(id:  refunddetailsdata?.refund?.id.toString() ?? "", status: newValue);
-                                                          
-                                                          },
-                                                          items: options.map(
-                                                              (statusoptions) {
-                                                            return DropdownMenuItem<
-                                                                String>(
-                                                              value:
-                                                                  statusoptions[
-                                                                      "id"],
-                                                              child: Text(
-                                                                statusoptions[
-                                                                    "status"],
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      16.sp,
-                                                                  color: Color(
-                                                                      0xff2E3192),
+                                                      refunddetailsdata?.refund
+                                                                  ?.status ==
+                                                              "pending"
+                                                          ? SizedBox(
+                                                              height: 2.8.h,
+                                                              width: 25.w,
+                                                              child: Center(
+                                                                  child:
+                                                                      DropdownButtonFormField<
+                                                                          String>(
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  hintText:
+                                                                      "Pending",
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16.sp,
+                                                                    color: Color(
+                                                                        0xff2E3192),
+                                                                  ),
+                                                                  enabledBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            14),
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                            color:
+                                                                                Color(0xff2E3192)),
+                                                                  ),
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            14),
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                            color:
+                                                                                Color(0xff2E3192)),
+                                                                  ),
+                                                                  contentPadding:
+                                                                      EdgeInsets.only(
+                                                                          left:
+                                                                              8,
+                                                                          right:
+                                                                              2),
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            14),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            );
-                                                          }).toList(),
-                                                        )),
-                                                      ):
-                                                      Row(children: [
-                                                        Text(
-                                                        'Approval: ',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: 13.sp,
-                                                            color: const Color(
-                                                                0xff757474)),
-                                                      ),
-                                                      Text(
-                                                        toCamelCase(refunddetailsdata
-                                                                ?.refund?.status
-                                                                .toString() ??
-                                                            ""),
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            fontSize: 13.sp,
-                                                            color: const Color(
-                                                                0xffE2001B)),
-                                                      )
-                                                      ],)
+                                                                value:
+                                                                    selectedoption,
+                                                                onChanged:
+                                                                    (newValue) {
+                                                                  selectedoption =
+                                                                      newValue!;
+                                                                  ordercontroller.updateRefundOrderStatus(
+                                                                      id: refunddetailsdata
+                                                                              ?.refund
+                                                                              ?.id
+                                                                              .toString() ??
+                                                                          "",
+                                                                      status:
+                                                                          newValue);
+                                                                },
+                                                                items: options.map(
+                                                                    (statusoptions) {
+                                                                  return DropdownMenuItem<
+                                                                      String>(
+                                                                    value:
+                                                                        statusoptions[
+                                                                            "id"],
+                                                                    child: Text(
+                                                                      statusoptions[
+                                                                          "status"],
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            16.sp,
+                                                                        color: Color(
+                                                                            0xff2E3192),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }).toList(),
+                                                              )),
+                                                            )
+                                                          : Row(
+                                                              children: [
+                                                                Text(
+                                                                  'Approval: ',
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      fontSize:
+                                                                          13.sp,
+                                                                      color: const Color(
+                                                                          0xff757474)),
+                                                                ),
+                                                                Text(
+                                                                  toCamelCase(refunddetailsdata
+                                                                          ?.refund
+                                                                          ?.status
+                                                                          .toString() ??
+                                                                      ""),
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      fontSize:
+                                                                          13.sp,
+                                                                      color: const Color(
+                                                                          0xffE2001B)),
+                                                                )
+                                                              ],
+                                                            )
                                                     ],
                                                   ),
                                                   Text(
@@ -598,11 +628,60 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                                         .refund
                                                                         ?.media?[
                                                                     index];
-                                                            return customreasonimagescontainer(
-                                                                image: refundimages
-                                                                        ?.originalUrl ??
-                                                                    AppConstants
-                                                                        .noimage);
+                                                            return GestureDetector(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return Container(
+                                                                          height: 2
+                                                                              .h,
+                                                                          width: 2
+                                                                              .w,
+                                                                          color: const Color
+                                                                              .fromRGBO(
+                                                                              227,
+                                                                              215,
+                                                                              215,
+                                                                              0.318),
+                                                                          child:
+                                                                              Column(
+                                                                            children: [
+                                                                              Align(
+                                                                                  alignment: Alignment.topRight,
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(right: 4.w, top: 3.h),
+                                                                                    child: GestureDetector(
+                                                                                        onTap: () {
+                                                                                          Get.back();
+                                                                                        },
+                                                                                        child: const Icon(
+                                                                                          Icons.close,
+                                                                                          color: Colors.white,
+                                                                                        )),
+                                                                                  )),
+                                                                              SizedBox(
+                                                                                height: 14.h,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                                children: [
+                                                                                  // Icon(Icons.arrow_back_ios,color: Color(0xffFFFFFF)),
+                                                                                  SizedBox(height: 50.h, width: 75.w, child: imageSlider(refunddetailsdata.refund?.media ?? [])),
+                                                                                ],
+                                                                              )
+                                                                            ],
+                                                                          ));
+                                                                    });
+                                                              },
+                                                              child: customreasonimagescontainer(
+                                                                  image: refundimages
+                                                                          ?.originalUrl ??
+                                                                      AppConstants
+                                                                          .noimage),
+                                                            );
                                                           })
                                                     ],
                                                   ),
@@ -637,10 +716,11 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                                       horizontal: 12,
                                                       vertical: 15),
                                                   child: Text(
-                                                   toCamelCase( refunddetailsdata
-                                                            ?.refund?.reason
-                                                            .toString() ??
-                                                        ""),
+                                                    toCamelCase(
+                                                        refunddetailsdata
+                                                                ?.refund?.reason
+                                                                .toString() ??
+                                                            ""),
                                                     style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w400,
@@ -753,8 +833,11 @@ class _SellerRefundOrderDetailsState extends State<SellerRefundOrderDetails> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 15),
                                     child: Text(
-                                      toCamelCase(ordercontroller.getrefundorderdetailsbyid
-                                              .value?.data?.note
+                                      toCamelCase(ordercontroller
+                                              .getrefundorderdetailsbyid
+                                              .value
+                                              ?.data
+                                              ?.note
                                               .toString() ??
                                           ""),
                                       style: TextStyle(
@@ -817,4 +900,28 @@ Padding customreasonimagescontainer({required String image}) {
           borderRadius: BorderRadius.circular(3)),
     ),
   );
+}
+
+///////////image slider
+CarouselSlider imageSlider(List<Media> imageUrl) {
+  return CarouselSlider(
+      options: CarouselOptions(
+        enableInfiniteScroll: false,
+        autoPlay: true,
+        enlargeCenterPage: true,
+        viewportFraction: 1.w,
+        autoPlayInterval: const Duration(seconds: 2),
+      ),
+      items: imageUrl.map((imageurl) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Image.network(
+              imageurl.originalUrl ?? AppConstants.noimage,
+              fit: BoxFit.fill,
+              height: 40.h,
+              width: 70.w,
+            );
+          },
+        );
+      }).toList());
 }

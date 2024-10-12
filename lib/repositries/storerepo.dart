@@ -581,11 +581,11 @@ class StoreRepo extends GetxService {
   }
 
 ////////get wallet transections api
-  Future<TransectionModel?> getWalletTransection(int page) async {
+  Future<TransectionModel?> getWalletTransection(int page,String status) async {
     try {
       final sellerguid = LocalStorage().getString("sellerguid");
       final res = await apiClient.getFromServer(
-        endPoint: "${AppConstants.getwallettransection}$sellerguid?page=$page",
+        endPoint: "${AppConstants.getwallettransection}$sellerguid?page=$page&status=$status",
       );
       if (res.statusCode == 200) {
         final listofwallettransections = transectionModelFromJson(res.body);
