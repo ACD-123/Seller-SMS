@@ -162,21 +162,29 @@ class Attribute {
   int? id;
   String? name;
   int? attributeid;
+  String? colorimageurl;
+  String? colorcode;
   Attribute({
     required this.id,
     required this.name,
     required this.attributeid,
+     required this.colorcode,
+    required this.colorimageurl,
   });
 
   factory Attribute.fromJson(Map<String, dynamic> json) => Attribute(
         id: json["id"],
         name: json["name"],
         attributeid: json["attribute_id"],
+        colorcode: json["code"],
+        colorimageurl: json["image_url"],
       );
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "attributeid": attributeid,
+        "colorcode": colorcode,
+        "colorimageurl": colorimageurl,
       };
 }
 

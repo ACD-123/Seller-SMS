@@ -54,6 +54,7 @@ class ProductController extends GetxController {
       getsellersubcategorieslistloading(false);
     }
   }
+
 ////////getbrands list
   final Rx<GetBrandsListModel?> getbrandslist = Rx<GetBrandsListModel?>(null);
   final RxBool getbrandslistloading = false.obs;
@@ -138,6 +139,95 @@ class ProductController extends GetxController {
       createproductloading.value = false;
     } finally {
       createproductloading.value = false;
+    }
+  }
+
+//////////product attributes color image
+  var createproductselectedcolor = <Map<String, dynamic>>[].obs;
+  RxBool productcolorImagesloading = false.obs;
+  Future<void> createproductColorImages({
+    required BuildContext context,
+    required File attributesColorimages,
+    required String colorOptionName,
+    required String categoryAttributeid,
+    required String colorCode,
+  }) async {
+    try {
+      final existingIndex = createselectedcategoryattributesList.indexWhere(
+        (item) => item['name'] == colorOptionName,
+      );
+      productcolorImagesloading.value = true;
+      final imageUrl = await productRepo.productAttributesImages(
+        attributesColorimages: attributesColorimages,
+      );
+      if (imageUrl != null) {
+        if (existingIndex != -1) {
+          createselectedcategoryattributesList[existingIndex] = {
+            'name': colorOptionName,
+            'attribute_id': categoryAttributeid,
+            'color_code': colorCode,
+            'image_url': imageUrl,
+          };
+        } else {
+          createselectedcategoryattributesList.add({
+            'name': colorOptionName,
+            'attribute_id': categoryAttributeid,
+            'color_code': colorCode,
+            'image_url': imageUrl,
+          });
+          createproductselectedcolor.add({
+            'name': colorOptionName,
+            'attribute_id': categoryAttributeid,
+          });
+        }
+      
+      }
+      productcolorImagesloading.value = false;
+    } finally {
+      productcolorImagesloading.value = false;
+    }
+  }
+
+///////update product color images
+  RxBool updateproductcolorImagesloading = false.obs;
+  var updateproductselectedcolor = <Map<String, dynamic>>[].obs;
+  Future<void> updateproductColorImages({
+    required BuildContext context,
+    required File attributesColorimages,
+    required String colorOptionName,
+    required String categoryAttributeid,
+    required String colorCode,
+  }) async {
+    try {
+      final existingIndex = updateselectedcategoryattributesList.indexWhere(
+        (item) => item['name'] == colorOptionName,
+      );
+      updateproductcolorImagesloading.value = true;
+      final imageUrl = await productRepo.productAttributesImages(
+        attributesColorimages: attributesColorimages,
+      );
+      if (imageUrl != null) {
+        final randomId = generateUniqueRandomString(5);
+        if (existingIndex != -1) {
+          updateselectedcategoryattributesList[existingIndex]['image_url'] =
+              imageUrl;
+        } else {
+          updateselectedcategoryattributesList.add({
+            'id': randomId,
+            'name': colorOptionName,
+            'attribute_id': categoryAttributeid,
+            'color_code': colorCode,
+            'image_url': imageUrl,
+          });
+          updateproductselectedcolor.add({
+            'name': colorOptionName,
+            'attribute_id': categoryAttributeid,
+          });
+        }
+      }
+      updateproductcolorImagesloading.value = false;
+    } finally {
+      updateproductcolorImagesloading.value = false;
     }
   }
 
@@ -230,7 +320,7 @@ class ProductController extends GetxController {
       if (inactiveproductpage.value > 1) {
         getinactiveproducts.value?.data?.products
             ?.addAll(value?.data?.products ?? []);
-      getoutofstockdeleteproductswitchboolvalue();
+        getoutofstockdeleteproductswitchboolvalue();
       } else {
         getinactiveproducts.value = value;
       }
@@ -242,7 +332,6 @@ class ProductController extends GetxController {
       getinactiveproductsloading.value = false;
     }
   }
-
 
 ////////get deletedproducts
   final Rx<DeletedProductsModel?> getdeletedproducts =
@@ -268,7 +357,6 @@ class ProductController extends GetxController {
         getdeletedproducts.value?.data?.products
             ?.addAll(value?.data?.products ?? []);
         getinactivedeleteproductswitchboolvalue();
-        
       } else {
         getdeletedproducts.value = value;
       }
@@ -295,7 +383,7 @@ class ProductController extends GetxController {
   }
 
   void updateproductcategorydropdown(String value) {
-updateproductselectedAttributes.clear();
+    updateproductselectedAttributes.clear();
     updateselectedcategoryattributesList.clear();
     updateproductcategory.value = value;
     var selectedCategory = getsellercategorieslist.value?.data
@@ -303,11 +391,13 @@ updateproductselectedAttributes.clear();
     getCategoryAttributes(selectedCategory?.guid ?? "");
     getsellerSubCategoriesList(value);
   }
+
   void updateproductsubcategorydropdown(String value) {
-updateproductselectedAttributes.clear();
+    updateproductselectedAttributes.clear();
     updateselectedcategoryattributesList.clear();
     updateproductcategory.value = value;
-    var selectedsubCategory = getsellersubcategorieslist.value?.data?.subCategories
+    var selectedsubCategory = getsellersubcategorieslist
+        .value?.data?.subCategories
         ?.firstWhere((subcategory) => subcategory.id.toString() == value);
     getCategoryAttributes(selectedsubCategory?.guid ?? "");
   }
@@ -334,44 +424,59 @@ updateproductselectedAttributes.clear();
     for (var attribute in newAttributes) {
       final attributeValues = attribute.value;
       for (var value in attributeValues ?? []) {
-         final id = value.id;
+        final id = value.id;
         final name = value.name;
         final attributeId = value.attributeid;
-
+        final attributecolorcode = value.colorcode;
+        final attributeimage = value.colorimageurl;
+  if (attributecolorcode != null && attributecolorcode.isNotEmpty) {
+      updateproductselectedcolor.clear();
+      updateproductselectedcolor.add({
+        'name': name,
+        'attribute_id': attributeId,
+      });};
         updateselectedcategoryattributesList.add({
           'id': id,
           'name': name,
           'attribute_id': attributeId,
+          'color_code': attributecolorcode,
+          'image_url': attributeimage,
         });
 
-      ////attribute add in dropdow 
-        final categoryname = attribute.key ??'';
-      final currentAttributes =
-          updateproductselectedAttributes.putIfAbsent(categoryname, () => []);
+        ////attribute add in dropdow
+        final categoryname = attribute.key ?? '';
+        final currentAttributes =
+            updateproductselectedAttributes.putIfAbsent(categoryname, () => []);
 
-      if (!currentAttributes.contains('${categoryname}_$name')) {
-        updateproductselectedAttributes[categoryname] = [
-          ...currentAttributes,
-          '${categoryname}_$name',
-        ];}
-      print(updateproductselectedAttributes);
+        if (!currentAttributes.contains('${categoryname}_$name')) {
+          updateproductselectedAttributes[categoryname] = [
+            ...currentAttributes,
+            '${categoryname}_$name',
+          ];
+        }
+        print(updateproductselectedAttributes);
       }
     }
   }
-final Set<String> _usedIds = {};
 
-String generateUniqueRandomString(int length) {
-  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  final random = Random();
+  final Set<String> _usedIds = {};
 
-  String newId;
-  do {
-    newId = List.generate(length, (index) => characters[random.nextInt(characters.length)]).join();
-  } while (_usedIds.contains(newId));
+  String generateUniqueRandomString(int length) {
+    const characters =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = Random();
 
-  _usedIds.add(newId);
-  return newId;
-}
+    String newId;
+    do {
+      newId = List.generate(
+              length, (index) => characters[random.nextInt(characters.length)])
+          .join();
+    } while (_usedIds.contains(newId));
+
+    _usedIds.add(newId);
+    return newId;
+  }
+
   RxList updateoldproductimageids = RxList<int?>([]);
   final updateproductnamecontroller = TextEditingController().obs;
   final updateproductstockcontroller = TextEditingController().obs;
@@ -386,43 +491,36 @@ String generateUniqueRandomString(int length) {
   }) async {
     try {
       updateproductloading.value = true;
-      await productRepo
-          .updateproduct(
-              context: context,
-              id: id.toString(),
-              title: updateproductnamecontroller.value.text.isEmpty
-                  ? getproductpreviewbyid.value?.data?.title.toString() ?? ""
-                  : updateproductnamecontroller.value.text.toString(),
-              stock: updateproductstockcontroller.value.text.isEmpty
-                  ? getproductpreviewbyid.value?.data?.stock.toString() ?? ""
-                  : updateproductstockcontroller.value.text.toString(),
-              categoryid: updateproductcategory.value.toString(),
-              brandid: updateproductbrand.value.toString(),
-              price: updateproductsetpricecontroller.value.text.isEmpty
-                  ? getproductpreviewbyid.value?.data?.price.toString() ?? ""
-                  : updateproductsetpricecontroller.value.text.toString(),
-              discountprice: updateproductsalepricecontroller.value.text.isEmpty
-                  ? getproductpreviewbyid.value?.data?.discountPrice
-                          .toString() ??
-                      ""
-                  : updateproductsalepricecontroller.value.text.toString(),
-              productattributes: updateselectedcategoryattributesList,
-              description: updateproductdescriptioncontroller.value.text.isEmpty
-                  ? getproductpreviewbyid.value?.data?.description.toString() ??
-                      ""
-                  : updateproductdescriptioncontroller.value.text.toString(),
-              productimages: updateproductuploadimages,
-              oldimageids: updateoldproductimageids)
-          ;
-        
+      await productRepo.updateproduct(
+          context: context,
+          id: id.toString(),
+          title: updateproductnamecontroller.value.text.isEmpty
+              ? getproductpreviewbyid.value?.data?.title.toString() ?? ""
+              : updateproductnamecontroller.value.text.toString(),
+          stock: updateproductstockcontroller.value.text.isEmpty
+              ? getproductpreviewbyid.value?.data?.stock.toString() ?? ""
+              : updateproductstockcontroller.value.text.toString(),
+          categoryid: updateproductcategory.value.toString(),
+          brandid: updateproductbrand.value.toString(),
+          price: updateproductsetpricecontroller.value.text.isEmpty
+              ? getproductpreviewbyid.value?.data?.price.toString() ?? ""
+              : updateproductsetpricecontroller.value.text.toString(),
+          discountprice: updateproductsalepricecontroller.value.text.isEmpty
+              ? getproductpreviewbyid.value?.data?.discountPrice.toString() ??
+                  ""
+              : updateproductsalepricecontroller.value.text.toString(),
+          productattributes: updateselectedcategoryattributesList,
+          description: updateproductdescriptioncontroller.value.text.isEmpty
+              ? getproductpreviewbyid.value?.data?.description.toString() ?? ""
+              : updateproductdescriptioncontroller.value.text.toString(),
+          productimages: updateproductuploadimages,
+          oldimageids: updateoldproductimageids);
 
       updateproductloading.value = false;
     } finally {
       updateproductloading.value = false;
     }
   }
-
-
 
 //////////delet product api
 ///////activeproduct switch button value
@@ -433,14 +531,14 @@ String generateUniqueRandomString(int length) {
         i++) {
       deleteproductswitchbutton[i] = RxBool(true);
     }
-    
   }
-void isdeleteactiveproduct(int index, bool value) {
-  if (deleteproductswitchbutton.containsKey(index)) {
+
+  void isdeleteactiveproduct(int index, bool value) {
+    if (deleteproductswitchbutton.containsKey(index)) {
       deleteproductswitchbutton[index]?.value = value;
     }
+  }
 
-}
 ///////outof product switch button value
   Map<int, RxBool> outofstockdeleteproductswitchbutton = {};
   void getoutofstockdeleteproductswitchboolvalue() {
@@ -449,14 +547,13 @@ void isdeleteactiveproduct(int index, bool value) {
         i++) {
       outofstockdeleteproductswitchbutton[i] = RxBool(true);
     }
-    
   }
-void outofstockisdeleteactiveproduct(int index, bool value) {
-  if (outofstockdeleteproductswitchbutton.containsKey(index)) {
+
+  void outofstockisdeleteactiveproduct(int index, bool value) {
+    if (outofstockdeleteproductswitchbutton.containsKey(index)) {
       outofstockdeleteproductswitchbutton[index]?.value = value;
     }
-
-}
+  }
 
 ///////inactive switch button value
   Map<int, RxBool> inactivedeleteproductswitchbutton = {};
@@ -465,27 +562,21 @@ void outofstockisdeleteactiveproduct(int index, bool value) {
         i < (getdeletedproducts.value?.data?.products?.length ?? 0);
         i++) {
       inactivedeleteproductswitchbutton[i] = RxBool(false);
-    
     }
-    
   }
-void inactiveisdeleteactiveproduct(int index, bool value) {
-  if (inactivedeleteproductswitchbutton.containsKey(index)) {
+
+  void inactiveisdeleteactiveproduct(int index, bool value) {
+    if (inactivedeleteproductswitchbutton.containsKey(index)) {
       inactivedeleteproductswitchbutton[index]?.value = value;
     }
+  }
 
-}
-RxBool deletedproductloading = false.obs;
-  Future<void> deleteProduct({
-    required int id,
-    required int status
-  }) async {
+  RxBool deletedproductloading = false.obs;
+  Future<void> deleteProduct({required int id, required int status}) async {
     try {
       deletedproductloading.value = true;
-      await productRepo
-          .deleteProduct(id: id.toString(), status: status.toString())
-      ;  
-      
+      await productRepo.deleteProduct(
+          id: id.toString(), status: status.toString());
 
       deletedproductloading.value = false;
     } finally {
@@ -494,17 +585,19 @@ RxBool deletedproductloading = false.obs;
   }
 
 ///////////get product wise feedbacks
- final Rx<ProductWiseFeedbackModel?> getproductwisefeedbacks =
+  final Rx<ProductWiseFeedbackModel?> getproductwisefeedbacks =
       Rx<ProductWiseFeedbackModel?>(null);
   final RxBool getproductwisefeedbacksloading = false.obs;
   final RxBool getproductwisefeedbacksreloading = false.obs;
   final RxInt productwisefeedbackpage = 1.obs;
-  Future<void> getProductWiseFeedbacks({required String guid,required String filter}) async {
-    if (getproductwisefeedbacksreloading.value || getproductwisefeedbacksloading.value)
-      return;
+  Future<void> getProductWiseFeedbacks(
+      {required String guid, required String filter}) async {
+    if (getproductwisefeedbacksreloading.value ||
+        getproductwisefeedbacksloading.value) return;
     if (productwisefeedbackpage.value > 1 &&
         productwisefeedbackpage.value >
-            (getproductwisefeedbacks.value?.data?.pagination?.totalPages ?? 0)) {
+            (getproductwisefeedbacks.value?.data?.pagination?.totalPages ??
+                0)) {
       return;
     }
 
@@ -513,18 +606,20 @@ RxBool deletedproductloading = false.obs;
           ? getproductwisefeedbacksreloading.value = true
           : getproductwisefeedbacksloading.value = true;
       final value = await productRepo.getProductWiseFeedbacks(
-        guid: guid, filter: filter, page: productwisefeedbackpage.value.toString());
+          guid: guid,
+          filter: filter,
+          page: productwisefeedbackpage.value.toString());
       if (productwisefeedbackpage.value > 1) {
         getproductwisefeedbacks.value?.data?.feedback
             ?.addAll(value?.data?.feedback ?? []);
-       
+
         productwisefiltervalue.value = filter;
-         reasonproductwisefeedbackcontroller();
+        reasonproductwisefeedbackcontroller();
       } else {
         getproductwisefeedbacks.value = value;
-      
+
         productwisefiltervalue.value = filter;
-          reasonproductwisefeedbackcontroller();
+        reasonproductwisefeedbackcontroller();
       }
       productwisefeedbackpage.value++;
       getproductwisefeedbacksreloading.value = false;
@@ -534,8 +629,9 @@ RxBool deletedproductloading = false.obs;
       getproductwisefeedbacksloading.value = false;
     }
   }
+
 ////////// product wise reply feedback api
- final RxString productwisefiltervalue = ''.obs;
+  final RxString productwisefiltervalue = ''.obs;
   Map<int, TextEditingController> productwisereplyfeedbackControllers = {};
   void reasonproductwisefeedbackcontroller() {
     for (int i = 0;
@@ -546,11 +642,12 @@ RxBool deletedproductloading = false.obs;
   }
 
 //////////CREATE PRODUCT subcategory dropdown logic
-void createSelectedproductsubCategorydropdown(String value) {
+  void createSelectedproductsubCategorydropdown(String value) {
     createselectedcategoryattributesList.clear();
     createproductcategory.value = value;
 
-    var selectedSubCategory = getsellersubcategorieslist.value?.data?.subCategories
+    var selectedSubCategory = getsellersubcategorieslist
+        .value?.data?.subCategories
         ?.firstWhere((subcategory) => subcategory.id.toString() == value);
 
     getCategoryAttributes(selectedSubCategory?.guid.toString() ?? "");

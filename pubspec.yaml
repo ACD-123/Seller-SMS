@@ -60,6 +60,7 @@ dependencies:
   firebase_messaging: ^14.7.19
   flutter_local_notifications: ^17.2.2
   url_launcher: ^6.3.0
+  image: ^3.3.0
 
 dev_dependencies:
   flutter_test:

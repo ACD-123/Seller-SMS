@@ -6,8 +6,10 @@ import 'package:getwidget/types/gf_border_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/customcomponents/pickimages.dart';
 
 class UpdateStepper extends StatefulWidget {
   @override
@@ -455,31 +457,130 @@ class _UpdateStepperState extends State<UpdateStepper> {
               height: MediaQuery.of(context).size.height * 0.02,
             ),
             Obx(
-              () => Wrap(
-                spacing: 8.0,
-                children: productcontroller.updateselectedcategoryattributesList
-                    .map((attribute) {
-                  final id = attribute['id'];
-                  final name = attribute['name'];
-                  final attributeId = attribute['attribute_id'];
+              () => productcontroller.updateproductcolorImagesloading.value
+                  ? Center(
+                      child: SizedBox(
+                      height: 3.h,
+                      width: 5.w,
+                      child: customcircularprogress(),
+                    ))
+                  : Wrap(
+                      spacing: 8.0,
+                      children: productcontroller
+                          .updateselectedcategoryattributesList
+                          .map((attribute) {
+                        final id = attribute['id'];
+                        final name = attribute['name'];
+                        final attributeId = attribute['attribute_id'];
+                        final String imageurl = attribute['image_url'];
+                        final String attributecolorcode =
+                            attribute['color_code'];
+                        return attributecolorcode.isEmpty
+                            ? Chip(
+                                label: Text('$name'),
+                                deleteIcon: CircleAvatar(
+                                  radius: 13.sp,
+                                  backgroundColor: const Color(0xff2E3192),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 16.sp,
+                                  ),
+                                ),
+                                onDeleted: () {
+                                  if (name == null ||
+                                      id == null ||
+                                      attributeId == null) return;
+                                  productcontroller
+                                      .updateselectedcategoryattributesList
+                                      .removeWhere(
+                                    (entry) =>
+                                        entry['id'] == id &&
+                                        entry['name'] == name &&
+                                        entry['attribute_id'] == attributeId,
+                                  );
+                                },
+                              )
+                            : Padding(
+                                padding: EdgeInsets.only(bottom: 1.h),
+                                child: Container(
+                                  width: 25.w,
+                                  margin: EdgeInsets.only(right: 2.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: Colors.grey),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 13.w,
+                                              child: Text(toCamelCase(name)),
+                                            ),
+                                            SizedBox(
+                                              width: 2.w,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (name == null ||
+                                                    id == null ||
+                                                    attributeId == null) return;
+                                                productcontroller
+                                                    .updateselectedcategoryattributesList
+                                                    .removeWhere(
+                                                  (entry) =>
+                                                      entry['id'] == id &&
+                                                      entry['name'] == name &&
+                                                      entry['attribute_id'] ==
+                                                          attributeId,
+                                                );
 
-                  return Chip(
-                    label: Text('$name'),
-                    deleteIcon: Icon(Icons.close),
-                    onDeleted: () {
-                      if (name == null || id == null || attributeId == null)
-                        return;
-                      productcontroller.updateselectedcategoryattributesList
-                          .removeWhere(
-                        (entry) =>
-                            entry['id'] == id &&
-                            entry['name'] == name &&
-                            entry['attribute_id'] == attributeId,
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+                                                productcontroller
+                                                    .updateproductselectedcolor
+                                                    .removeWhere(
+                                                  (entry) =>
+                                                      entry['name'] == name &&
+                                                      entry['attribute_id'] ==
+                                                          attributeId,
+                                                );
+                                              },
+                                              child: CircleAvatar(
+                                                radius: 13.sp,
+                                                backgroundColor:
+                                                    const Color(0xff2E3192),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                  size: 16.sp,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 1.h),
+                                        ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            child: Image.network(
+                                              imageurl.isNotEmpty
+                                                  ? imageurl
+                                                  : AppConstants.noimage,
+                                              fit: BoxFit.fill,
+                                              width: 25.w,
+                                              height: 8.h,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                      }).toList(),
+                    ),
             ),
             Obx(() => productcontroller.getcategoryattributesloading.value
                 ? Center(
@@ -516,119 +617,197 @@ class _UpdateStepperState extends State<UpdateStepper> {
                                     height: MediaQuery.of(context).size.height *
                                         0.01,
                                   ),
-                                  DropdownButtonFormField<String>(
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (attribute) {
-                                      if (attribute == null ||
-                                          attribute.isEmpty) {
-                                        return "Please Select ${categoryAttributeData.name ?? ""}";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          'Select ${categoryAttributeData?.name ?? ""}',
-                                      fillColor: Colors.white,
-                                      hintStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                      contentPadding: EdgeInsets.all(15),
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xffDBDBDB)),
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                    ),
-                                    value: productcontroller
-                                        .updateproductselectedAttributes[
-                                            categoryname]
-                                        ?.first,
-                               
-                                    onChanged: (newValue) {
-                                      if (newValue == null) return;
+                                  categoryAttributeData?.name == 'Colors'
+                                      ? SizedBox(
+                                          height: 4.h,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                ...List.generate(
+                                                  categoryAttributeData
+                                                          ?.optionscode
+                                                          ?.length ??
+                                                      0,
+                                                  (colorIndex) {
+                                                    final colorCode =
+                                                        categoryAttributeData
+                                                                    ?.optionscode?[
+                                                                colorIndex] ??
+                                                            "#FFFFFF";
+                                                    final colorOptionName =
+                                                        categoryAttributeData
+                                                                    ?.options?[
+                                                                colorIndex] ??
+                                                            "";
 
-                                      final categoryAttributeData =
-                                          productcontroller
-                                              .getcategoryattributes
-                                              .value
-                                              ?.data
-                                              ?.attributes?[index];
-                                      if (categoryAttributeData == null) return;
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        final pickedImage =
+                                                            await pickImage(
+                                                                context);
+                                                        if (pickedImage !=
+                                                            null) {
+                                                          productcontroller.updateproductColorImages(
+                                                              context: context,
+                                                              attributesColorimages:
+                                                                  pickedImage,
+                                                              colorOptionName:
+                                                                  colorOptionName,
+                                                              categoryAttributeid:
+                                                                  categoryAttributeData
+                                                                          ?.id
+                                                                          .toString() ??
+                                                                      "",
+                                                              colorCode:
+                                                                  colorCode);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color:
+                                                                    Colors.grey,
+                                                                width: 2),
+                                                            shape: BoxShape
+                                                                .circle),
+                                                        margin: EdgeInsets.only(
+                                                            right: 2.w),
+                                                        child: CircleAvatar(
+                                                          backgroundColor:
+                                                              Color(int.parse(
+                                                                  "0xff${colorCode.replaceFirst('#', '')}")),
+                                                          radius: 18.sp,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : DropdownButtonFormField<String>(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (attribute) {
+                                            if (attribute == null ||
+                                                attribute.isEmpty) {
+                                              return "Please Select ${categoryAttributeData.name ?? ""}";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                'Select ${categoryAttributeData?.name ?? ""}',
+                                            fillColor: Colors.white,
+                                            hintStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                            contentPadding: EdgeInsets.all(15),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xffDBDBDB)),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                          ),
+                                          value: productcontroller
+                                              .updateproductselectedAttributes[
+                                                  categoryname]
+                                              ?.first,
+                                          onChanged: (newValue) {
+                                            if (newValue == null) return;
 
-                                      final attributeId =
-                                          categoryAttributeData.id;
-                                      if (attributeId == null) return;
-                                      final selectedOption =
-                                          (categoryAttributeData.options ?? [])
-                                              .firstWhere(
-                                        (option) =>
-                                            '${categoryAttributeData.name}_$option' ==
-                                            newValue,
-                                        orElse: () => '',
-                                      );
+                                            final categoryAttributeData =
+                                                productcontroller
+                                                    .getcategoryattributes
+                                                    .value
+                                                    ?.data
+                                                    ?.attributes?[index];
+                                            if (categoryAttributeData == null)
+                                              return;
 
-                                      if (selectedOption.isEmpty) return;
+                                            final attributeId =
+                                                categoryAttributeData.id;
 
-                                      final randomId = productcontroller
-                                          .generateUniqueRandomString(5);
-                                      final entry = {
-                                        'id': randomId,
-                                        'name': selectedOption,
-                                        'attribute_id': attributeId,
-                                      };
+                                            if (attributeId == null) return;
+                                            final selectedOption =
+                                                (categoryAttributeData
+                                                            .options ??
+                                                        [])
+                                                    .firstWhere(
+                                              (option) =>
+                                                  '${categoryAttributeData.name}_$option' ==
+                                                  newValue,
+                                              orElse: () => '',
+                                            );
 
-                                      final existingEntryIndex = productcontroller
-                                          .updateselectedcategoryattributesList
-                                          .indexWhere((entry) =>
-                                              entry['attribute_id'] ==
-                                                  attributeId &&
-                                              entry['name'] == selectedOption);
+                                            if (selectedOption.isEmpty) return;
 
-                                      if (existingEntryIndex == -1) {
-                                        productcontroller
-                                            .updateselectedcategoryattributesList
-                                            .add(entry);
-                                      }
-// final newAttributeValue = '$newValue'; 
-                                      final currentAttributes =
-                                          productcontroller
-                                              .updateproductselectedAttributes
-                                              .putIfAbsent(
-                                                  categoryname, () => []);
+                                            final randomId = productcontroller
+                                                .generateUniqueRandomString(5);
+                                            final entry = {
+                                              'id': randomId,
+                                              'name': selectedOption,
+                                              'attribute_id': attributeId,
+                                              'color_code': "",
+                                              'image_url': "",
+                                            };
+
+                                            final existingEntryIndex =
+                                                productcontroller
+                                                    .updateselectedcategoryattributesList
+                                                    .indexWhere((entry) =>
+                                                        entry['attribute_id'] ==
+                                                            attributeId &&
+                                                        entry['name'] ==
+                                                            selectedOption);
+
+                                            if (existingEntryIndex == -1) {
+                                              productcontroller
+                                                  .updateselectedcategoryattributesList
+                                                  .add(entry);
+                                            }
+// final newAttributeValue = '$newValue';
+                                            final currentAttributes =
+                                                productcontroller
+                                                    .updateproductselectedAttributes
+                                                    .putIfAbsent(
+                                                        categoryname, () => []);
 // if (!currentAttributes.contains(newAttributeValue)) {
 //     productcontroller.updateproductselectedAttributes[categoryname] = [
 //       ...currentAttributes,
 //       newAttributeValue,
 //     ];
 // }
-                                      if (!currentAttributes
-                                          .contains(newValue)) {
-                                        productcontroller
-                                                .updateproductselectedAttributes[
-                                            categoryname] = [
-                                          ...currentAttributes,
-                                          '${categoryAttributeData.name}_$newValue',
-                                        ];
-                                      }
-                                      print(productcontroller.updateproductselectedAttributes);
-                                    },
-                                    items: categoryAttributeData!.options!
-                                        .map<DropdownMenuItem<String>>(
-                                            (option) {
-                                              // final categoryvalue = option; 
+                                            if (!currentAttributes
+                                                .contains(newValue)) {
+                                              productcontroller
+                                                      .updateproductselectedAttributes[
+                                                  categoryname] = [
+                                                ...currentAttributes,
+                                                '${categoryAttributeData.name}_$newValue',
+                                              ];
+                                            }
+                                            print(productcontroller
+                                                .updateproductselectedAttributes);
+                                          },
+                                          items: categoryAttributeData!.options!
+                                              .map<DropdownMenuItem<String>>(
+                                                  (option) {
+                                            // final categoryvalue = option;
 
-                                      final categoryvalue =
-                                          '${categoryAttributeData.name}_$option';
-                                      return DropdownMenuItem<String>(
-                                        value: categoryvalue,
-                                        child: Text(option),
-                                      );
-                                    }).toList(),
-                                  ),
+                                            final categoryvalue =
+                                                '${categoryAttributeData.name}_$option';
+                                            return DropdownMenuItem<String>(
+                                              value: categoryvalue,
+                                              child: Text(option),
+                                            );
+                                          }).toList(),
+                                        ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.01,
@@ -752,6 +931,21 @@ class _UpdateStepperState extends State<UpdateStepper> {
                         .getproductpreviewbyid.value!.data!.media!.isEmpty &&
                     productcontroller.updateproductuploadimages.isEmpty) {
                   showErrrorSnackbar(message: "Please Upload Product Images");
+                } else if (productcontroller
+                        .getcategoryattributes.value?.data?.attributes
+                        ?.any(
+                      (attribute) => attribute.name == "Colors",
+                    ) ??
+                    false) {
+                  if (productcontroller.updateproductselectedcolor.isEmpty) {
+                    showErrrorSnackbar(message: "Please Select Color");
+                  } else {
+                    if (currentStep < 2) {
+                      setState(() {
+                        currentStep += 1;
+                      });
+                    }
+                  }
                 } else {
                   if (currentStep < 2) {
                     setState(() {
@@ -870,24 +1064,41 @@ class _UpdateStepperState extends State<UpdateStepper> {
                     buttonName: 'Update',
                     textColor: Colors.white,
                     ontap: () {
-                      productcontroller.getcategoryattributes.value!.data!
-                                  .attributes!.isNotEmpty &&
-                              productcontroller
-                                  .updateselectedcategoryattributesList.isEmpty
-                          ? showErrrorSnackbar(
-                              message: "Please Select Attributes")
-                          : productcontroller.getproductpreviewbyid.value!.data!
-                                      .media!.isEmpty &&
-                                  productcontroller
-                                      .updateproductuploadimages.isEmpty
-                              ? showErrrorSnackbar(
-                                  message: "Please Upload Product Images")
-                              : productcontroller.updateProduct(
-                                  context: context,
-                                  id: productcontroller
-                                          .getproductpreviewbyid.value?.data?.id
-                                          .toString() ??
-                                      "");
+                      if (productcontroller.getcategoryattributes.value!.data!
+                              .attributes!.isNotEmpty &&
+                          productcontroller
+                              .updateselectedcategoryattributesList.isEmpty) {
+                        showErrrorSnackbar(message: "Please Select Attributes");
+                      } else if (productcontroller.getproductpreviewbyid.value!
+                              .data!.media!.isEmpty &&
+                          productcontroller.updateproductuploadimages.isEmpty) {
+                        showErrrorSnackbar(
+                            message: "Please Upload Product Images");
+                      } else if (productcontroller
+                              .getcategoryattributes.value?.data?.attributes
+                              ?.any(
+                            (attribute) => attribute.name == "Colors",
+                          ) ??
+                          false) {
+                        if (productcontroller
+                            .updateproductselectedcolor.isEmpty) {
+                          showErrrorSnackbar(message: "Please Select Color");
+                        } else {
+                          productcontroller.updateProduct(
+                              context: context,
+                              id: productcontroller
+                                      .getproductpreviewbyid.value?.data?.id
+                                      .toString() ??
+                                  "");
+                        }
+                      } else {
+                        productcontroller.updateProduct(
+                            context: context,
+                            id: productcontroller
+                                    .getproductpreviewbyid.value?.data?.id
+                                    .toString() ??
+                                "");
+                      }
                     },
                     fontSize: 10,
                     color: Color(0xff2E3192),

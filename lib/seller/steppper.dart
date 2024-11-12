@@ -5,10 +5,13 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/border/gf_border.dart';
 import 'package:getwidget/types/gf_border_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:smsseller/constants/appconstants.dart';
 import 'package:smsseller/controller/productcontroller.dart';
+import 'package:smsseller/customcomponents/capitalword.dart';
 import 'package:smsseller/customcomponents/currencytext.dart';
 import 'package:smsseller/customcomponents/customeleveted_button.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
+import 'package:smsseller/customcomponents/pickimages.dart';
 
 class MyStepperApp extends StatefulWidget {
   @override
@@ -82,6 +85,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
   @override
   void initState() {
     super.initState();
+    productcontroller.createproductselectedcolor.clear();
     productcontroller.getsellersubcategorieslist.value = null;
     productcontroller.createproductselectedAttributes.clear();
     productcontroller.createselectedcategoryattributesList.clear();
@@ -590,7 +594,8 @@ class _MyStepperAppState extends State<MyStepperApp> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      productcontroller.createselectedcategoryattributesList.clear();
+                      productcontroller.createselectedcategoryattributesList
+                          .clear();
                       productcontroller.createproductcategory.value = value!;
                       var selectedCategory = productcontroller
                           .getsellercategorieslist.value?.data
@@ -598,94 +603,234 @@ class _MyStepperAppState extends State<MyStepperApp> {
                               (category) => category.id.toString() == value);
                       productcontroller
                           .getCategoryAttributes(selectedCategory?.guid ?? "");
-                       productcontroller
-                          .getsellerSubCategoriesList(value);
+                      productcontroller.getsellerSubCategoriesList(value);
                     });
                   },
                 ),
               ],
             ),
-           
-    Obx(() => productcontroller.getsellersubcategorieslist.value == null ||       
-    productcontroller.getsellersubcategorieslist.value!.data!.subCategories!.isEmpty ?
-const SizedBox() :
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                 SizedBox(
-              height: MediaQuery.of(context).size.height * 0.02,
-            ),
-                 Text('Sub-Category (Optional)',style: TextStyle(fontSize: 15.sp),),
-                SizedBox(height: 1.h),
-                DropdownButtonFormField<String>(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  // validator: (v) {
-                  //   if (v == null) {
-                  //     return 'Category can\'t be empty';
-                  //   }
-                  //   return null;
-                  // },
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(12),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xffDBDBDB)),
-                      borderRadius: BorderRadius.circular(15.0),
+
+            Obx(
+              () => productcontroller.getsellersubcategorieslist.value ==
+                          null ||
+                      productcontroller.getsellersubcategorieslist.value!.data!
+                          .subCategories!.isEmpty
+                  ? const SizedBox()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Text(
+                          'Sub-Category (Optional)',
+                          style: TextStyle(fontSize: 15.sp),
+                        ),
+                        SizedBox(height: 1.h),
+                        DropdownButtonFormField<String>(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            // validator: (v) {
+                            //   if (v == null) {
+                            //     return 'Category can\'t be empty';
+                            //   }
+                            //   return null;
+                            // },
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(12),
+                              border: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Color(0xffDBDBDB)),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              fillColor: Colors.white,
+                              hintText: 'Select Sub-Category',
+                            ),
+                            value: productcontroller
+                                .createproductselectedsubcategory?.value,
+                            items: productcontroller.getsellersubcategorieslist
+                                .value?.data?.subCategories
+                                ?.map((subcategories) {
+                              return DropdownMenuItem<String>(
+                                value: subcategories.id.toString(),
+                                child: Text(subcategories.name.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              productcontroller
+                                  .createSelectedproductsubCategorydropdown(
+                                      value!);
+                              // setState(() {
+                              //   productcontroller.createselectedcategoryattributesList.clear();
+                              //   productcontroller.createproductcategory.value = value!;
+                              //  var selectedsubCategory = productcontroller
+                              //       .getsellersubcategorieslist.value?.data?.subCategories
+                              //       ?.firstWhere(
+                              //           (subcategory) => subcategory.id.toString() == value);
+                              //   productcontroller
+                              //       .getCategoryAttributes(selectedsubCategory?.guid.toString() ?? "");
+                            }),
+                      ],
                     ),
-                    fillColor: Colors.white,
-                    hintText: 'Select Sub-Category',
-                  ),
-                  value: productcontroller.createproductselectedsubcategory?.value,
-                  items: productcontroller.getsellersubcategorieslist.value?.data?.subCategories
-                      ?.map((subcategories) {
-                    return DropdownMenuItem<String>(
-                      value: subcategories.id.toString(),
-                      child: Text(subcategories.name.toString()),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    productcontroller.createSelectedproductsubCategorydropdown(value!);
-                    // setState(() {
-                    //   productcontroller.createselectedcategoryattributesList.clear();
-                    //   productcontroller.createproductcategory.value = value!;
-                    //  var selectedsubCategory = productcontroller
-                    //       .getsellersubcategorieslist.value?.data?.subCategories
-                    //       ?.firstWhere(
-                    //           (subcategory) => subcategory.id.toString() == value);
-                    //   productcontroller
-                    //       .getCategoryAttributes(selectedsubCategory?.guid.toString() ?? "");
-                    }
-                    
-                    
-                ),
-              ],
-            ),),
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
             Obx(
-              () => Wrap(
-                spacing: 8.0,
-                children: productcontroller.createselectedcategoryattributesList
-                    .map((attribute) {
-                  final name = attribute['name'];
-                  final attributeId = attribute['attribute_id'];
+              () => productcontroller.productcolorImagesloading.value
+                  ? Center(
+                      child: SizedBox(
+                      height: 4.h,
+                      width: 8.w,
+                      child: customcircularprogress(),
+                    ))
+                  : Wrap(
+                      spacing: 8.0,
+                      children: productcontroller
+                          .createselectedcategoryattributesList
+                          .map((attribute) {
+                        final name = attribute['name'];
+                        final attributeId = attribute['attribute_id'];
+                        final String imageurl = attribute['image_url'];
+                        return imageurl.isEmpty
+                            ? Chip(
+                                label: Text('$name'),
+                                deleteIcon: CircleAvatar(
+                                  radius: 13.sp,
+                                  backgroundColor: const Color(0xff2E3192),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 16.sp,
+                                  ),
+                                ),
+                                onDeleted: () {
+                                  if (name == null || attributeId == null)
+                                    return;
+                                  productcontroller
+                                      .createselectedcategoryattributesList
+                                      .removeWhere(
+                                    (entry) =>
+                                        entry['name'] == name &&
+                                        entry['attribute_id'] == attributeId,
+                                  );
+                                },
+                              )
+                            : Padding(
+                                padding: EdgeInsets.only(bottom: 1.h),
+                                child: Container(
+                                  width: 25.w,
+                                  margin: EdgeInsets.only(right: 2.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: Colors.grey),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 13.w,
+                                              child: Text(toCamelCase(name)),
+                                            ),
+                                            SizedBox(
+                                              width: 2.w,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (name == null ||
+                                                    attributeId == null) return;
+                                                productcontroller
+                                                    .createselectedcategoryattributesList
+                                                    .removeWhere(
+                                                  (entry) =>
+                                                      entry['name'] == name &&
+                                                      entry['attribute_id'] ==
+                                                          attributeId,
+                                                );
 
-                  return Chip(
-                    label: Text('$name'),
-                    deleteIcon: Icon(Icons.close),
-                    onDeleted: () {
-                      if (name == null || attributeId == null) return;
-                      productcontroller.createselectedcategoryattributesList
-                          .removeWhere(
-                        (entry) =>
-                            entry['name'] == name &&
-                            entry['attribute_id'] == attributeId,
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+                                                productcontroller
+                                                    .createproductselectedcolor
+                                                    .removeWhere(
+                                                  (entry) =>
+                                                      entry['name'] == name &&
+                                                      entry['attribute_id'] ==
+                                                          attributeId,
+                                                );
+                                              },
+                                              child: CircleAvatar(
+                                                radius: 13.sp,
+                                                backgroundColor:
+                                                    const Color(0xff2E3192),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                  size: 16.sp,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 1.h),
+                                        ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            child: Image.network(
+                                              imageurl.isNotEmpty
+                                                  ? imageurl
+                                                  : AppConstants.noimage,
+                                              fit: BoxFit.fill,
+                                              width: 25.w,
+                                              height: 8.h,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                      }).toList(),
+                    ),
             ),
+            // GestureDetector(
+            //   onTap: () {
+            //     productcontroller.uploadcreateproductimages(context);
+            //   },
+            //   child: Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 1.w),
+            //     child: Container(
+            //       width: Get.width,
+            //       height: 10.h,
+            //       decoration:
+            //           BoxDecoration(borderRadius: BorderRadius.circular(20)),
+            //       child: GFBorder(
+            //           dashedLine: [3, 4],
+            //           type: GFBorderType.rect,
+            //           color: Colors.black,
+            //           child: Column(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             crossAxisAlignment: CrossAxisAlignment.center,
+            //             children: [
+            //               Image.asset('assets/images/uploadicon.png'),
+            //               SizedBox(
+            //                 height: 0.5.h,
+            //               ),
+            //               Text(
+            //                 'Upload Images As Selected Color',
+            //                 style:
+            //                     TextStyle(color: Colors.grey, fontSize: 14.sp),
+            //               )
+            //             ],
+            //           )),
+            //     ),
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: 2.h,
+            // ),
 
             Obx(() => productcontroller.getcategoryattributesloading.value
                 ? Center(
@@ -716,122 +861,202 @@ const SizedBox() :
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(categoryAttributeData?.name.toString() ??
-                                      ""),
+                                  Text(toCamelCase(
+                                      categoryAttributeData?.name.toString() ??
+                                          "")),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.01,
                                   ),
-                                  DropdownButtonFormField<String>(
-                                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                                    validator: (attribute) {
-                                      if (attribute == null ||
-                                          attribute.isEmpty) {
-                                        return "Please Select ${categoryAttributeData.name ?? ""}";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          'Select ${categoryAttributeData?.name ?? ""}',
-                                      fillColor: Colors.white,
-                                      hintStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
-                                      ),
-                                      contentPadding: EdgeInsets.all(15),
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xffDBDBDB)),
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                      ),
-                                    ),
-                                    value: productcontroller
-                                        .createproductselectedAttributes[
-                                            categoryname]
-                                        ?.first,
-                                    onChanged: (newValue) {
-                                      if (newValue == null) return;
+                                  categoryAttributeData?.name == 'Colors'
+                                      ? SizedBox(
+                                          height: 4.h,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                ...List.generate(
+                                                  categoryAttributeData
+                                                          ?.optionscode
+                                                          ?.length ??
+                                                      0,
+                                                  (colorIndex) {
+                                                    final colorCode =
+                                                        categoryAttributeData
+                                                                    ?.optionscode?[
+                                                                colorIndex] ??
+                                                            "#FFFFFF";
+                                                    final colorOptionName =
+                                                        categoryAttributeData
+                                                                    ?.options?[
+                                                                colorIndex] ??
+                                                            "";
 
-                                      final categoryAttributeData =
-                                          productcontroller
-                                              .getcategoryattributes
-                                              .value
-                                              ?.data
-                                              ?.attributes?[index];
-                                      if (categoryAttributeData == null) return;
+                                                    return GestureDetector(
+                                                      onTap: () async {
+                                                        final pickedImage =
+                                                            await pickImage(
+                                                                context);
+                                                        if (pickedImage !=
+                                                            null) {
+                                                          productcontroller.createproductColorImages(
+                                                              context: context,
+                                                              attributesColorimages:
+                                                                  pickedImage,
+                                                              colorOptionName:
+                                                                  colorOptionName,
+                                                              categoryAttributeid:
+                                                                  categoryAttributeData
+                                                                          ?.id
+                                                                          .toString() ??
+                                                                      "",
+                                                              colorCode:
+                                                                  colorCode);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color:
+                                                                    Colors.grey,
+                                                                width: 2),
+                                                            shape: BoxShape
+                                                                .circle),
+                                                        margin: EdgeInsets.only(
+                                                            right: 2.w),
+                                                        child: CircleAvatar(
+                                                          backgroundColor:
+                                                              Color(int.parse(
+                                                                  "0xff${colorCode.replaceFirst('#', '')}")),
+                                                          radius: 18.sp,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : DropdownButtonFormField<String>(
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (attribute) {
+                                            if (attribute == null ||
+                                                attribute.isEmpty) {
+                                              return "Please Select ${categoryAttributeData.name ?? ""}";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                'Select ${categoryAttributeData?.name ?? ""}',
+                                            fillColor: Colors.white,
+                                            hintStyle: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                            contentPadding: EdgeInsets.all(15),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xffDBDBDB)),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                          ),
+                                          value: productcontroller
+                                              .createproductselectedAttributes[
+                                                  categoryname]
+                                              ?.first,
+                                          onChanged: (newValue) async {
+                                            if (newValue == null) return;
 
-                                      final attributeId =
-                                          categoryAttributeData.id;
-                                      if (attributeId == null) return;
+                                            final categoryAttributeData =
+                                                productcontroller
+                                                    .getcategoryattributes
+                                                    .value
+                                                    ?.data
+                                                    ?.attributes?[index];
+                                            if (categoryAttributeData == null)
+                                              return;
 
-                                      final selectedOption =
-                                          (categoryAttributeData.options ?? [])
-                                              .firstWhere(
-                                        (option) =>
-                                            '${categoryAttributeData.name}_$option' ==
-                                            newValue,
-                                        orElse: () => '',
-                                      );
+                                            final attributeId =
+                                                categoryAttributeData.id;
+                                            if (attributeId == null) return;
 
-                                      if (selectedOption.isEmpty) return;
+                                            final selectedOption =
+                                                (categoryAttributeData
+                                                            .options ??
+                                                        [])
+                                                    .firstWhere(
+                                              (option) =>
+                                                  '${categoryAttributeData.name}_$option' ==
+                                                  newValue,
+                                              orElse: () => '',
+                                            );
+                                            print(
+                                                "Type: ${categoryname.toLowerCase()}");
+                                            if (selectedOption.isEmpty) return;
 
-                                      final entry = {
-                                        'name': selectedOption,
-                                        'attribute_id': attributeId,
-                                      };
+                                            final entry = {
+                                              'name': selectedOption,
+                                              'attribute_id': attributeId,
+                                              'color_code': '',
+                                              'image_url': ''
+                                            };
 
-                                      final existingEntryIndex = productcontroller
-                                          .createselectedcategoryattributesList
-                                          .indexWhere(
-                                        (entry) =>
-                                            entry['attribute_id'] ==
-                                                attributeId &&
-                                            entry['name'] == selectedOption,
-                                      );
+                                            final existingEntryIndex =
+                                                productcontroller
+                                                    .createselectedcategoryattributesList
+                                                    .indexWhere(
+                                              (entry) =>
+                                                  entry['attribute_id'] ==
+                                                      attributeId &&
+                                                  entry['name'] ==
+                                                      selectedOption,
+                                            );
 
-                                      if (existingEntryIndex != -1) {
-                                        productcontroller
-                                                .createselectedcategoryattributesList[
-                                            existingEntryIndex] = entry;
-                                      } else {
-                                        productcontroller
-                                            .createselectedcategoryattributesList
-                                            .add(entry);
-                                      }
+                                            if (existingEntryIndex != -1) {
+                                              productcontroller
+                                                      .createselectedcategoryattributesList[
+                                                  existingEntryIndex] = entry;
+                                            } else {
+                                              productcontroller
+                                                  .createselectedcategoryattributesList
+                                                  .add(entry);
+                                            }
 
-                                      final currentAttributes =
-                                          productcontroller
-                                              .createproductselectedAttributes
-                                              .putIfAbsent(
-                                                  categoryname, () => []);
+                                            final currentAttributes =
+                                                productcontroller
+                                                    .createproductselectedAttributes
+                                                    .putIfAbsent(
+                                                        categoryname, () => []);
 
-                                      if (!currentAttributes
-                                          .contains(newValue)) {
-                                        productcontroller
-                                                .createproductselectedAttributes[
-                                            categoryname] = [
-                                          ...currentAttributes,
-                                          newValue,
-                                        ];
-                                      }
+                                            if (!currentAttributes
+                                                .contains(newValue)) {
+                                              productcontroller
+                                                      .createproductselectedAttributes[
+                                                  categoryname] = [
+                                                ...currentAttributes,
+                                                newValue,
+                                              ];
+                                            }
 
-                                      print(productcontroller
-                                          .createselectedcategoryattributesList);
-                                    },
-                                    items: categoryAttributeData!.options!
-                                        .map<DropdownMenuItem<String>>(
-                                            (option) {
-                                      final categoryvalue =
-                                          '${categoryAttributeData.name}_$option';
-                                      return DropdownMenuItem<String>(
-                                        value: categoryvalue,
-                                        child: Text(option),
-                                      );
-                                    }).toList(),
-                                  ),
+                                            print(productcontroller
+                                                .createselectedcategoryattributesList);
+                                          },
+                                          items: categoryAttributeData!.options!
+                                              .map<DropdownMenuItem<String>>(
+                                                  (option) {
+                                            final categoryvalue =
+                                                '${categoryAttributeData.name}_$option';
+                                            return DropdownMenuItem<String>(
+                                              value: categoryvalue,
+                                              child: Text(option),
+                                            );
+                                          }).toList(),
+                                        ),
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.01,
@@ -984,6 +1209,21 @@ const SizedBox() :
                 if (formKey1.currentState!.validate()) {
                   if (productcontroller.createproductuploadimages.isEmpty) {
                     showErrrorSnackbar(message: "Please Upload Product Images");
+                  } else if (productcontroller
+                          .getcategoryattributes.value?.data?.attributes
+                          ?.any(
+                        (attribute) => attribute.name == "Colors",
+                      ) ??
+                      false) {
+                    if (productcontroller.createproductselectedcolor.isEmpty) {
+                      showErrrorSnackbar(message: "Please Select Color");
+                    } else {
+                      if (currentStep < 2) {
+                        setState(() {
+                          currentStep += 1;
+                        });
+                      }
+                    }
                   } else {
                     if (currentStep < 2) {
                       setState(() {
@@ -1016,7 +1256,7 @@ const SizedBox() :
           Text(
             title,
             style: TextStyle(
-               fontSize: 14.sp,
+              fontSize: 14.sp,
               color: currentStep == index ? Color(0xff2E3192) : Colors.black,
             ),
           ),
@@ -1099,10 +1339,25 @@ const SizedBox() :
                     ontap: () {
                       if (formKey1.currentState!.validate() &&
                           formKey2.currentState!.validate()) {
-                        productcontroller.createproductuploadimages.isEmpty
-                            ? showErrrorSnackbar(
-                                message: "Please Upload Product Images")
-                            : productcontroller.createProduct(context: context);
+                        if (productcontroller
+                            .createproductuploadimages.isEmpty) {
+                          showErrrorSnackbar(
+                              message: "Please Upload Product Images");
+                        } else if (productcontroller
+                                .getcategoryattributes.value?.data?.attributes
+                                ?.any(
+                              (attribute) => attribute.name == "Colors",
+                            ) ??
+                            false) {
+                          if (productcontroller
+                              .createproductselectedcolor.isEmpty) {
+                            showErrrorSnackbar(message: "Please Select Color");
+                          } else {
+                            productcontroller.createProduct(context: context);
+                          }
+                        } else {
+                          productcontroller.createProduct(context: context);
+                        }
                       }
                     },
                     fontSize: 10,

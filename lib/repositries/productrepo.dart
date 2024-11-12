@@ -42,18 +42,21 @@ class ProductRepo extends GetxService {
   Future<GetSubCategoryModel?> getSellerSubCategoriesList(String id) async {
     try {
       final res = await apiClient.getFromServer(
-        endPoint: "${AppConstants.getsellersubcategorieslist}$id?page_size=9999999999",
+        endPoint:
+            "${AppConstants.getsellersubcategorieslist}$id?page_size=9999999999",
       );
       if (res.statusCode == 200) {
         final listofsellersubcategories = getSubCategoryModelFromJson(res.body);
         return listofsellersubcategories;
       } else {
-        throw Exception("No data field found in the GetSellerSubCategoriesList");
+        throw Exception(
+            "No data field found in the GetSellerSubCategoriesList");
       }
     } catch (e) {
       throw Exception(e);
     }
   }
+
 ////////getbrandslist api
   Future<GetBrandsListModel?> getBrandsList() async {
     try {
@@ -78,6 +81,7 @@ class ProductRepo extends GetxService {
       final res = await apiClient.getFromServer(
         endPoint: "${AppConstants.getcategorywiseattributes}$guid",
       );
+      print(res.body);
       if (res.statusCode == 200) {
         final listofsellercategories =
             categoryWiseAttributesModelFromJson(res.body);
@@ -111,6 +115,7 @@ class ProductRepo extends GetxService {
       "brand_id": brandid,
       "price": price,
       "height": "1",
+
       ///height,width,length,weight is default because moeed said shipping is not yet confirm so from backend side said post defualt 1.
       "width": "1",
       "length": "1",
@@ -146,6 +151,41 @@ class ProductRepo extends GetxService {
       return showErrrorSnackbar(message: 'No Internet Connection');
     } catch (e) {
       showErrrorSnackbar(message: e.toString());
+    }
+  }
+
+///////////////create attributes color images
+  Future<String?> productAttributesImages({
+    required File attributesColorimages,
+  }) async {
+    try {
+      print("Sent Images to Api:$attributesColorimages");
+      final res = await apiClient.postImagesToServer(
+        endPoint: AppConstants.productColorimages,
+        data: {},
+        files: {
+          "image": attributesColorimages,
+        },
+      );
+      print(res.body);
+      if (res.statusCode == 200) {
+        final responseData = jsonDecode(res.body);
+        final imageUrl = responseData['data']['image'];
+        return imageUrl;
+      } else {
+        final message = jsonDecode(res.body)['message'];
+        showErrrorSnackbar(message: message);
+        return null;
+      }
+    } on SocketException {
+      showErrrorSnackbar(message: 'No Internet Connection');
+      return null;
+    } catch (e) {
+      print("Product Color Images:${e.toString()}");
+      showErrrorSnackbar(
+          message:
+              "An unexpected error occurred ProductColorImages. Please try again later.");
+      return null;
     }
   }
 
@@ -307,13 +347,18 @@ class ProductRepo extends GetxService {
   }
 
 ////////////product wise feedbacks api
-  Future<ProductWiseFeedbackModel?> getProductWiseFeedbacks({required String guid,required String filter,required String page}) async {
+  Future<ProductWiseFeedbackModel?> getProductWiseFeedbacks(
+      {required String guid,
+      required String filter,
+      required String page}) async {
     try {
       final res = await apiClient.getFromServer(
-        endPoint: "${AppConstants.getproductwisefeedback}$guid?filter=$filter&page=$page",
+        endPoint:
+            "${AppConstants.getproductwisefeedback}$guid?filter=$filter&page=$page",
       );
       if (res.statusCode == 200) {
-        final listofproductwisefeedbacks = productWiseFeedbackModelFromJson(res.body);
+        final listofproductwisefeedbacks =
+            productWiseFeedbackModelFromJson(res.body);
         return listofproductwisefeedbacks;
       } else {
         throw Exception("No data field found in the GetProductWiseFeedbacks");

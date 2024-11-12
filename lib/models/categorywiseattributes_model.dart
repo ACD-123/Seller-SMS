@@ -59,11 +59,13 @@ class Data {
 class Attribute {
   String? name;
   List<String>? options;
+  List<String>? optionscode;
   int? id;
 
   Attribute({
     this.name,
     this.options,
+     this.optionscode,
     this.id,
   });
 
@@ -72,6 +74,9 @@ class Attribute {
         options: json["options"] == null
             ? null
             : List<String>.from(json["options"].map((x) => x)),
+       optionscode: json["options_code"] == null
+            ? null
+            : List<String>.from(json["options_code"].map((x) => x)),
         id: json["id"],
       );
 
@@ -79,6 +84,8 @@ class Attribute {
         "name": name,
         "options":
             options == null ? [] : List<dynamic>.from(options!.map((x) => x)),
+            "optionscode":
+            optionscode == null ? [] : List<dynamic>.from(optionscode!.map((x) => x)),
         "id": id,
       };
 }

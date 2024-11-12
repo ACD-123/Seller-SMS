@@ -76,22 +76,22 @@ class HttpApiClient extends GetxService {
       );
 
       request.headers['Authorization'] = 'Bearer $token';
+      for (var entry in files.entries) {
+        String key = entry.key;
+        dynamic value = entry.value;
 
-      // Handle files in the request
-       for (var entry in files.entries) {
-      String key = entry.key;
-      dynamic value = entry.value;
-
-      if (value is List<File?>) {
-        for (var file in value.where((file) => file != null).cast<File>()) {
-          request.files.add(await http.MultipartFile.fromPath(key, file.path));
-        }
-      } else if (value is File?) {
-        if (value != null) {
-          request.files.add(await http.MultipartFile.fromPath(key, value.path));
+        if (value is List<File?>) {
+          for (var file in value.where((file) => file != null).cast<File>()) {
+            request.files
+                .add(await http.MultipartFile.fromPath(key, file.path));
+          }
+        } else if (value is File?) {
+          if (value != null) {
+            request.files
+                .add(await http.MultipartFile.fromPath(key, value.path));
+          }
         }
       }
-    }
 
       request.fields.addAll(data);
 
