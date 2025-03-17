@@ -9,6 +9,8 @@ import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/passwordtextfield.dart';
 import 'package:smsseller/customcomponents/textfieldforphone.dart';
 
+import '../../customcomponents/custom_text_field.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen() : super();
 
@@ -97,10 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 4.5.h,
                 ),
                 _isEmailSelected
-                    ? EmailCustomTextField(
-                        enabled: true,
-                        editingController:
-                            loginController.loginemailcontroller.value,
+                    ? CustomTextField(
+                    
+                        controller: loginController.loginemailcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
                             return 'Email can\'t be empty';
@@ -109,28 +110,44 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return null;
                         },
-                        hintText: 'Email Address',
-                        image: 'assets/images/emailiconlogin.png',
+                        hintText: 'Sign in Phone',
+                        prefix: Icon(Icons.call,
+                        color: Color(0xff1375EA),
+                       size: 18.sp,
+                        ),
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                       )
                     : const CustomTextFieldforPhone(),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 Obx(
-                  () => CustomTextFieldPassword(
-                    image: 'assets/images/pasword.png',
-                    hintText: 'Password',
+                  () => CustomTextField(
+                  obscureText: true,
                     controller: loginController.loginpasswordcontroller.value,
-                    callback: () {
-                      loginController.loginPasswordVisibility();
-                    },
-                    fieldValidator: (v) {
+                    validator: (v) {
                       if (v!.isEmpty) {
                         return 'Password can\'t be empty';
                       }
                       return null;
                     },
-                    hiddenPassword: !loginController.loginpasswordvisible.value,
+                    hintText: 'Password',
+             prefix:Icon(Icons.lock,                        color: Color(0xff1375EA),
+size: 18.sp),
+                    suffix: IconButton(
+                      icon: Icon(
+                        loginController.loginpasswordvisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        loginController.loginPasswordVisibility();
+                      },
+                    ),
+                    keyboardType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.done,
                   ),
                 ),
                 const SizedBox(
@@ -274,39 +291,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   direction: Direction.vertical,
                   offset: 0.5,
                   child: Center(
-                    child: const Text(
-                      'Create an Account?',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                ShowUpAnimation(
-                  delayStart: const Duration(milliseconds: 500),
-                  animationDuration: const Duration(milliseconds: 500),
-                  curve: Curves.fastLinearToSlowEaseIn,
-                  direction: Direction.vertical,
-                  offset: 0.5,
-                  child: Center(
-                    child: InkWell(
-                      onTap: () {
-                        Get.toNamed(RouteConstants.signup);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => SignUpScreen()),
-                        // );
-                      },
-                      child: const Text(
-                        '  Sign Up',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0xff2E3192),
+                    child: Row(
+                      mainAxisSize:
+                          MainAxisSize.min, 
+                      children: [
+                        const Text(
+                          'Create an Account?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed(RouteConstants.signup);
+                          },
+                          child: const Text(
+                            ' Sign Up',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xff2E3192),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

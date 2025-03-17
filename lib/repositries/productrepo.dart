@@ -115,8 +115,6 @@ class ProductRepo extends GetxService {
       "brand_id": brandid,
       "price": price,
       "height": "1",
-
-      ///height,width,length,weight is default because moeed said shipping is not yet confirm so from backend side said post defualt 1.
       "width": "1",
       "length": "1",
       "weight": "1",

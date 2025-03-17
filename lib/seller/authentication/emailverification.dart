@@ -84,7 +84,7 @@ class _ForgotEmailverificationState extends State<Emailverification> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: ' Verification code on your email',
+                        text: ' Verification code on your number',
                       ),
                     ],
                   ),
@@ -97,7 +97,7 @@ class _ForgotEmailverificationState extends State<Emailverification> {
                     child: TextFormField(
                       enabled: false, // Isse input field disable ho jayega
                       decoration: InputDecoration(
-                        hintText: email,
+                        hintText: "012302013012",
                         fillColor: Colors.white,
                         hintStyle: TextStyle(
                           color: Colors.grey,

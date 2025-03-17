@@ -427,36 +427,36 @@ class _MyStepperAppState extends State<MyStepperApp> {
               'Describe Your Item',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
+             SizedBox(
+              height: 1.h,
+            ),
             GestureDetector(
               onTap: () {
                 productcontroller.uploadcreateproductimages(context);
               },
-              child: Padding(
-                padding: EdgeInsets.only(left: 40.0, top: 30, right: 50),
-                child: Container(
-                  width: Get.width,
-                  height: 90,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: GFBorder(
-                      dashedLine: [3, 4],
-                      type: GFBorderType.rect,
-                      color: Colors.black,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/images/uploadicon.png'),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            'Upload Images',
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          )
-                        ],
-                      )),
-                ),
+              child: Container(
+                width: Get.width,
+                height: 90,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: GFBorder(
+                    dashedLine: [3, 4],
+                    type: GFBorderType.rect,
+                    color: Colors.black,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/images/uploadicon.png'),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          'Upload Images',
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        )
+                      ],
+                    )),
               ),
             ),
             SizedBox(
@@ -523,16 +523,16 @@ class _MyStepperAppState extends State<MyStepperApp> {
             SizedBox(
               height: 1.h,
             ),
-            Row(children: [
-              Image.asset('assets/images/abc.png'),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
-              ),
-              Text(
-                'Add Minimum 5 Images Covering All Angles.',
-                style: TextStyle(fontSize: 9),
-              ),
-            ]),
+            // Row(children: [
+            //   Image.asset('assets/images/abc.png'),
+            //   SizedBox(
+            //     width: MediaQuery.of(context).size.width * 0.03,
+            //   ),
+            //   Text(
+            //     'Add Minimum 5 Images Covering All Angles.',
+            //     style: TextStyle(fontSize: 9),
+            //   ),
+            // ]),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),

@@ -73,6 +73,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreens> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.06),
                   EmailCustomTextField(
+                    icon: Icons.phone,
                     editingController: emailTextEditingContoller,
                     validator: (v) {
                       if (v!.isEmpty) {
@@ -83,8 +84,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreens> {
               
                       return null;
                     },
-                    hintText: 'Email Address',
-                    image: 'assets/images/emailiconlogin.png',
+                    hintText: 'Phone Number',
+                
                   ),
                   const SizedBox(
                     height: 35,

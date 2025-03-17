@@ -10,14 +10,14 @@ class EmailCustomTextField extends StatelessWidget {
     required this.hintText,
     required this.editingController,
     required this.validator,
-    required this.image,
+    required this.icon,
     this.enabled = true,
   }) : super(key: key);
 
   final String hintText;
   final TextEditingController editingController;
   final FieldValidator validator;
-  final String image;
+  final IconData icon;
   final bool enabled;
 
   @override
@@ -25,8 +25,6 @@ class EmailCustomTextField extends StatelessWidget {
     return TextFormField(
       enabled: enabled,
       controller: editingController,
-      // readOnly: enabled,
-      
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator,
       style: const TextStyle(
@@ -40,10 +38,6 @@ class EmailCustomTextField extends StatelessWidget {
           borderSide: const BorderSide(color: Color(0xF3F3F3), width: 0),
           borderRadius: BorderRadius.circular(12.0),
         ),
-        // focusedBorder: OutlineInputBorder(
-        //   borderSide: const BorderSide(color: Color(0xF3F3F3), width: 1.5),
-        //   borderRadius: BorderRadius.circular(10.0),
-        // ),
         isDense: true,
         contentPadding: const EdgeInsets.all(18.0),
         border: InputBorder.none,
@@ -51,12 +45,26 @@ class EmailCustomTextField extends StatelessWidget {
         hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         prefixIcon: Padding(
           padding: EdgeInsets.all(8.0),
-          child: Image.asset(
-            image.toString(),
-            scale: 6.sp,
-          ),
+          child: Icon(
+            icon,
+            size: 18.sp,
+color: Color(0xff1375EA)          ),
         ),
       ),
     );
   }
 }
+
+// Usage example:
+// EmailCustomTextField(
+//   enabled: false,
+//   editingController: logincontroller.signupcountryregioncontroller.value,
+//   validator: (v) {
+//     if (v!.isEmpty) {
+//       return 'Country or Region can\'t be empty';
+//     }
+//     return null;
+//   },
+//   hintText: 'Country or Region',
+//   icon: Icons.public,
+// ),

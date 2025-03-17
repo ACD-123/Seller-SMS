@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
                   title: 'SMS Seller',
                   defaultTransition: Transition.cupertino,
                   getPages: RouteGenerator.getPages(),
-                  initialRoute: RouteConstants.splashscreen);
+                  initialRoute: RouteConstants.loginscreen);
             });
       },
     );

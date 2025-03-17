@@ -10,6 +10,8 @@ import 'package:smsseller/customcomponents/customwidgets.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/passwordtextfield.dart';
 
+import '../../customcomponents/custom_text_field.dart';
+
 class Signup extends StatefulWidget {
   Signup({super.key});
 
@@ -101,22 +103,28 @@ class _SignupState extends State<Signup> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.06),
-                  EmailCustomTextField(
-                    editingController: fullnamecontroller,
-                    validator: (v) {
-                      if (v!.isEmpty) {
-                        return 'Full Name can\'t be empty';
-                      }
-                      return null;
-                    },
-                    hintText: 'Full Name',
-                    image: 'assets/images/fullnameicon.png',
-                  ),
+                  
+                 CustomTextField(
+  controller: fullnamecontroller, 
+  validator: (v) {
+    if (v == null || v.isEmpty) {
+      return 'Full Name can\'t be empty';
+    }
+    return null;
+  },
+  hintText: 'Full Name',
+  prefix:  Icon(Icons.person, size: 18.sp,color: Color(0xff1375EA)),
+   keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+),
+SizedBox(height: 1.h),
+
                   SizedBox(
                     height: 1.h,
                   ),
 
                   EmailCustomTextField(
+                    icon: Icons.email,
                     editingController: emailTextEditingContoller,
                     validator: (v) {
                       if (v!.isEmpty) {
@@ -128,7 +136,7 @@ class _SignupState extends State<Signup> {
                       return null;
                     },
                     hintText: 'Email Address',
-                    image: 'assets/images/emailiconlogin.png',
+                
                   ),
                   SizedBox(
                     height: 1.h,
@@ -187,15 +195,10 @@ class _SignupState extends State<Signup> {
                       hintText: 'Orange Pay Account No:',
                       hintStyle:
                           TextStyle(color: Colors.grey[500], fontSize: 14),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          'assets/images/ion_card-outline.png',
-                          scale: 20.sp,
-                        ),
+                      prefixIcon:Icon(Icons.wallet,size: 18.sp, color: Color(0xff1375EA),)
                       ),
                     ),
-                  ),
+                  
                   // EmailCustomTextField(
                   //   editingController: orangepayaccountcontroller,
                   //   validator: (v) {
@@ -212,7 +215,7 @@ class _SignupState extends State<Signup> {
                   ),
                   Obx(
                     () => CustomTextFieldPassword(
-                      image: 'assets/images/pasword.png',
+                     icon: Icons.lock,
                       hintText: 'Password',
                       controller: passwordcontroller,
                       callback: () {
@@ -234,7 +237,7 @@ class _SignupState extends State<Signup> {
 
                   Obx(
                     () => CustomTextFieldPassword(
-                      image: 'assets/images/pasword.png',
+                    icon: Icons.lock,
                       hintText: 'Confirm Password',
                       controller: confirmpasswordcontroller,
                       callback: () {
@@ -257,6 +260,7 @@ class _SignupState extends State<Signup> {
 
                   Obx(
                     () => EmailCustomTextField(
+                      icon: Icons.location_city,
                       editingController:
                           logincontroller.signupstreetaddrescontroller.value,
                       validator: (v) {
@@ -269,7 +273,7 @@ class _SignupState extends State<Signup> {
                       hintText: logincontroller.signupstreetaddres.value.isEmpty
                           ? 'Street Address'
                           : logincontroller.signupstreetaddres.value,
-                      image: 'assets/images/streetaddresicon.png',
+                    
                     ),
                   ),
                   SizedBox(
@@ -305,6 +309,7 @@ class _SignupState extends State<Signup> {
                     },
                   ),
                   EmailCustomTextField(
+                    icon: Icons.public,
                       enabled: false,
                       editingController:
                           logincontroller.signupcountryregioncontroller.value,
@@ -316,12 +321,13 @@ class _SignupState extends State<Signup> {
                         return null;
                       },
                       hintText: 'Country or Region',
-                      image: 'assets/images/countryregionicon.png'),
+                     ),
                   SizedBox(
                     height: 1.h,
                   ),
 
                   EmailCustomTextField(
+                    icon: Icons.location_city,
                     enabled: false,
                     editingController:
                         logincontroller.signupstateprovincecontroller.value,
@@ -333,13 +339,14 @@ class _SignupState extends State<Signup> {
                       return null;
                     },
                     hintText: 'State/Province',
-                    image: 'assets/images/stateprovineicon.png',
+                   
                   ),
                   SizedBox(
                     height: 1.h,
                   ),
 
                   EmailCustomTextField(
+                    icon: Icons.location_city_outlined,
                     enabled: false,
                     editingController:
                         logincontroller.signupcitycontroller.value,
@@ -351,7 +358,7 @@ class _SignupState extends State<Signup> {
                       return null;
                     },
                     hintText: 'City',
-                    image: 'assets/images/cityicon.png',
+                  
                   ),
 
                   SizedBox(
@@ -359,6 +366,7 @@ class _SignupState extends State<Signup> {
                   ),
 
                   EmailCustomTextField(
+                    icon: Icons.local_post_office_sharp,
                     enabled: false,
                     editingController:
                         logincontroller.signupzipcodecontroller.value,
@@ -370,7 +378,6 @@ class _SignupState extends State<Signup> {
                       return null;
                     },
                     hintText: 'Zip Code',
-                    image: 'assets/images/zipcodeicon.png',
                   ),
 
                   const SizedBox(
@@ -487,18 +494,26 @@ class _SignupState extends State<Signup> {
                   SizedBox(
                     height: 1.h,
                   ),
-                  const Center(child: const Text('Already have an Account ')),
-                  GestureDetector(
-                    onTap: () {
-                      Get.offAllNamed(RouteConstants.loginscreen);
-                    },
-                    child: Center(
-                      child: const Text(
-                        'Login ',
-                        style: TextStyle(color: Color(0xff2E3192)),
-                      ),
-                    ),
-                  ),
+                  Center(
+  child: Row(
+    mainAxisSize: MainAxisSize.min, 
+    children: [
+      const Text('Already have an Account? '),
+      GestureDetector(
+        onTap: () {
+          Get.offAllNamed(RouteConstants.loginscreen);
+        },
+        child: const Text(
+          'Login',
+          style: TextStyle(
+            color: Color(0xff2E3192),
+            fontWeight: FontWeight.bold, 
+          ),
+        ),
+      ),
+    ],
+  ),
+),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),

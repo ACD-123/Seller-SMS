@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-// import 'package:sms/helper/typ_/defs.dart';
+// import 'package:sms/helper/typ_defs.dart';
 import 'package:smsseller/helper/typ_defs.dart';
 
 class CustomTextFieldPassword extends StatelessWidget {
@@ -10,20 +10,19 @@ class CustomTextFieldPassword extends StatelessWidget {
     required this.fieldValidator,
     required this.controller,
     required this.hintText,
-    required this.image,
+    required this.icon,
     required this.hiddenPassword,
     this.callback,
-    this.prefixIcon = true, // Add showPrefixIcon parameter with default value
+    this.prefixIcon = true, 
   }) : super(key: key);
 
   final String hintText;
-  final String image;
+  final IconData icon;
   final FieldValidator fieldValidator;
   final TextEditingController controller;
   final bool hiddenPassword;
   final Function()? callback;
-  final bool prefixIcon; // Define the parameter
-  // final bool prefixIco
+  final bool prefixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +52,19 @@ class CustomTextFieldPassword extends StatelessWidget {
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
         prefixIcon: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Image.asset(
-              image,
-              scale: 6.sp,
-            )),
+          padding: EdgeInsets.all(8.0),
+          child: Icon(
+            icon,
+            size: 18.sp,
+color: Color(0xff1375EA)          ),
+        ),
         suffixIcon: prefixIcon
             ? InkWell(
                 onTap: callback,
                 child: Icon(
                   hiddenPassword ? Icons.visibility : Icons.visibility_off,
-                  size: 20,
-                  color: Colors.black,
+                  size: 18,
+                  color: Colors.grey,
                 ),
               )
             : null,
@@ -72,3 +72,20 @@ class CustomTextFieldPassword extends StatelessWidget {
     );
   }
 }
+
+// Usage example:
+// CustomTextFieldPassword(
+//   fieldValidator: (v) {
+//     if (v!.isEmpty) {
+//       return 'Password can\'t be empty';
+//     }
+//     return null;
+//   },
+//   controller: passwordController,
+//   hintText: 'Password',
+//   icon: Icons.lock,
+//   hiddenPassword: !logincontroller.signuppasswordvisible.value,
+//   callback: () {
+//     logincontroller.signupPasswordVisibility();
+//   },
+// ),

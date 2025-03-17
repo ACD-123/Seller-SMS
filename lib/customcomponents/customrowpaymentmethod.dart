@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-// import 'package:sms/controller/homeguestcontroller.dart';
 import 'package:smsseller/controller/homeguestcontroller.dart';
 
 Padding customrowpaymentmethods({

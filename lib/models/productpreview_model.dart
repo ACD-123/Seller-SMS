@@ -49,7 +49,7 @@ class Data {
   int? ratingCount;
   Brand? brand;
   Category? category;
-List<NewAttribute>? newattributes;
+  List<NewAttribute>? newattributes;
   List<Attribute>? attributes;
   List<Media>? media;
 
@@ -71,12 +71,13 @@ List<NewAttribute>? newattributes;
     required this.newattributes,
     required this.media,
   });
-double ratingasdouble(){
-  if (rating == null || rating!.isEmpty){
-    return 0.0;
+  double ratingasdouble() {
+    if (rating == null || rating!.isEmpty) {
+      return 0.0;
+    }
+    return double.tryParse(rating ?? "") ?? 0.0;
   }
-  return double.tryParse(rating ?? "") ?? 0.0;
-}
+
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         id: json["id"],
         title: json["title"],
@@ -90,13 +91,14 @@ double ratingasdouble(){
         rating: json["rating"],
         ratingCount: json["rating_count"],
         brand: json["brand"] == null ? null : Brand.fromJson(json["brand"]),
-        category:
-            json["category"] == null ? null : Category.fromJson(json["category"]),
+        category: json["category"] == null
+            ? null
+            : Category.fromJson(json["category"]),
         attributes: json["attributes"] == null
             ? null
             : List<Attribute>.from(
                 json["attributes"].map((x) => Attribute.fromJson(x))),
-                 newattributes: json["new_attributes"] == null
+        newattributes: json["new_attributes"] == null
             ? null
             : List<NewAttribute>.from(
                 json["new_attributes"].map((x) => NewAttribute.fromJson(x))),
@@ -122,7 +124,7 @@ double ratingasdouble(){
         "attributes": attributes == null
             ? null
             : List<dynamic>.from(attributes!.map((x) => x.toJson())),
-         "new_attributes": newattributes == null
+        "new_attributes": newattributes == null
             ? null
             : List<dynamic>.from(newattributes!.map((x) => x.toJson())),
         "media": media == null
@@ -132,32 +134,33 @@ double ratingasdouble(){
 }
 
 class Category {
-    int? id;
-    String? guid;
-     String? name;
-    String? parentId;
+  int? id;
+  String? guid;
+  String? name;
+  String? parentId;
 
-    Category({
-        required this.id,
-        required this.guid,
-         required this.name,
-        required this.parentId,
-    });
+  Category({
+    required this.id,
+    required this.guid,
+    required this.name,
+    required this.parentId,
+  });
 
-    factory Category.fromJson(Map<String, dynamic> json) => Category(
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         guid: json["guid"],
-           name: json["name"],
+        name: json["name"],
         parentId: json["parent_id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "guid": guid,
         "name": name,
         "parent_id": parentId,
-    };
+      };
 }
+
 class Attribute {
   int? id;
   String? name;
@@ -168,7 +171,7 @@ class Attribute {
     required this.id,
     required this.name,
     required this.attributeid,
-     required this.colorcode,
+    required this.colorcode,
     required this.colorimageurl,
   });
 
@@ -195,13 +198,13 @@ class Brand {
   Brand({
     required this.id,
     required this.name,
-     required this.guid,
+    required this.guid,
   });
 
   factory Brand.fromJson(Map<String, dynamic> json) => Brand(
         id: json["id"],
         name: json["name"],
-         guid: json["guid"],
+        guid: json["guid"],
       );
 
   Map<String, dynamic> toJson() => {
