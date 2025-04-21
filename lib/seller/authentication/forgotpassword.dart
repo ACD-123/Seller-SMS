@@ -67,13 +67,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreens> {
                   ),
                   const Center(
                     child: Text(
-                      'No Problem! We have got your back',
+                      'No problem,we have got your back!',
                       style: TextStyle(fontSize: 11),
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.06),
                   EmailCustomTextField(
-                    icon: Icons.phone,
+                    
+                    icon: Icons.email,
                     editingController: emailTextEditingContoller,
                     validator: (v) {
                       if (v!.isEmpty) {
@@ -84,7 +85,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreens> {
               
                       return null;
                     },
-                    hintText: 'Phone Number',
+                    hintText: 'Email',
                 
                   ),
                   const SizedBox(

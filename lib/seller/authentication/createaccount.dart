@@ -9,8 +9,7 @@ import 'package:smsseller/customcomponents/customelevatedbutton.dart';
 import 'package:smsseller/customcomponents/customwidgets.dart';
 import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/passwordtextfield.dart';
-
-import '../../customcomponents/custom_text_field.dart';
+import '../../customcomponents/custom_textfield.dart';
 
 class Signup extends StatefulWidget {
   Signup({super.key});
@@ -98,26 +97,27 @@ class _SignupState extends State<Signup> {
                   ),
                   const Center(
                     child: Text(
-                      'Enter you detail below',
+                      'Enter Your Details Below',
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.06),
-                  
-                 CustomTextField(
-  controller: fullnamecontroller, 
-  validator: (v) {
-    if (v == null || v.isEmpty) {
-      return 'Full Name can\'t be empty';
-    }
-    return null;
-  },
-  hintText: 'Full Name',
-  prefix:  Icon(Icons.person, size: 18.sp,color: Color(0xff1375EA)),
-   keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-),
-SizedBox(height: 1.h),
+
+                  CustomTextField(
+                    controller: fullnamecontroller,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) {
+                        return 'Full Name can\'t be empty';
+                      }
+                      return null;
+                    },
+                    hintText: 'Full Name',
+                    prefix: Icon(Icons.person,
+                        size: 18.sp, color: Color(0xff1375EA)),
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  SizedBox(height: 1.h),
 
                   SizedBox(
                     height: 1.h,
@@ -136,7 +136,6 @@ SizedBox(height: 1.h),
                       return null;
                     },
                     hintText: 'Email Address',
-                
                   ),
                   SizedBox(
                     height: 1.h,
@@ -182,40 +181,33 @@ SizedBox(height: 1.h),
                       color: Colors.black,
                     ),
                     decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: Color(0xF3F3F3), width: 0),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      isDense: true,
-                      contentPadding: const EdgeInsets.all(18.0),
-                      border: InputBorder.none,
-                      hintText: 'Orange Pay Account No:',
-                      hintStyle:
-                          TextStyle(color: Colors.grey[500], fontSize: 14),
-                      prefixIcon:Icon(Icons.wallet,size: 18.sp, color: Color(0xff1375EA),)
-                      ),
-                    ),
-                  
-                  // EmailCustomTextField(
-                  //   editingController: orangepayaccountcontroller,
-                  //   validator: (v) {
-                  //     if (v!.isEmpty) {
-                  //       return 'Account Number can\'t be empty';
-                  //     }
-                  //     return null;
-                  //   },
-                  //   hintText: 'Orange Pay Account No:',
-                  //   image: 'assets/images/ion_card-outline.png',
-                  // ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xF3F3F3), width: 0),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.all(18.0),
+                        border: InputBorder.none,
+                        hintText: 'Orange Pay Account No:',
+                        hintStyle:
+                            TextStyle(color: Colors.grey[500], fontSize: 14),
+                        prefixIcon: Icon(
+                          Icons.wallet,
+                          size: 18.sp,
+                          color: Color(0xff1375EA),
+                        )),
+                  ),
+
+            
                   SizedBox(
                     height: 1.h,
                   ),
                   Obx(
                     () => CustomTextFieldPassword(
-                     icon: Icons.lock,
+                      icon: Icons.lock,
                       hintText: 'Password',
                       controller: passwordcontroller,
                       callback: () {
@@ -237,7 +229,7 @@ SizedBox(height: 1.h),
 
                   Obx(
                     () => CustomTextFieldPassword(
-                    icon: Icons.lock,
+                      icon: Icons.lock,
                       hintText: 'Confirm Password',
                       controller: confirmpasswordcontroller,
                       callback: () {
@@ -273,7 +265,6 @@ SizedBox(height: 1.h),
                       hintText: logincontroller.signupstreetaddres.value.isEmpty
                           ? 'Street Address'
                           : logincontroller.signupstreetaddres.value,
-                    
                     ),
                   ),
                   SizedBox(
@@ -310,18 +301,18 @@ SizedBox(height: 1.h),
                   ),
                   EmailCustomTextField(
                     icon: Icons.public,
-                      enabled: false,
-                      editingController:
-                          logincontroller.signupcountryregioncontroller.value,
-                      validator: (v) {
-                        if (v!.isEmpty) {
-                          return 'Country or Region can\'t be empty';
-                        }
+                    enabled: false,
+                    editingController:
+                        logincontroller.signupcountryregioncontroller.value,
+                    validator: (v) {
+                      if (v!.isEmpty) {
+                        return 'Country or Region can\'t be empty';
+                      }
 
-                        return null;
-                      },
-                      hintText: 'Country or Region',
-                     ),
+                      return null;
+                    },
+                    hintText: 'Country or Region',
+                  ),
                   SizedBox(
                     height: 1.h,
                   ),
@@ -335,12 +326,11 @@ SizedBox(height: 1.h),
                       if (v!.isEmpty) {
                         return 'State/Province can\'t be empty';
                       }
-
                       return null;
                     },
                     hintText: 'State/Province',
-                   
                   ),
+                  
                   SizedBox(
                     height: 1.h,
                   ),
@@ -358,7 +348,6 @@ SizedBox(height: 1.h),
                       return null;
                     },
                     hintText: 'City',
-                  
                   ),
 
                   SizedBox(
@@ -366,7 +355,7 @@ SizedBox(height: 1.h),
                   ),
 
                   EmailCustomTextField(
-                    icon: Icons.local_post_office_sharp,
+                    icon: Icons.code_rounded,
                     enabled: false,
                     editingController:
                         logincontroller.signupzipcodecontroller.value,
@@ -424,6 +413,7 @@ SizedBox(height: 1.h),
                   SizedBox(
                     height: 2.h,
                   ),
+
                   // const Center(child: Text('Continue With')),
                   // Center(
                   //   child: ElevetedButton(
@@ -442,6 +432,7 @@ SizedBox(height: 1.h),
                   // SizedBox(
                   //   height: MediaQuery.of(context).size.height * 0.02,
                   // ),
+
                   Obx(
                     () => Center(
                       child: logincontroller.socialloginloading.value
@@ -491,29 +482,30 @@ SizedBox(height: 1.h),
                             ),
                     ),
                   ),
+
                   SizedBox(
                     height: 1.h,
                   ),
                   Center(
-  child: Row(
-    mainAxisSize: MainAxisSize.min, 
-    children: [
-      const Text('Already have an Account? '),
-      GestureDetector(
-        onTap: () {
-          Get.offAllNamed(RouteConstants.loginscreen);
-        },
-        child: const Text(
-          'Login',
-          style: TextStyle(
-            color: Color(0xff2E3192),
-            fontWeight: FontWeight.bold, 
-          ),
-        ),
-      ),
-    ],
-  ),
-),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Already have an Account? '),
+                        GestureDetector(
+                          onTap: () {
+                            Get.offAllNamed(RouteConstants.loginscreen);
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(
+                              color: Color(0xff2E3192),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.03,
                   ),

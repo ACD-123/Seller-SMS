@@ -9,7 +9,7 @@ import 'package:smsseller/customcomponents/errordailog.dart';
 import 'package:smsseller/customcomponents/passwordtextfield.dart';
 import 'package:smsseller/customcomponents/textfieldforphone.dart';
 
-import '../../customcomponents/custom_text_field.dart';
+import '../../customcomponents/custom_textfield.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen() : super();
@@ -19,6 +19,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController passwordcontroller = TextEditingController();
+
   bool _isEmailSelected = true;
   final loginController =
       Get.put(AuthenticationController(authRepo: Get.find()));
@@ -30,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     loginController.googleemail.value = '';
     loginController.googlefullname.value = '';
     loginController.loginemailcontroller.value.clear();
-    loginController.loginpasswordcontroller.value.clear();
+    loginController.loginpasswordcontroller.value;
     loginController.loadremebermecredentials();
   }
 
@@ -84,15 +86,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   curve: Curves.fastLinearToSlowEaseIn,
                   direction: Direction.vertical,
                   offset: 0.5,
-                  child: Center(
-                    child: const Text(
-                      'Ready to start shopping. Login to get started',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'Poppins',
-                        color: Colors.grey,
-                      ),
+                  child: const Text(
+                    'Ready to start shopping? Login to get started.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Poppins',
+                      color: Colors.grey,
+                      height: 1.5,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(
@@ -100,7 +104,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 _isEmailSelected
                     ? CustomTextField(
-                    
                         controller: loginController.loginemailcontroller.value,
                         validator: (v) {
                           if (v!.isEmpty) {
@@ -110,12 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return null;
                         },
-                        hintText: 'Sign in Phone',
-                        prefix: Icon(Icons.call,
-                        color: Color(0xff1375EA),
-                       size: 18.sp,
+                        hintText: 'Email',
+                        prefix: Icon(
+                          Icons.email,
+                          color: Color(0xff1375EA),
+                          size: 18.sp,
                         ),
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                       )
                     : const CustomTextFieldforPhone(),
@@ -123,31 +127,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 Obx(
-                  () => CustomTextField(
-                  obscureText: true,
-                    controller: loginController.loginpasswordcontroller.value,
-                    validator: (v) {
+                  () => CustomTextFieldPassword(
+                    icon: Icons.lock,
+                    hintText: 'Password',
+                  controller: loginController.loginpasswordcontroller.value,
+                    callback: () {
+                      loginController.signupPasswordVisibility();
+                    },
+                    fieldValidator: (v) {
                       if (v!.isEmpty) {
                         return 'Password can\'t be empty';
                       }
                       return null;
                     },
-                    hintText: 'Password',
-             prefix:Icon(Icons.lock,                        color: Color(0xff1375EA),
-size: 18.sp),
-                    suffix: IconButton(
-                      icon: Icon(
-                        loginController.loginpasswordvisible.value
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {
-                        loginController.loginPasswordVisibility();
-                      },
-                    ),
-                    keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.done,
+                    hiddenPassword:
+                        !loginController.signuppasswordvisible.value,
                   ),
                 ),
                 const SizedBox(
@@ -173,7 +167,7 @@ size: 18.sp),
                               },
                             ),
                           ),
-                          const Text('Remember Me'),
+                          const Text('Remember me'),
                         ],
                       ),
                       GestureDetector(
@@ -185,7 +179,8 @@ size: 18.sp),
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.black,
                           ),
                         ),
                       ),
@@ -292,8 +287,7 @@ size: 18.sp),
                   offset: 0.5,
                   child: Center(
                     child: Row(
-                      mainAxisSize:
-                          MainAxisSize.min, 
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
                           'Create an Account?',

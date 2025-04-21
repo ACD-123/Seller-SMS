@@ -258,10 +258,10 @@ class _MyStepperAppState extends State<MyStepperApp> {
               value: 4,
               groupValue: selectedOption,
               activeColor:
-                  Colors.blue, // Change the active radio button color here
+                  Colors.blue,
               fillColor: MaterialStateProperty.all(
-                  Colors.blue), // Change the fill color when selected
-              splashRadius: 20, // Change the splash radius when clicked
+                  Colors.blue), 
+              splashRadius: 20,
               onChanged: (int? value) {
                 setState(() {
                   selectedOption = value!;
@@ -1323,7 +1323,7 @@ class _MyStepperAppState extends State<MyStepperApp> {
             },
             onSaved: (value) {},
           ),
-          Divider(),
+          // Divider(),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.3,
           ),

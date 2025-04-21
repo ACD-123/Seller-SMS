@@ -44,7 +44,7 @@ class EmailCustomTextField extends StatelessWidget {
         hintText: hintText,
         hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         prefixIcon: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(top:8.0),
           child: Icon(
             icon,
             size: 18.sp,

@@ -26,7 +26,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customappbar(title: 'Setup Shop'),
+      appBar: customappbar(title: 'Setup your Shop'),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         child: SingleChildScrollView(
@@ -85,7 +85,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                   'About your shop',
                   style: TextStyle(
                       fontSize: 16.sp,
-                      color: Color(0xff878787),
+                      color: Colors.black,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
@@ -128,7 +128,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                   'Select Categories',
                   style: TextStyle(
                       fontSize: 16.sp,
-                      color: Color(0xff878787),
+                       color: Colors.black,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
@@ -310,7 +310,7 @@ class _SellerSetupShopState extends State<SellerSetupShop> {
                   'Add Banner Images',
                   style: TextStyle(
                       fontSize: 16.sp,
-                      color: Color(0xff878787),
+                       color: Colors.black,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(

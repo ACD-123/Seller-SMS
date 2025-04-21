@@ -199,6 +199,10 @@ class AuthRepo extends GetxService {
   }) async {
     final mapData = {"email": email, "password": password, "is_user": "0"};
     try {
+      print("email"+email);
+      print("password"+password);
+
+
       final res = await apiClient.postToServer(
           endPoint: AppConstants.login, data: mapData);
       if (res.statusCode == 200) {

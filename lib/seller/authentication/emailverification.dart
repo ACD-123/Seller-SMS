@@ -97,7 +97,7 @@ class _ForgotEmailverificationState extends State<Emailverification> {
                     child: TextFormField(
                       enabled: false, // Isse input field disable ho jayega
                       decoration: InputDecoration(
-                        hintText: "012302013012",
+                        hintText: email,
                         fillColor: Colors.white,
                         hintStyle: TextStyle(
                           color: Colors.grey,

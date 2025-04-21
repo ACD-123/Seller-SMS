@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-// import 'package:sms/constants/route_constants.dart';
-// import 'package:sms/controller/storecontroller.dart';
-// import 'package:sms/customcomponents/custom_textformfield.dart';
-// import 'package:sms/customcomponents/customappbar.dart';
-// import 'package:sms/customcomponents/custombutton.dart';
+
 import 'package:smsseller/constants/route_constants.dart';
 import 'package:smsseller/controller/storecontroller.dart';
 import 'package:smsseller/customcomponents/custom_textformfield.dart';
